@@ -75,6 +75,8 @@ python main.py
 | El panel dice "Sin conexión" | El backend no está corriendo; revisar la terminal 1 |
 | `port is already allocated` (5432 u 8000) | Otro programa usa el puerto: cerrar otro PostgreSQL local o cambiar el puerto en `docker-compose.yml` |
 | "Clave incorrecta" | Usar el valor de `CLAVE_UNICA` del archivo `.env` |
+| Pide una "API key" o una clave | No hace falta ninguna API key. La única clave es la de **Modo operador** (`CLAVE_UNICA` en `.env`, por defecto `cambiar-esta-clave`) |
+| El mapa se ve gris, sin calles | El fondo es de OpenStreetMap y necesita internet; las colonias y reportes se ven igual. Para otro proveedor, definir `TEJAS_MAPA` |
 | El mapa no muestra colonias | Falta el paso 3 o el seed (⚙ → Cargar datos) |
 | Cambié `.env` y no se aplica | `docker compose down` y luego `docker compose up --build` |
 

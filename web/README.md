@@ -18,6 +18,9 @@ Abre http://localhost:8080.
 |---|---|---|
 | `API_URL` | `http://localhost:8000` | Dirección del backend |
 | `PUERTO_WEB` | `8080` | Puerto del panel |
+| `TEJAS_MAPA` | OpenStreetMap | Fondo del mapa; no requiere API key |
+
+**No se necesita ninguna API key.** La única clave que pide el panel es la de "Modo operador": el valor de `CLAVE_UNICA` en `.env` (por defecto `cambiar-esta-clave`). Sin ella el mapa se ve igual; solo se bloquean las acciones que modifican.
 
 Para tener datos: en el panel, **⚙ → Cargar datos (seed)**, que carga lo que haya en `data/`. Mientras `data/` esté vacía, puedes levantar el backend con `DATA_DIR=backend/tests/datos` para usar los datos ficticios de las pruebas.
 
