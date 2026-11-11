@@ -26,7 +26,7 @@ Cada quien trabaja en su carpeta para evitar conflictos. Los cambios a carpetas 
 
 | Fase | Tareas |
 |---|---|
-| 0 (h 0–2) | **Conseguir polígonos de colonias de Veracruz** (GeoJSON en `data/`), vulnerabilidad base (fuente real o rotulada como ejemplo), 30–50 reportes de prueba. Crear proyecto React + MapLibre/Leaflet con datos simulados |
+| 0 (h 0–2) | **Conseguir polígonos de colonias de Veracruz** (GeoJSON en `data/`), vulnerabilidad base (fuente real o rotulada como ejemplo), 30–50 reportes de prueba. Crear el proyecto web en Python con datos simulados |
 | 1 (h 2–8) | Mapa con reportes en vivo por WebSocket |
 | 2 (h 8–13) | Capa de colonias por riesgo con el **motivo**; formulario de reporte manual; calibrar pesos y umbrales junto con A |
 | 3 (h 13–18) | Bandeja de alertas propuestas: edición y aprobación con clave única; filtro por categoría |
@@ -36,7 +36,7 @@ Cada quien trabaja en su carpeta para evitar conflictos. Los cambios a carpetas 
 
 | Fase | Tareas |
 |---|---|
-| 0 (h 0–2) | Crear proyecto Expo (o Flutter) con datos simulados según el contrato |
+| 0 (h 0–2) | Crear el proyecto móvil en Python con datos simulados según el contrato |
 | 1 (h 2–8) | Reporte en 3 pasos (tipo, ubicación con pin ajustable, severidad, foto opcional), elegir colonia, mapa de reportes. En ratos libres: probar prompts de clasificación y borrador de alerta |
 | 2 (h 8–13) | Capa de colonias por riesgo. Escribir guías por tipo (inundación, encharcamiento, alcantarilla, fuga, tandeo) basadas en lineamientos oficiales de Protección Civil, como datos (JSON) |
 | 3 (h 13–18) | Registro del dispositivo, notificación push (**prueba antes de la h 15**), pantalla de alerta con guía, caché de la última guía. Entregar a A el módulo de borrador con LLM + respaldo por plantillas |
@@ -55,3 +55,28 @@ Cada quien trabaja en su carpeta para evitar conflictos. Los cambios a carpetas 
 2. Ramas por tarea con el prefijo de tu frente, por ejemplo `backend/reportes`, `web/mapa`, `movil/formulario`.
 3. Commits pequeños y `push` seguido.
 4. Integrar a `main` mediante pull request.
+
+## Estructura del repositorio
+
+Todo el proyecto se trabaja en **Python**. Las carpetas ya están creadas (vacías, con `.gitkeep`):
+
+```
+backend/                 # Persona A
+├── app/
+│   ├── reportes/        # POST/GET /reports, colonia y expiración
+│   ├── colonias/        # punto → colonia, GET /zones/risk
+│   ├── meteorologia/    # Ingesta de Open-Meteo
+│   ├── riesgo/          # Cálculo de riesgo (función pura)
+│   ├── alertas/         # Borrador, aprobación y envío
+│   ├── dispositivos/    # Registro y notificaciones push
+│   ├── tiempo_real/     # WebSocket hacia el panel
+│   ├── admin/           # simulate-storm, seed, reset
+│   └── ia/              # Persona C: prompts/ y plantillas/
+├── migraciones/
+└── tests/
+data/                    # Persona B: colonias, vulnerabilidad, reportes de prueba
+└── guias/               # Persona C: guías por tipo de problema (como datos)
+web/                     # Persona B: api/, componentes/, paginas/, static/
+movil/                   # Persona C: api/, pantallas/, componentes/, notificaciones/, cache/, assets/
+docs/                    # Plan, reparto y contrato de la API
+```
