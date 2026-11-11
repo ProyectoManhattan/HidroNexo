@@ -1,0 +1,1 @@
+Aviso para la colonia {colonia}: riesgo {nivel} de inundación (motivo principal: {motivo}). Revisa la guía de acción en la app y mantente atento a nuevos avisos. En emergencia llama al 911.

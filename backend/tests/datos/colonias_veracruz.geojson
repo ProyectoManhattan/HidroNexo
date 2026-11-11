@@ -1,0 +1,15 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"nombre": "Colonia Prueba Baja", "vulnerabilidad": 0.9, "vulnerabilidad_fuente": "ejemplo"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-96.14, 19.17], [-96.13, 19.17], [-96.13, 19.18], [-96.14, 19.18], [-96.14, 19.17]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"nombre": "Colonia Prueba Alta", "vulnerabilidad": 0.1, "vulnerabilidad_fuente": "ejemplo"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-96.13, 19.17], [-96.12, 19.17], [-96.12, 19.18], [-96.13, 19.18], [-96.13, 19.17]]]}
+    }
+  ]
+}

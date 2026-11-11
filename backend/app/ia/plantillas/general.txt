@@ -1,0 +1,1 @@
+Aviso para la colonia {colonia}: nivel de riesgo {nivel} (motivo principal: {motivo}). Consulta la guía de acción en la app. En emergencia llama al 911.
