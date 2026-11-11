@@ -1,0 +1,341 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+<rect id="fondo" x="0" y="0" width="1440" height="900" rx="0" fill="#F4F6F9"/>
+<g id="mapa">
+<rect id="tierra" x="0" y="100" width="1040" height="736" rx="0" fill="#EEF1EA"/>
+<path id="mar" d="M820 100 C 790 220, 860 300, 830 420 C 805 520, 880 600, 860 700 C 850 760, 900 810, 890 836 L 1040 836 L 1040 100 Z" fill="#CFE3F2"/>
+<text id="etiqueta-mar" x="965" y="470" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#7FA7C6" text-anchor="middle">Golfo de México</text>
+<path d="M0 300 C 250 280, 500 330, 820 290" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+<path d="M0 560 C 300 540, 520 600, 850 560" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+<path d="M260 100 C 280 300, 240 500, 300 836" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+<path d="M560 100 C 540 330, 600 560, 560 836" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+<g id="capa-colonias">
+<g id="colonia-Centro">
+<path d="M600 150 L 790 140 L 800 280 L 610 300 Z" fill="#E0A800" fill-opacity="0.28" stroke="#E0A800" stroke-width="2" stroke-linejoin="round"/>
+<text x="700" y="222" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Centro</text>
+<text letter-spacing="0.5" x="700" y="238" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#E0A800" text-anchor="middle">MEDIO</text>
+</g>
+<g id="colonia-Formando Hogar">
+<path d="M300 140 L 590 150 L 600 300 L 320 290 Z" fill="#F07C1E" fill-opacity="0.28" stroke="#F07C1E" stroke-width="4" stroke-linejoin="round"/>
+<text x="450" y="222" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Formando Hogar</text>
+<text letter-spacing="0.5" x="450" y="238" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#F07C1E" text-anchor="middle">ALTO</text>
+</g>
+<g id="colonia-Ricardo Flores Magón">
+<path d="M40 140 L 290 140 L 310 290 L 50 300 Z" fill="#2E9E5B" fill-opacity="0.28" stroke="#2E9E5B" stroke-width="2" stroke-linejoin="round"/>
+<text x="170" y="222" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Ricardo Flores Magón</text>
+<text letter-spacing="0.5" x="170" y="238" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#2E9E5B" text-anchor="middle">BAJO</text>
+</g>
+<g id="colonia-Las Brisas">
+<path d="M610 310 L 810 290 L 800 450 L 600 470 Z" fill="#D63B3B" fill-opacity="0.28" stroke="#D63B3B" stroke-width="2" stroke-linejoin="round"/>
+<text x="705" y="385" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Las Brisas</text>
+<text letter-spacing="0.5" x="705" y="401" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#D63B3B" text-anchor="middle">CRÍTICO</text>
+</g>
+<g id="colonia-Reforma">
+<path d="M320 300 L 600 310 L 590 470 L 330 450 Z" fill="#E0A800" fill-opacity="0.28" stroke="#E0A800" stroke-width="2" stroke-linejoin="round"/>
+<text x="460" y="390" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Reforma</text>
+<text letter-spacing="0.5" x="460" y="406" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#E0A800" text-anchor="middle">MEDIO</text>
+</g>
+<g id="colonia-Floresta">
+<path d="M50 310 L 310 300 L 320 460 L 60 470 Z" fill="#2E9E5B" fill-opacity="0.28" stroke="#2E9E5B" stroke-width="2" stroke-linejoin="round"/>
+<text x="185" y="390" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Floresta</text>
+<text letter-spacing="0.5" x="185" y="406" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#2E9E5B" text-anchor="middle">BAJO</text>
+</g>
+<g id="colonia-Virginia">
+<path d="M600 480 L 800 460 L 820 640 L 610 650 Z" fill="#F07C1E" fill-opacity="0.28" stroke="#F07C1E" stroke-width="2" stroke-linejoin="round"/>
+<text x="710" y="560" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Virginia</text>
+<text letter-spacing="0.5" x="710" y="576" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#F07C1E" text-anchor="middle">ALTO</text>
+</g>
+<g id="colonia-El Coyol">
+<path d="M330 460 L 590 480 L 600 660 L 340 640 Z" fill="#2E9E5B" fill-opacity="0.28" stroke="#2E9E5B" stroke-width="2" stroke-linejoin="round"/>
+<text x="465" y="565" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">El Coyol</text>
+<text letter-spacing="0.5" x="465" y="581" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#2E9E5B" text-anchor="middle">BAJO</text>
+</g>
+<g id="colonia-Dos Caminos">
+<path d="M60 480 L 320 470 L 330 650 L 70 660 Z" fill="#E0A800" fill-opacity="0.28" stroke="#E0A800" stroke-width="2" stroke-linejoin="round"/>
+<text x="195" y="570" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Dos Caminos</text>
+<text letter-spacing="0.5" x="195" y="586" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#E0A800" text-anchor="middle">MEDIO</text>
+</g>
+<g id="colonia-Río Medio">
+<path d="M70 670 L 330 660 L 340 810 L 80 815 Z" fill="#2E9E5B" fill-opacity="0.28" stroke="#2E9E5B" stroke-width="2" stroke-linejoin="round"/>
+<text x="205" y="740" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Río Medio</text>
+<text letter-spacing="0.5" x="205" y="756" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#2E9E5B" text-anchor="middle">BAJO</text>
+</g>
+<g id="colonia-Mocambo">
+<path d="M340 650 L 600 670 L 610 815 L 350 815 Z" fill="#2E9E5B" fill-opacity="0.28" stroke="#2E9E5B" stroke-width="2" stroke-linejoin="round"/>
+<text x="475" y="740" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="middle">Mocambo</text>
+<text letter-spacing="0.5" x="475" y="756" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#2E9E5B" text-anchor="middle">BAJO</text>
+</g>
+</g>
+<g id="capa-reportes">
+<g id="reporte-1-inundacion">
+<circle id="pulso-nuevo-reporte" cx="765" cy="340" r="23" fill="#1E5AA8"/>
+<circle cx="765" cy="340" r="23" fill="#FFFFFF" opacity="0.55"/>
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="765" cy="340" r="14" fill="#1E5AA8"/>
+<text x="765" y="344" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">I</text>
+</g>
+<g id="reporte-2-inundacion">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="740" cy="410" r="14" fill="#1E5AA8"/>
+<text x="740" y="414" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">I</text>
+</g>
+<g id="reporte-3-encharcamiento">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="660" cy="420" r="12" fill="#3A8DDE"/>
+<text x="660" y="424" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">E</text>
+</g>
+<g id="reporte-4-encharcamiento">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="440" cy="260" r="12" fill="#3A8DDE"/>
+<text x="440" y="264" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">E</text>
+</g>
+<g id="reporte-5-alcantarilla">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="500" cy="180" r="10" fill="#6B4FA0"/>
+<text x="500" y="184" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">A</text>
+</g>
+<g id="reporte-6-inundacion">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="690" cy="600" r="12" fill="#1E5AA8"/>
+<text x="690" y="604" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">I</text>
+</g>
+<g id="reporte-7-encharcamiento">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="740" cy="520" r="12" fill="#3A8DDE"/>
+<text x="740" y="524" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">E</text>
+</g>
+<g id="reporte-8-fuga">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="420" cy="420" r="12" fill="#0FA3A3"/>
+<text x="420" y="424" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">F</text>
+</g>
+<g id="reporte-9-sin_agua">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="150" cy="540" r="10" fill="#8A5A2B"/>
+<text x="150" y="544" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+</g>
+<g id="reporte-10-sin_agua">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="230" cy="600" r="12" fill="#8A5A2B"/>
+<text x="230" y="604" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+</g>
+<g id="reporte-11-fuga">
+<circle stroke="#FFFFFF" stroke-width="2.5" cx="655" cy="262" r="10" fill="#0FA3A3"/>
+<text x="655" y="266" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">F</text>
+</g>
+</g>
+<g id="zoom">
+<rect stroke="#DDE3EA" stroke-width="1" x="20" y="120" width="36" height="72" rx="8" fill="#FFFFFF"/>
+<text x="38" y="145" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="500" fill="#1B2430" text-anchor="middle">+</text>
+<line x1="26" y1="156" x2="50" y2="156" stroke="#DDE3EA"/>
+<text x="38" y="181" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="500" fill="#1B2430" text-anchor="middle">−</text>
+</g>
+<g id="detalle-colonia">
+<path d="M450 300 L 440 330 L 470 330 Z" fill="#FFFFFF"/>
+<rect stroke="#DDE3EA" stroke-width="1" x="330" y="330" width="300" height="214" rx="12" fill="#FFFFFF"/>
+<text x="346" y="358" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#1B2430" text-anchor="start">Formando Hogar</text>
+<g id="nivel">
+<rect x="544" y="342" width="70" height="24" rx="12.0" fill="#FFE9D6"/>
+<text x="579.0" y="358.32" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#F07C1E" text-anchor="middle">ALTO</text>
+</g>
+<text x="346" y="380" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Riesgo 0.62 · actualizado hace 1 min</text>
+<text x="346" y="408" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1B2430" text-anchor="start">¿Por qué?</text>
+<text x="346" y="437" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Lluvia</text>
+<rect x="450" y="428" width="120" height="10" rx="5" fill="#EEF1F5"/>
+<rect x="450" y="428" width="120.0" height="10" rx="5" fill="#1E5AA8"/>
+<text x="614" y="437" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="end">+0.40</text>
+<text x="346" y="467" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Reportes</text>
+<rect x="450" y="458" width="120" height="10" rx="5" fill="#EEF1F5"/>
+<rect x="450" y="458" width="54.0" height="10" rx="5" fill="#8FB3E0"/>
+<text x="614" y="467" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="end">+0.18</text>
+<text x="346" y="497" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Vulnerabilidad</text>
+<rect x="450" y="488" width="120" height="10" rx="5" fill="#EEF1F5"/>
+<rect x="450" y="488" width="24.0" height="10" rx="5" fill="#8FB3E0"/>
+<text x="614" y="497" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#1B2430" text-anchor="end">+0.04</text>
+<text x="346" y="526" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="400" fill="#5B6675" text-anchor="start">Vulnerabilidad: dato de ejemplo</text>
+</g>
+<g id="aviso-nuevo-reporte">
+<rect stroke="#DDE3EA" stroke-width="1" x="700" y="116" width="324" height="64" rx="10" fill="#FFFFFF"/>
+<rect x="700" y="116" width="5" height="64" rx="2" fill="#1E5AA8"/>
+<text x="720" y="142" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#1B2430" text-anchor="start">Nuevo reporte · Inundación</text>
+<text x="720" y="163" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Las Brisas · severidad alta · hace 5 s</text>
+</g>
+<g id="leyenda">
+<rect stroke="#DDE3EA" stroke-width="1" x="20" y="676" width="330" height="144" rx="10" fill="#FFFFFF"/>
+<text x="36" y="700" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1B2430" text-anchor="start">Riesgo por colonia</text>
+<rect opacity="0.8" x="36" y="712" width="16" height="16" rx="4" fill="#2E9E5B"/>
+<text x="58" y="725" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Bajo</text>
+<rect opacity="0.8" x="112" y="712" width="16" height="16" rx="4" fill="#E0A800"/>
+<text x="134" y="725" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Medio</text>
+<rect opacity="0.8" x="188" y="712" width="16" height="16" rx="4" fill="#F07C1E"/>
+<text x="210" y="725" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Alto</text>
+<rect opacity="0.8" x="264" y="712" width="16" height="16" rx="4" fill="#D63B3B"/>
+<text x="286" y="725" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Crítico</text>
+<text x="36" y="756" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#1B2430" text-anchor="start">Reportes (tamaño = severidad)</text>
+<circle cx="44" cy="776" r="8" fill="#1E5AA8"/>
+<text x="44" y="780" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">I</text>
+<text x="58" y="781" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Inundación</text>
+<circle cx="148" cy="776" r="8" fill="#3A8DDE"/>
+<text x="148" y="780" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">E</text>
+<text x="162" y="781" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Encharc.</text>
+<circle cx="252" cy="776" r="8" fill="#6B4FA0"/>
+<text x="252" y="780" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">A</text>
+<text x="266" y="781" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Alcantarilla</text>
+<circle cx="44" cy="802" r="8" fill="#0FA3A3"/>
+<text x="44" y="806" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">F</text>
+<text x="58" y="807" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Fuga</text>
+<circle cx="148" cy="802" r="8" fill="#8A5A2B"/>
+<text x="148" y="806" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">T</text>
+<text x="162" y="807" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Sin agua / tandeo</text>
+</g>
+<text id="nota-datos" x="1024" y="826" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#5B6675" text-anchor="end">Datos de ejemplo</text>
+</g>
+<g id="barra-superior">
+<rect x="0" y="0" width="1440" height="64" rx="0" fill="#FFFFFF"/>
+<line x1="0" y1="64" x2="1440" y2="64" stroke="#DDE3EA"/>
+<g id="logo">
+<circle cx="40" cy="32" r="18" fill="#E7F0FB"/>
+<path d="M40 22.0 C 47.0 31.0, 48.0 35.0, 48.0 37.0 A 8.0 8.0 0 0 1 32.0 37.0 C 32.0 35.0, 33.0 31.0, 40 22.0 Z" fill="#1E5AA8"/>
+</g>
+<text id="titulo" x="70" y="29" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#1B2430" text-anchor="start">Agua y Lluvia · Veracruz</text>
+<text id="subtitulo" x="70" y="48" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Panel de Protección Civil</text>
+<g id="estado-lluvia">
+<rect x="470" y="16" width="210" height="32" rx="16" fill="#F4F6F9"/>
+<path d="M492 25.3 C 496.9 31.6, 497.6 34.4, 497.6 35.8 A 5.6 5.6 0 0 1 486.4 35.8 C 486.4 34.4, 487.1 31.6, 492 25.3 Z" fill="#3A8DDE"/>
+<text x="508" y="37" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1B2430" text-anchor="start">Lluvia 3 h: 38 mm</text>
+<text x="640" y="37" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#F28C28" text-anchor="start">(sim.)</text>
+</g>
+<g id="estado-conexion">
+<rect x="692" y="16" width="100" height="32" rx="16" fill="#E6F6EC"/>
+<circle cx="712" cy="32" r="5" fill="#2E9E5B"/>
+<text x="724" y="37" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#2E9E5B" text-anchor="start">En vivo</text>
+</g>
+<g id="aviso-911">
+<rect stroke="#F2B8B8" stroke-width="1" x="1010" y="20" width="160" height="24" rx="12.0" fill="#FFFFFF"/>
+<text x="1090.0" y="36.32" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#D63B3B" text-anchor="middle">No sustituye al 911</text>
+</g>
+<g id="modo-operador">
+<rect x="1186" y="14" width="236" height="36" rx="8" fill="#E7F0FB"/>
+<text x="1206" y="37" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1E5AA8" text-anchor="start">Operador: Protección Civil</text>
+<circle cx="1404" cy="32" r="4" fill="#2E9E5B"/>
+</g>
+</g>
+<g id="banner-simulacion">
+<rect x="0" y="64" width="1440" height="36" rx="0" fill="#FFF1E0"/>
+<line x1="0" y1="100" x2="1440" y2="100" stroke="#F8D3A8"/>
+<rect x="16" y="72" width="104" height="20" rx="4" fill="#F28C28"/>
+<text letter-spacing="0.6" x="68" y="86" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">SIMULACIÓN</text>
+<text x="132" y="87" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#8A4B0F" text-anchor="start">Tormenta simulada activa. Los datos de lluvia no son reales.</text>
+<text id="terminar-simulacion" x="1424" y="87" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#8A4B0F" text-anchor="end">Terminar simulación</text>
+</g>
+<g id="panel-lateral">
+<rect x="1040" y="100" width="400" height="736" rx="0" fill="#FFFFFF"/>
+<line x1="1040" y1="100" x2="1040" y2="836" stroke="#DDE3EA"/>
+<g id="pestanas">
+<text x="1060" y="134" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#1E5AA8" text-anchor="start">Alertas</text>
+<g id="contador-Alertas">
+<rect x="1124.2" y="120" width="26" height="20" rx="10.0" fill="#D63B3B"/>
+<text x="1137.2" y="133.96" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" text-anchor="middle">2</text>
+</g>
+<rect x="1056" y="146" width="112" height="3" rx="1.5" fill="#1E5AA8"/>
+<text x="1184" y="134" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" fill="#5B6675" text-anchor="start">Reportes</text>
+<g id="contador-Reportes">
+<rect x="1256.8" y="120" width="30" height="20" rx="10.0" fill="#EEF1F5"/>
+<text x="1271.8" y="133.96" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#5B6675" text-anchor="middle">11</text>
+</g>
+<text x="1308" y="134" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" fill="#5B6675" text-anchor="start">Colonias</text>
+<line x1="1040" y1="149" x2="1440" y2="149" stroke="#DDE3EA"/>
+</g>
+<text x="1060" y="178" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#5B6675" text-anchor="start">Propuestas por la IA · pendientes de aprobar</text>
+<g id="alerta-las-brisas">
+<rect stroke="#DDE3EA" stroke-width="1" x="1056" y="192" width="368" height="246" rx="12" fill="#FFFFFF"/>
+<rect x="1056" y="192" width="6" height="246" rx="3" fill="#D63B3B"/>
+<text x="1076" y="222" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#1B2430" text-anchor="start">Las Brisas</text>
+<g id="nivel">
+<rect x="1324" y="206" width="84" height="24" rx="12.0" fill="#FBE1E1"/>
+<text x="1366.0" y="222.32" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#D63B3B" text-anchor="middle">CRÍTICO</text>
+</g>
+<text x="1076" y="244" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Motivo principal: lluvia · hace 2 min</text>
+<g id="etiqueta-Simulación">
+<rect x="1076" y="256" width="88" height="22" rx="11.0" fill="#FFF1E0"/>
+<text x="1120.0" y="270.96" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#8A4B0F" text-anchor="middle">Simulación</text>
+</g>
+<g id="etiqueta-Redactada por IA">
+<rect x="1170" y="256" width="129" height="22" rx="11.0" fill="#EFE9FA"/>
+<text x="1234.5" y="270.96" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#6B4FA0" text-anchor="middle">Redactada por IA</text>
+</g>
+<g id="texto-alerta">
+<rect stroke="#DDE3EA" stroke-width="1" x="1076" y="290" width="332" height="86" rx="8" fill="#F8FAFC"/>
+<text font-family="Inter, Arial, sans-serif" font-size="13" fill="#1B2430"><tspan x="1088" y="312">Aviso para Las Brisas: riesgo crítico de</tspan><tspan x="1088" y="331">inundación. Evita cruzar calles con</tspan><tspan x="1088" y="350">corriente y revisa la guía en la app.</tspan><tspan x="1088" y="369">En emergencia llama al 911.</tspan></text>
+</g>
+<g id="boton-editar">
+<rect stroke="#DDE3EA" stroke-width="1" x="1076" y="388" width="84" height="36" rx="8" fill="#FFFFFF"/>
+<text x="1118.0" y="411.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1B2430" text-anchor="middle">Editar</text>
+</g>
+<g id="boton-descartar">
+<rect stroke="#F2B8B8" stroke-width="1" x="1168" y="388" width="100" height="36" rx="8" fill="#FFFFFF"/>
+<text x="1218.0" y="411.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#D63B3B" text-anchor="middle">Descartar</text>
+</g>
+<g id="boton-aprobar">
+<rect x="1276" y="388" width="132" height="36" rx="8" fill="#1E5AA8"/>
+<text x="1342.0" y="411.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Aprobar y enviar</text>
+</g>
+</g>
+<g id="alerta-formando-hogar">
+<rect stroke="#DDE3EA" stroke-width="1" x="1056" y="452" width="368" height="246" rx="12" fill="#FFFFFF"/>
+<rect x="1056" y="452" width="6" height="246" rx="3" fill="#F07C1E"/>
+<text x="1076" y="482" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#1B2430" text-anchor="start">Formando Hogar</text>
+<g id="nivel">
+<rect x="1324" y="466" width="84" height="24" rx="12.0" fill="#FFE9D6"/>
+<text x="1366.0" y="482.32" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#F07C1E" text-anchor="middle">ALTO</text>
+</g>
+<text x="1076" y="504" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">Motivo principal: lluvia · hace 2 min</text>
+<g id="etiqueta-Simulación">
+<rect x="1076" y="516" width="88" height="22" rx="11.0" fill="#FFF1E0"/>
+<text x="1120.0" y="530.96" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#8A4B0F" text-anchor="middle">Simulación</text>
+</g>
+<g id="etiqueta-Plantilla">
+<rect x="1170" y="516" width="81" height="22" rx="11.0" fill="#EEF1F5"/>
+<text x="1210.5" y="530.96" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#5B6675" text-anchor="middle">Plantilla</text>
+</g>
+<g id="texto-alerta">
+<rect stroke="#DDE3EA" stroke-width="1" x="1076" y="550" width="332" height="86" rx="8" fill="#F8FAFC"/>
+<text font-family="Inter, Arial, sans-serif" font-size="13" fill="#1B2430"><tspan x="1088" y="572">Aviso para Formando Hogar: riesgo alto</tspan><tspan x="1088" y="591">de inundación (motivo principal: lluvia).</tspan><tspan x="1088" y="610">Revisa la guía de acción en la app.</tspan><tspan x="1088" y="629">En emergencia llama al 911.</tspan></text>
+</g>
+<g id="boton-editar">
+<rect stroke="#DDE3EA" stroke-width="1" x="1076" y="648" width="84" height="36" rx="8" fill="#FFFFFF"/>
+<text x="1118.0" y="671.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1B2430" text-anchor="middle">Editar</text>
+</g>
+<g id="boton-descartar">
+<rect stroke="#F2B8B8" stroke-width="1" x="1168" y="648" width="100" height="36" rx="8" fill="#FFFFFF"/>
+<text x="1218.0" y="671.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#D63B3B" text-anchor="middle">Descartar</text>
+</g>
+<g id="boton-aprobar">
+<rect x="1276" y="648" width="132" height="36" rx="8" fill="#1E5AA8"/>
+<text x="1342.0" y="671.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Aprobar y enviar</text>
+</g>
+</g>
+<g id="resumen-enviadas">
+<rect stroke="#DDE3EA" stroke-width="1" x="1056" y="716" width="368" height="100" rx="12" fill="#F8FAFC"/>
+<text x="1076" y="744" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" fill="#5B6675" text-anchor="start">Enviadas hoy</text>
+<text x="1076" y="778" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1B2430" text-anchor="start">3 alertas</text>
+<text x="1076" y="800" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400" fill="#5B6675" text-anchor="start">412 dispositivos notificados</text>
+<text x="1404" y="778" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1E5AA8" text-anchor="end">Ver historial →</text>
+</g>
+</g>
+<g id="barra-inferior">
+<rect x="0" y="836" width="1440" height="64" rx="0" fill="#FFFFFF"/>
+<line x1="0" y1="836" x2="1440" y2="836" stroke="#DDE3EA"/>
+<text x="20" y="873" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#5B6675" text-anchor="start">Mostrar:</text>
+<g id="filtro-categoria">
+<rect x="84" y="850" width="360" height="36" rx="10" fill="#F4F6F9"/>
+<rect stroke="#DDE3EA" stroke-width="1" x="88" y="854" width="70" height="28" rx="8" fill="#FFFFFF"/>
+<text x="123" y="873" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#1B2430" text-anchor="middle">Todo</text>
+<text x="220" y="873" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#5B6675" text-anchor="middle">Lluvia</text>
+<text x="350" y="873" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#5B6675" text-anchor="middle">Agua (fugas y tandeo)</text>
+</g>
+<text x="464" y="873" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="400" fill="#5B6675" text-anchor="start">11 reportes activos · 4 colonias en alto o crítico</text>
+<g id="boton-reporte-manual">
+<rect stroke="#DDE3EA" stroke-width="1" x="1000" y="850" width="160" height="36" rx="8" fill="#FFFFFF"/>
+<text x="1080.0" y="873.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1B2430" text-anchor="middle">+ Reporte manual</text>
+</g>
+<g id="boton-simular">
+<rect x="1172" y="850" width="200" height="36" rx="8" fill="#F28C28"/>
+<text x="1272.0" y="873.0" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Simular tormenta: activa</text>
+</g>
+<g id="boton-ajustes">
+<rect stroke="#DDE3EA" stroke-width="1" x="1384" y="850" width="36" height="36" rx="8" fill="#FFFFFF"/>
+<circle stroke="#5B6675" stroke-width="2" cx="1402" cy="868" r="7" fill="#FFFFFF"/>
+<circle cx="1402" cy="868" r="2.5" fill="#5B6675"/>
+</g>
+</g>
+</svg>
