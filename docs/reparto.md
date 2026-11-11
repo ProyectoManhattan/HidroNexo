@@ -36,7 +36,7 @@ Cada quien trabaja en su carpeta para evitar conflictos. Los cambios a carpetas 
 
 | Fase | Tareas |
 |---|---|
-| 0 (h 0–2) | Crear el proyecto móvil en Python con datos simulados según el contrato |
+| 0 (h 0–2) | Crear el proyecto móvil en **Flutter** (`flutter create` dentro de `movil/`) con datos simulados según el contrato |
 | 1 (h 2–8) | Reporte en 3 pasos (tipo, ubicación con pin ajustable, severidad, foto opcional), elegir colonia, mapa de reportes. En ratos libres: probar prompts de clasificación y borrador de alerta |
 | 2 (h 8–13) | Capa de colonias por riesgo. Escribir guías por tipo (inundación, encharcamiento, alcantarilla, fuga, tandeo) basadas en lineamientos oficiales de Protección Civil, como datos (JSON) |
 | 3 (h 13–18) | Registro del dispositivo, notificación push (**prueba antes de la h 15**), pantalla de alerta con guía, caché de la última guía. Entregar a A el módulo de borrador con LLM + respaldo por plantillas |
@@ -58,7 +58,7 @@ Cada quien trabaja en su carpeta para evitar conflictos. Los cambios a carpetas 
 
 ## Estructura del repositorio
 
-Todo el proyecto se trabaja en **Python**. Las carpetas ya están creadas (vacías, con `.gitkeep`):
+Backend y web se trabajan en **Python**; la app móvil, en **Flutter**. Las carpetas ya están creadas (vacías, con `.gitkeep`):
 
 ```
 backend/                 # Persona A
@@ -77,6 +77,6 @@ backend/                 # Persona A
 data/                    # Persona B: colonias, vulnerabilidad, reportes de prueba
 └── guias/               # Persona C: guías por tipo de problema (como datos)
 web/                     # Persona B: api/, componentes/, paginas/, static/
-movil/                   # Persona C: api/, pantallas/, componentes/, notificaciones/, cache/, assets/
+movil/                   # Persona C: proyecto Flutter (lo genera `flutter create`)
 docs/                    # Plan, reparto y contrato de la API
 ```
