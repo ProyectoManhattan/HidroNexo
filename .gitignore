@@ -1,4 +1,11 @@
 # Carpeta de configuracion de VSCode
 /.vscode
-# Variables locales
+
+# Variables de entorno (usar .env.example como base)
 .env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
