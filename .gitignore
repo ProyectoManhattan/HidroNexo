@@ -1,2 +1,4 @@
 # Carpeta de configuracion de VSCode
 /.vscode
+# Variables locales
+.env
