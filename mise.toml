@@ -1,0 +1,17 @@
+[tools]
+python = "3.12"
+
+[env]
+_.file = ".env"
+
+[tasks.db-up]
+description = "Levanta PostgreSQL + PostGIS en Docker"
+run = "docker compose up -d db"
+
+[tasks.db-down]
+description = "Detiene la base de datos"
+run = "docker compose down"
+
+[tasks.db-reset]
+description = "Borra el volumen y recrea la base de datos"
+run = "docker compose down -v && docker compose up -d db"

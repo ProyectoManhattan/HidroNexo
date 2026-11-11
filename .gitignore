@@ -1,5 +1,6 @@
 # Carpeta de configuracion de VSCode
 /.vscode
+
 # Variables de entorno (usar .env.example como base)
 .env
 
