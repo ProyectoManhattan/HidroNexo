@@ -13,6 +13,7 @@ docker compose up --build
 
 - Salud: http://localhost:8000/health
 - Documentación interactiva (OpenAPI): http://localhost:8000/docs
+- Contrato con JSON de ejemplo: [docs/api.md](../docs/api.md)
 
 Las migraciones (`alembic upgrade head`) corren solas al arrancar el contenedor.
 
