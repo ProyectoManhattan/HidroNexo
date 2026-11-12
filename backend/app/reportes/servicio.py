@@ -30,7 +30,7 @@ def crear(db: Session, datos: ReporteEntrada, origen: str = "app", horas_vigenci
     db.add(reporte)
     db.commit()
     db.refresh(reporte)
-    eventos.publicar("report.created", ReporteSalida.model_validate(reporte).model_dump(mode="json"))
+    eventos.publicar("report.created", con_prioridad(reporte).model_dump(mode="json"))
     # TODO: límite de solicitudes por dispositivo y confirmaciones de otros dispositivos
     return reporte
 
@@ -56,6 +56,21 @@ def listar(
     return ordenar_por_prioridad(db.scalars(consulta.limit(1000)))
 
 
+def _lluvia_de_reporte(reporte: Reporte) -> dict[str, float]:
+    if reporte.colonia_id is not None:
+        return meteo.lluvia_de(reporte.colonia_id)
+    return meteo.lluvia_actual()
+
+
+def con_prioridad(reporte: Reporte, lluvia: dict[str, float] | None = None) -> ReporteSalida:
+    """ReporteSalida con `prioridad` = severidad ajustada por la lluvia local de su colonia."""
+    item = ReporteSalida.model_validate(reporte)
+    item.prioridad = round(
+        severidad_efectiva(reporte.severidad, reporte.categoria, lluvia or _lluvia_de_reporte(reporte)), 4
+    )
+    return item
+
+
 def ordenar_por_prioridad(reportes) -> list[ReporteSalida]:
     """Calcula `prioridad` con la lluvia de la colonia de cada reporte y ordena
     por prioridad desc, luego creado_en desc."""
@@ -63,12 +78,8 @@ def ordenar_por_prioridad(reportes) -> list[ReporteSalida]:
     salida = []
     for r in reportes:
         if r.colonia_id not in lluvias:
-            lluvias[r.colonia_id] = (
-                meteo.lluvia_de(r.colonia_id) if r.colonia_id is not None else meteo.lluvia_actual()
-            )
-        item = ReporteSalida.model_validate(r)
-        item.prioridad = round(severidad_efectiva(r.severidad, r.categoria, lluvias[r.colonia_id]), 4)
-        salida.append(item)
+            lluvias[r.colonia_id] = _lluvia_de_reporte(r)
+        salida.append(con_prioridad(r, lluvias[r.colonia_id]))
     salida.sort(key=lambda x: (x.prioridad, x.creado_en), reverse=True)
     return salida
 
@@ -76,5 +87,5 @@ def ordenar_por_prioridad(reportes) -> list[ReporteSalida]:
 def resolver(db: Session, reporte: Reporte) -> Reporte:
     reporte.estado = "resuelto"
     db.commit()
-    eventos.publicar("report.updated", ReporteSalida.model_validate(reporte).model_dump(mode="json"))
+    eventos.publicar("report.updated", con_prioridad(reporte).model_dump(mode="json"))
     return reporte

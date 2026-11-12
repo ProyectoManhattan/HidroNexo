@@ -18,6 +18,8 @@ export interface Reporte {
   estado: 'activo' | 'resuelto'
   creado_en: string
   expira_en: string
+  /** Severidad ajustada por la lluvia local; null si el backend no la calculó (p. ej. respuesta de POST) */
+  prioridad?: number | null
 }
 
 export interface ReporteNuevo {

@@ -53,3 +53,23 @@ def test_orden_por_prioridad_y_luego_fecha(monkeypatch):
 def test_prioridad_es_aditiva_y_opcional():
     r = _R(1, "fuga", 1, 0)
     assert ReporteSalida.model_validate(r).prioridad is None
+
+
+def test_eventos_de_reporte_incluyen_prioridad(cliente, monkeypatch):
+    """report.created y report.updated llevan `prioridad` (el panel ordena con ella)."""
+    from app import eventos
+    from app.meteorologia import estado
+
+    recibidos = []
+    eventos.suscribir("report.created", recibidos.append)
+    eventos.suscribir("report.updated", recibidos.append)
+    estado.simular({"mm_1h": 20.0})
+    try:
+        r = cliente.post("/reports", json={"categoria": "inundacion", "severidad": 2, "lat": 19.1738, "lon": -96.1342})
+        assert r.status_code == 201, r.text
+        cliente.post(f"/reports/{r.json()['id']}/resolve", headers={"X-Clave": "clave-de-prueba"})
+    finally:
+        estado.simular(None)
+    assert len(recibidos) >= 2
+    assert all(e["prioridad"] is not None for e in recibidos[-2:])
+    assert recibidos[-2]["prioridad"] == pytest.approx(3.0)  # 2 × (1 + 0.5 × 1.0)

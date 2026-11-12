@@ -98,7 +98,7 @@ Listar reportes. Parámetros opcionales en la URL:
 | `activos` | `true` | Por defecto `true`; con `false` incluye resueltos y expirados |
 | `bbox` | `-96.14,19.17,-96.13,19.18` | Solo lo que cae en el rectángulo: lon mín, lat mín, lon máx, lat máx |
 
-Respuesta: lista de reportes, ordenada por `prioridad` descendente y, a igualdad, por `creado_en` descendente (más reciente primero). Cada reporte incluye el campo adicional `prioridad` (número): la severidad ajustada por la lluvia local de su colonia. Inundación, encharcamiento y alcantarilla tapada se amplifican hasta x1.5 según la lluvia; fuga y falta de agua conservan su severidad (x1.0). `prioridad` solo viene en este endpoint; en `POST` y en los eventos `report.*` es `null`.
+Respuesta: lista de reportes, ordenada por `prioridad` descendente y, a igualdad, por `creado_en` descendente (más reciente primero). Cada reporte incluye el campo adicional `prioridad` (número): la severidad ajustada por la lluvia local de su colonia. Inundación, encharcamiento y alcantarilla tapada se amplifican hasta x1.5 según la lluvia; fuga y falta de agua conservan su severidad (x1.0). `prioridad` también viene en los eventos `report.created` y `report.updated`; en la respuesta de `POST /reports` es `null`.
 
 ### `POST /reports/{id}/resolve` 🔒
 

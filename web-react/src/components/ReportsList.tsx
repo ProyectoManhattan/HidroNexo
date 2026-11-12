@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { resolverReporte } from '../api/client'
 import { SEVERIDADES, categoriaInfo, hace } from '../constants'
 import { comoOperador, seleccionarColonia, useStore } from '../store'
+import type { Reporte } from '../types'
 import { Badge, ErrorBox, Vacio, useAccion } from './sidebar/ui'
 
 export default function ReportsList() {
@@ -14,7 +15,11 @@ export default function ReportsList() {
   const visibles = useMemo(() => {
     const lluvia = ['inundacion', 'encharcamiento', 'alcantarilla']
     const lista = (reportes ?? []).filter((r) => filtro === 'todo' || (filtro === 'lluvia') === lluvia.includes(r.categoria))
-    return [...lista].sort((a, b) => new Date(b.creado_en).getTime() - new Date(a.creado_en).getTime())
+    // Más prioritarios primero (severidad ajustada por lluvia local); a igualdad, el más reciente
+    const prioridad = (r: Reporte) => r.prioridad ?? r.severidad
+    return [...lista].sort(
+      (a, b) => prioridad(b) - prioridad(a) || new Date(b.creado_en).getTime() - new Date(a.creado_en).getTime(),
+    )
   }, [reportes, filtro])
 
   const nombres = useMemo(() => {
