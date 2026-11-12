@@ -59,8 +59,8 @@ export default function App() {
         </div>
       )}
       <OfficialAlertsBanner />
-      <div className="relative flex min-h-0 flex-1 gap-3 p-3 max-md:p-0">
-        <main id="mapa-principal" className="relative min-w-0 flex-1 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-slate-200 shadow-sm max-md:rounded-none max-md:border-0">
+      <div className="relative flex min-h-0 flex-1 gap-4 p-4 max-md:p-0 max-md:pt-3">
+        <main id="mapa-principal" className="relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-[#d5e1f4] bg-white shadow-[0_8px_28px_rgb(30_64_175/.09)] max-md:rounded-none max-md:border-x-0">
           <MapView />
           {cargandoInicial && (
             <div className="absolute inset-0 z-30 grid place-items-center bg-slate-100/75 backdrop-blur-[2px]" role="status" aria-live="polite">
@@ -80,7 +80,14 @@ export default function App() {
           </button>
         </main>
 
-        <aside className="surface hidden w-[25rem] shrink-0 flex-col overflow-hidden md:flex" aria-label="Panel de información">
+        <aside className="hidden w-[29%] min-w-[24rem] max-w-[31rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-[#d5e1f4] bg-white shadow-[0_8px_28px_rgb(30_64_175/.09)] md:flex" aria-label="Panel de información">
+          <div className="flex min-h-14 items-center gap-3 border-b border-[#e0e8f5] px-4 text-[#0b2b70]">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#eef3ff] text-[#0d5ac7]" aria-hidden>
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>
+            </span>
+            <h2 className="text-lg font-black">Alertas</h2>
+            <span className="ml-auto text-sm font-bold text-[#0d5ac7]">Información vigente</span>
+          </div>
           {tabs}
           <div className="min-h-0 flex-1 overflow-y-auto" role="tabpanel"><Activa /></div>
         </aside>

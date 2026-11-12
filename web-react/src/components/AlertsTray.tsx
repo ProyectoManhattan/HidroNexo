@@ -24,9 +24,13 @@ export default function AlertsTray() {
   const vigentes = useMemo(() => [...(activas ?? [])].sort(masNuevo), [activas])
   return (
     <div className="p-4">
-      <div className="mb-4">
+      <div className="mb-4 md:hidden">
         <h2 className="text-base font-extrabold text-slate-900">Alertas vigentes</h2>
         <p className="mt-1 text-sm leading-relaxed text-slate-600">Mensajes aprobados por Protección Civil. Los avisos de otras autoridades aparecen en la franja superior.</p>
+      </div>
+      <div className="mb-5 flex items-center gap-3 rounded-xl bg-[#eef3ff] px-4 py-3 text-sm font-semibold text-[#17499b]">
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 border-[#0d5ac7] text-base font-black" aria-hidden>i</span>
+        Los boletines oficiales se muestran en la franja superior.
       </div>
       {vigentes.length === 0 ? (
         <Vacio icono="✓" texto="No hay alertas internas vigentes" detalle="Esto no garantiza ausencia de riesgo. Consulta el mapa y las fuentes oficiales." />
@@ -47,8 +51,9 @@ export default function AlertsTray() {
           ))}
         </ul>
       )}
-      <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
-        <b className="text-slate-800">Modo consulta pública.</b> La revisión, aprobación y publicación requieren una sesión administrativa segura que esta WebApp pública no expone.
+      <div className="mt-5 flex items-start gap-3 rounded-xl bg-[#eef3ff] p-4 text-sm leading-relaxed text-[#17326b]">
+        <span className="text-xl" aria-hidden>◎</span>
+        <span><b>Modo consulta pública.</b> La revisión, aprobación y publicación requieren una sesión administrativa segura.</span>
       </div>
     </div>
   )

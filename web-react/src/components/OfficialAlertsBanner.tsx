@@ -8,18 +8,18 @@ export default function OfficialAlertsBanner() {
   if (!avisos || avisos.alertas.length === 0) return null
   const principal = avisos.alertas[0]
   return (
-    <section className="z-20 border-b border-slate-200 bg-white text-slate-900" aria-label="Avisos hidrometeorológicos oficiales">
-      <button type="button" onClick={() => setAbierto((v) => !v)} className="flex min-h-14 w-full items-center gap-3 border-l-4 border-cyan-700 px-4 py-2.5 text-left hover:bg-slate-50 md:px-5" aria-expanded={abierto}>
-        <span className="shrink-0 rounded-md bg-[#0d536a] px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-white">Boletín oficial</span>
+    <section className="z-20 mx-4 mt-3 overflow-hidden rounded-2xl border border-red-200 bg-red-50 text-red-950 shadow-sm" aria-label="Avisos hidrometeorológicos oficiales">
+      <button type="button" onClick={() => setAbierto((v) => !v)} className="flex min-h-16 w-full items-center gap-4 px-5 py-2.5 text-left hover:bg-red-100/60" aria-expanded={abierto}>
+        <svg viewBox="0 0 32 32" className="h-9 w-9 shrink-0 text-red-600" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden><path d="M16 3 29 27H3L16 3Z"/><path d="M16 11v8m0 4v.1" strokeLinecap="round"/></svg>
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-base font-extrabold">{principal.titulo || 'Aviso hidrometeorológico vigente'}</span>
-          <span className="hidden text-sm text-slate-600 sm:block">{principal.institucion || avisos.fuente} · actualizado {hace(avisos.actualizado_en)}</span>
+          <span className="block truncate text-base font-extrabold text-red-900">{principal.titulo || 'Boletín de alerta hidrometeorológica general'}</span>
+          <span className="block text-sm font-medium text-[#17326b]">{principal.institucion || avisos.fuente} · actualizado {hace(avisos.actualizado_en)}</span>
         </span>
-        <span className="hidden text-sm font-semibold text-slate-600 lg:inline">{principal.fenomenos.join(' · ')}</span>
-        <span className="shrink-0 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-bold text-slate-700">{avisos.alertas.length} vigente{avisos.alertas.length === 1 ? '' : 's'} <span className="ml-1" aria-hidden>{abierto ? '−' : '+'}</span></span>
+        <span className="hidden text-sm font-semibold text-red-800 lg:inline">{principal.fenomenos.join(' · ')}</span>
+        <span className="shrink-0 rounded-full border border-red-300 bg-white/50 px-5 py-2 text-sm font-extrabold text-red-700">{abierto ? 'Cerrar' : 'Ver más'} <span className="ml-1" aria-hidden>{abierto ? '↑' : '→'}</span></span>
       </button>
       {abierto && (
-        <div className="grid max-h-[48vh] gap-4 overflow-y-auto border-t border-slate-200 bg-slate-50 px-4 py-4 md:grid-cols-2 md:px-5">
+        <div className="grid max-h-[48vh] gap-4 overflow-y-auto border-t border-red-200 bg-white px-4 py-4 md:grid-cols-2 md:px-5">
           {avisos.alertas.map((a) => (
             <article key={a.id} className="rounded-xl border border-slate-200 bg-white p-4 text-[15px] shadow-sm">
               <div className="flex items-start justify-between gap-3">

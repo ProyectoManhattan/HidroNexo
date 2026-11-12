@@ -399,45 +399,38 @@ export default function MapView() {
   }, [capa, listo])
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
-      <div ref={cont} style={{ position: 'absolute', inset: 0 }} />
-      <section className="control-group absolute left-3 top-3 z-10 w-[min(46rem,calc(100%-5rem))] overflow-hidden max-sm:left-2 max-sm:right-2 max-sm:w-auto" aria-label="Controles de visualización del mapa">
-        <div className="flex min-h-16 items-center gap-3 px-3 py-2 max-sm:flex-wrap max-sm:gap-2">
-          <div className="mr-1 shrink-0 max-sm:w-full">
-            <div className="text-[12px] font-extrabold uppercase tracking-[.09em] text-slate-500">Lectura territorial</div>
-            <div className="text-[13px] text-slate-500">Selecciona la información del mapa</div>
-          </div>
-          <div className="flex flex-1 rounded-lg bg-slate-100 p-1" role="group" aria-label="Capa del mapa">
-            <button type="button" onClick={() => setCapa('riesgo')} aria-pressed={capa === 'riesgo'} className={`min-h-10 flex-1 rounded-md px-3 text-sm font-bold ${capa === 'riesgo' ? 'bg-[var(--color-action-primary)] text-white shadow-sm' : 'text-slate-600 hover:bg-white'}`}>
-              Riesgo en vivo
-            </button>
-            <button type="button" onClick={() => setCapa('territorio')} aria-pressed={capa === 'territorio'} className={`min-h-10 flex-1 rounded-md px-3 text-sm font-bold ${capa === 'territorio' ? 'bg-[var(--color-action-primary)] text-white shadow-sm' : 'text-slate-600 hover:bg-white'}`}>
-              Susceptibilidad territorial
-            </button>
-          </div>
-          <button type="button" onClick={() => setModo3d((v) => !v)} aria-pressed={modo3d} className="flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-bold text-slate-700 hover:border-slate-400" title={modo3d ? 'Cambiar a vista operativa plana 2D' : 'Cambiar a perspectiva 3D con volumen'}>
-            <span className={`h-2 w-2 rounded-full ${modo3d ? 'bg-[var(--color-action-primary)]' : 'bg-slate-400'}`} aria-hidden />
-            {modo3d ? 'Vista 3D' : 'Vista 2D'}
+    <div className="flex h-full w-full flex-col overflow-hidden">
+      <div className="flex min-h-14 items-center gap-3 border-b border-[#dce6f5] bg-white px-4 text-[#0b2b70]">
+        <svg viewBox="0 0 24 24" className="h-7 w-7 text-[#0d5ac7]" fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/></svg>
+        <h2 className="text-lg font-black">Información del territorio</h2>
+        <span className="ml-auto hidden text-sm font-semibold text-slate-500 lg:block">{capa === 'riesgo' ? 'Cálculo operativo actualizado' : 'Índice físico preliminar · no es probabilidad'}</span>
+      </div>
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        <div ref={cont} style={{ position: 'absolute', inset: 0 }} />
+        <div className="absolute left-4 top-4 z-10 flex gap-2 max-sm:left-2 max-sm:right-2" role="group" aria-label="Capa del mapa">
+          <button type="button" onClick={() => setCapa('riesgo')} aria-pressed={capa === 'riesgo'} className={`flex min-h-12 items-center gap-2 rounded-2xl border px-5 text-sm font-extrabold shadow-md ${capa === 'riesgo' ? 'border-[#0d5ac7] bg-[#0d5ac7] text-white' : 'border-[#d5e1f4] bg-white/95 text-[#0b2b70]'}`}>
+            <span aria-hidden>△</span> Riesgo en vivo
+          </button>
+          <button type="button" onClick={() => setCapa('territorio')} aria-pressed={capa === 'territorio'} className={`flex min-h-12 items-center gap-2 rounded-2xl border px-5 text-sm font-extrabold shadow-md ${capa === 'territorio' ? 'border-[#0d5ac7] bg-[#0d5ac7] text-white' : 'border-[#d5e1f4] bg-white/95 text-[#0b2b70]'}`}>
+            <span aria-hidden>▱</span> Susceptibilidad territorial
           </button>
         </div>
-        <div className="flex min-h-9 items-center border-t border-slate-200 bg-slate-50 px-3 py-1.5 text-[13px] font-medium text-slate-600">
-          {capa === 'riesgo'
-            ? 'Riesgo calculado con lluvia, pronóstico, reportes y vulnerabilidad territorial.'
-            : 'Índice físico preliminar basado en topografía y cauces; no es probabilidad de inundación.'}
-        </div>
-      </section>
-      {capa === 'riesgo' ? (
-        <Legend />
-      ) : (
-        <div className="control-group absolute bottom-3 left-3 z-10 p-3 text-sm max-sm:bottom-20 max-sm:left-2">
-          <div className="mb-1 font-semibold text-slate-700">Susceptibilidad relativa</div>
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-8 rounded" style={{ background: 'linear-gradient(90deg,#2E8B57,#E9C46A,#F28C28,#C62828)' }} />
-            <span className="text-slate-500">Baja</span><span>→</span><span className="text-slate-500">Elevada</span>
+        <button type="button" onClick={() => setModo3d((v) => !v)} aria-pressed={modo3d} className="absolute right-16 top-4 z-10 flex min-h-12 items-center gap-2 rounded-2xl border border-[#d5e1f4] bg-white/95 px-4 text-sm font-extrabold text-[#0b2b70] shadow-md hover:bg-white max-sm:right-2 max-sm:top-20" title={modo3d ? 'Cambiar a vista operativa plana 2D' : 'Cambiar a perspectiva 3D con volumen'}>
+          <span aria-hidden>▰</span> {modo3d ? 'Vista 3D' : 'Vista 2D'}
+        </button>
+        {capa === 'riesgo' ? (
+          <Legend />
+        ) : (
+          <div className="control-group absolute bottom-3 left-3 z-10 p-3 text-sm max-sm:bottom-20 max-sm:left-2">
+            <div className="mb-1 font-semibold text-slate-700">Susceptibilidad relativa</div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-8 rounded" style={{ background: 'linear-gradient(90deg,#2E8B57,#E9C46A,#F28C28,#C62828)' }} />
+              <span className="text-slate-500">Baja</span><span>→</span><span className="text-slate-500">Elevada</span>
+            </div>
+            <div className="mt-1 text-[13px] font-semibold text-slate-700">Índice preliminar, no probabilidad</div>
           </div>
-          <div className="mt-1 text-[13px] font-semibold text-slate-700">Índice preliminar, no probabilidad</div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
