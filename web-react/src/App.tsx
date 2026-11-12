@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import AlertaManualDialog from './components/AlertaManualDialog'
 import AlertsTray from './components/AlertsTray'
 import BottomBar from './components/BottomBar'
 import ColoniasRanking from './components/ColoniasRanking'
@@ -6,13 +7,27 @@ import MapView from './components/MapView'
 import OfficialAlertsBanner from './components/OfficialAlertsBanner'
 import ReportsList from './components/ReportsList'
 import TopBar from './components/TopBar'
-import { iniciar, useStore } from './store'
+import { abrirDialogoAlertaManual, iniciar, useStore } from './store'
 
 const TABS = [
   { id: 'alertas', texto: 'Alertas', Vista: AlertsTray },
   { id: 'reportes', texto: 'Reportes', Vista: ReportsList },
   { id: 'colonias', texto: 'Zonas postales', Vista: ColoniasRanking },
 ] as const
+
+function BotonAlertaManual({ className = '' }: { className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={() => abrirDialogoAlertaManual(true)}
+      className={`inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg bg-[var(--color-danger)] px-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-red-800 ${className}`}
+      title="Redactar y enviar una alerta a las zonas postales que elijas"
+    >
+      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>
+      Enviar alerta
+    </button>
+  )
+}
 
 export default function App() {
   const apiOk = useStore((s) => s.apiOk)
@@ -82,12 +97,15 @@ export default function App() {
         </main>
 
         <aside className="information-panel hidden w-[26%] min-w-[24rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-[#d5e1f4] bg-white shadow-[0_8px_28px_rgb(30_64_175/.09)] md:flex" aria-label="Panel de información">
-          <div className="flex min-h-14 items-center gap-3 border-b border-[#e0e8f5] px-4 text-[#0b2b70]">
+          <div className="flex min-h-14 items-center gap-2.5 border-b border-[#e0e8f5] px-3 text-[#0b2b70]">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-[#eef3ff] text-[#0d5ac7]" aria-hidden>
               <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>
             </span>
-            <h2 className="text-xl font-black">Alertas</h2>
-            <span className="ml-auto text-base font-bold text-[#0d5ac7]">Información vigente</span>
+            <div className="min-w-0 leading-tight">
+              <h2 className="text-xl font-black">Alertas</h2>
+              <span className="block whitespace-nowrap text-sm font-bold text-[#0d5ac7]">Información vigente</span>
+            </div>
+            <BotonAlertaManual className="ml-auto" />
           </div>
           {tabs}
           <div className="min-h-0 flex-1 overflow-y-auto" role="tabpanel"><Activa /></div>
@@ -100,7 +118,8 @@ export default function App() {
               aria-label="Panel de información"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex min-h-11 items-center justify-center border-b border-slate-200">
+              <div className="relative flex min-h-14 items-center justify-center border-b border-slate-200">
+                <BotonAlertaManual className="absolute left-3" />
                 <span className="h-1 w-10 rounded-full bg-slate-300" aria-hidden />
                 <button type="button" onClick={() => setPanelMovil(false)} className="absolute right-3 min-h-11 px-3 text-sm font-semibold text-slate-600" aria-label="Cerrar panel">Cerrar</button>
               </div>
@@ -111,6 +130,7 @@ export default function App() {
         )}
       </div>
       <BottomBar />
+      <AlertaManualDialog />
     </div>
   )
 }
