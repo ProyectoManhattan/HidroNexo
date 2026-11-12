@@ -1,7 +1,6 @@
 import { API_URL, CLAVE } from '../config'
 import type {
-  Alerta, AlertaActiva, AlertaManualNueva, AvisosOficiales, Categoria, Categorias, Clima, Colonia, Dispositivo, Guia, Guias, Reporte,
-  ReporteNuevo, ZonasGeoJSON,
+  Alerta, AlertaActiva, AlertaManualNueva, AvisosOficiales, Categoria, Clima, Colonia, Reporte, ZonasGeoJSON,
 } from '../types'
 
 export class ApiError extends Error {
@@ -50,8 +49,6 @@ function qs(p: Record<string, string | number | boolean | undefined>): string {
 }
 
 // Reportes
-export const getCategorias = () => request<Categorias>('GET', '/reports/categories')
-export const crearReporte = (r: ReporteNuevo) => request<Reporte>('POST', '/reports', { body: r })
 export const getReportes = (f: { categoria?: Categoria; colonia_id?: number; activos?: boolean; bbox?: string } = {}) =>
   request<Reporte[]>('GET', '/reports' + qs(f))
 export const resolverReporte = (id: number) => request<Reporte>('POST', `/reports/${id}/resolve`, op)
@@ -65,31 +62,6 @@ export const getAlertas = (estado: 'propuesta' | 'aprobada' | 'descartada' | '' 
   request<Alerta[]>('GET', '/alerts' + qs({ estado }))
 export const getAlertasActivas = (colonia_id?: number) => request<AlertaActiva[]>('GET', '/alerts/active' + qs({ colonia_id }))
 export const crearAlertaManual = (b: AlertaManualNueva) => request<Alerta[]>('POST', '/alerts', { body: b, ...op })
-export const editarAlerta = (id: number, texto: string) => request<Alerta>('PATCH', `/alerts/${id}`, { body: { texto }, ...op })
-export const aprobarAlerta = (id: number) => request<Alerta>('POST', `/alerts/${id}/approve`, op)
-export const descartarAlerta = (id: number) => request<Alerta>('POST', `/alerts/${id}/discard`, op)
-
-// Guias
-export const getGuias = () => request<Guias>('GET', '/guides')
-export const getGuia = (tipo: string) => request<Guia>('GET', `/guides/${tipo}`)
-
-// Dispositivos
-export const registrarDispositivo = (d: { token: string; colonia_id: number; plataforma: 'android' | 'ios' | 'web' }) =>
-  request<Dispositivo>('POST', '/devices', { body: d })
-
-// Admin y demo
-export const adminSeed = () => request<{ colonias: number; reportes: number }>('POST', '/admin/seed', op)
-export const adminReset = () => request<{ ok: boolean }>('POST', '/admin/reset', op)
-export interface OpcionesTormenta {
-  intensidad?: number
-  /** Probabilidad (%) del pronóstico simulado */
-  probabilidad?: number
-  /** true = tormenta que viene: todavía no llueve, solo hay pronóstico */
-  solo_pronostico?: boolean
-}
-export const simularTormenta = (o: OpcionesTormenta = {}) =>
-  request<Clima>('POST', '/admin/simulate-storm', { body: { intensidad: 1.0, ...o }, ...op })
-export const terminarTormenta = () => request<Clima>('DELETE', '/admin/simulate-storm', op)
 export const getClima = () => request<Clima>('GET', '/weather')
 
 // Alertamientos oficiales de Protección Civil para Veracruz

@@ -22,21 +22,6 @@ export interface Reporte {
   prioridad?: number | null
 }
 
-export interface ReporteNuevo {
-  categoria: Categoria
-  severidad: Severidad
-  lat: number
-  lon: number
-  descripcion?: string | null
-  foto_url?: string | null
-  dispositivo_id?: string | null
-}
-
-export interface Categorias {
-  categorias: Record<Categoria, string>
-  severidades: Record<string, string>
-}
-
 export interface Colonia {
   id: number
   nombre: string
@@ -139,18 +124,10 @@ export interface AlertaActiva extends Alerta {
   guia: Guia | null
 }
 
-export type Guias = Record<string, Guia>
-
 export interface Clima {
   lluvia: { mm_1h: number; mm_3h: number; mm_24h: number; pronostico_3h: number; prob_3h?: number; prob_6h?: number }
   simulacion: boolean
   actualizado_en: string
-}
-
-export interface Dispositivo {
-  id: number
-  colonia_id: number
-  plataforma: 'android' | 'ios' | 'web'
 }
 
 export interface AvisoOficial {

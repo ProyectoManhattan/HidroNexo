@@ -1,6 +1,5 @@
 import type { Categoria, Nivel } from './types'
 
-export const AZUL = '#126783'
 export const NARANJA_SIM = '#F28C28'
 
 export const NIVELES: Record<Nivel, { color: string; suave: string; texto: string }> = {

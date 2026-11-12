@@ -66,7 +66,6 @@ function conPronosticoPlano(zonas: ZonasGeoJSON) {
         susceptibilidad: f.properties.perfil_territorial?.indice_susceptibilidad_preliminar ?? -1,
         elevacion_mediana_m: f.properties.perfil_territorial?.elevacion_mediana_m ?? null,
         hand_mediana_m: f.properties.perfil_territorial?.hand_mediana_m ?? null,
-        eventos_inundacion: f.properties.perfil_territorial?.eventos_inundacion_registrados ?? null,
       },
     })),
   }
