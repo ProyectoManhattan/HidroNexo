@@ -33,6 +33,7 @@ class _Repo extends MockReportRepository {
   final List<RepositoryException?> upload = [];
   final List<RepositoryException?> submits = [];
   final List<NewReport> submitted = [];
+  final List<String?> attemptedIds = [];
   int uploads = 0;
   int healthChecks = 0;
 
@@ -55,6 +56,7 @@ class _Repo extends MockReportRepository {
 
   @override
   Future<String> submit(NewReport report) async {
+    attemptedIds.add(report.clienteId);
     final e = _next(submits);
     if (e != null) throw e;
     submitted.add(report);
@@ -249,9 +251,9 @@ void main() {
       final c = await filled(repo, queue);
       await expectLater(c.submit(), throwsA(isA<RepositoryException>()));
       await c.submit();
-      // 1º fallo no registra id en submitted; comparamos con un segundo ciclo
-      final first = repo.submitted.single.clienteId;
-      expect(first, isNotNull);
+      expect(repo.attemptedIds, hasLength(2));
+      expect(repo.attemptedIds.first, isNotNull);
+      expect(repo.attemptedIds.first, repo.attemptedIds.last);
     });
   });
 
