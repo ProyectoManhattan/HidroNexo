@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
 from sqlalchemy.orm import Session
 
+from app import almacenamiento
 from app.catalogos import CATEGORIAS, SEVERIDADES
 from app.db import get_db
 from app.reportes import servicio
@@ -19,6 +20,20 @@ def categorias():
 @router.post("", response_model=ReporteSalida, status_code=201, summary="Crear reporte desde la app")
 def crear(datos: ReporteEntrada, db: Session = Depends(get_db)):
     return servicio.crear(db, datos, origen="app")
+
+
+@router.post("/photo", status_code=201, summary="Subir foto de un reporte (público)")
+async def subir_foto(request: Request, foto: UploadFile = File(...)):
+    """Devuelve `foto_url`; el cliente la envía después en `POST /reports`."""
+    try:
+        url = await almacenamiento.guardar_foto(foto, str(request.base_url))
+    except almacenamiento.TipoNoPermitido:
+        raise HTTPException(415, "Tipo de archivo no permitido. Solo image/jpeg, image/png o image/webp")
+    except almacenamiento.ArchivoDemasiadoGrande:
+        raise HTTPException(413, "La foto supera el máximo de 5 MB")
+    except almacenamiento.AlmacenamientoError:
+        raise HTTPException(503, "No se pudo guardar la foto; intenta más tarde")
+    return {"foto_url": url}
 
 
 @router.post(
