@@ -14,6 +14,7 @@ URL_PRUEBAS = os.environ.get("TEST_DATABASE_URL", f"{_servidor}/{_nombre}_test")
 os.environ["DATABASE_URL"] = URL_PRUEBAS
 os.environ["DATA_DIR"] = str(Path(__file__).parent / "datos")
 os.environ["METEO_ACTIVA"] = "false"
+os.environ["AVISOS_OFICIALES_ACTIVOS"] = "false"
 os.environ["AUTO_SEED"] = "false"
 os.environ["CLAVE_UNICA"] = "clave-de-prueba"
 

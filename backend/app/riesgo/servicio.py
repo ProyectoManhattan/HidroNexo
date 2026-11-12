@@ -12,6 +12,7 @@ from app.reportes.modelos import Reporte
 from app.reportes.servicio import filtro_activos
 from app.riesgo import calculo
 from app.riesgo.modelos import RiesgoColonia
+from app.territorio.perfiles import perfil_para, susceptibilidad
 from app.utiles import ahora
 
 
@@ -32,11 +33,16 @@ def recalcular(db: Session, colonia_id: int) -> RiesgoColonia | None:
         return None
     actual = db.get(RiesgoColonia, colonia_id)
     nivel_anterior = actual.nivel if actual else None
+    perfil = perfil_para(colonia.nombre)
+    lluvia = meteo.lluvia_de(colonia_id)
 
     resultado = calculo.calcular(
-        lluvia=calculo.componente_lluvia(meteo.lluvia_de(colonia_id)),
+        lluvia=calculo.componente_lluvia(
+            lluvia,
+            perfil.get("lluvia_24h_retorno_2a_mm") if perfil else None,
+        ),
         reportes=calculo.componente_reportes(_suma_severidades(db, colonia_id)),
-        vulnerabilidad=colonia.vulnerabilidad,
+        vulnerabilidad=susceptibilidad(perfil, colonia.vulnerabilidad),
         nivel_anterior=nivel_anterior,
     )
 

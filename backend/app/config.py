@@ -13,8 +13,11 @@ class Settings(BaseSettings):
     llm_api_key: str = ""
     data_dir: Path = RAIZ_REPO / "data"
 
-    # Al arrancar con la base vacía, carga colonias y un reporte de ejemplo por colonia
-    auto_seed: bool = True
+    # Producción: las colonias son datos geográficos de referencia; los reportes
+    # ciudadanos llegan exclusivamente desde los clientes.
+    auto_load_reference_data: bool = True
+    # Solo para demostraciones locales. Nunca debe activarse en producción.
+    auto_seed: bool = False
 
     # Reportes
     reporte_horas_expiracion: int = 6
@@ -25,6 +28,8 @@ class Settings(BaseSettings):
     # Meteorología (Open-Meteo)
     meteo_activa: bool = True
     meteo_intervalo_min: int = 15
+    avisos_oficiales_activos: bool = True
+    avisos_oficiales_intervalo_min: int = 10
     # Puntos de consulta de respaldo (lat, lon); la ingesta normal usa el centroide de cada colonia
     meteo_puntos: list[tuple[float, float]] = [
         (19.1738, -96.1342),  # Centro

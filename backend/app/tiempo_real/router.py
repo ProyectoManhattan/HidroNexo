@@ -10,7 +10,7 @@ async def websocket(ws: WebSocket):
     """Mensajes que recibe el panel: {"tipo": "<evento>", "datos": {...}}.
 
     Tipos: report.created, report.updated, zone.risk_updated, alert.drafted,
-    alert.approved, weather.updated
+    alert.approved, weather.updated, official_alerts.updated
     """
     await ws.accept()
     conexiones.agregar(ws)

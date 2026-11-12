@@ -21,6 +21,8 @@ services:
       CLAVE_UNICA: ${CLAVE_UNICA:-cambiar-esta-clave}
       LLM_API_KEY: ${LLM_API_KEY:-}
       DATA_DIR: /data
+      AUTO_LOAD_REFERENCE_DATA: ${AUTO_LOAD_REFERENCE_DATA:-true}
+      AUTO_SEED: ${AUTO_SEED:-false}
     ports:
       - "8000:8000"
     volumes:

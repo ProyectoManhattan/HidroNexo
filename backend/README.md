@@ -17,9 +17,9 @@ docker compose up --build
 
 Las migraciones (`alembic upgrade head`) corren solas al arrancar el contenedor.
 
-**Primera carga:** si la base no tiene colonias, la API carga sola `data/colonias_veracruz.geojson` (sin reportes de ejemplo). Se desactiva con `AUTO_SEED=false`.
 
-Volver a cargar los datos de `data/` (borra todo antes):
+
+Crear una demo sintética explícita (borra todo antes; no usar en producción):
 
 ```bash
 curl -X POST localhost:8000/admin/seed -H "X-Clave: cambiar-esta-clave"

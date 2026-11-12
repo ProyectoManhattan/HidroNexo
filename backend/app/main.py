@@ -12,6 +12,8 @@ from app import suscripciones
 from app.admin import servicio as admin_servicio
 from app.admin.router import router as admin_router
 from app.alertas.router import router as alertas_router
+from app.avisos_oficiales import ingesta as avisos_ingesta
+from app.avisos_oficiales.router import router as avisos_router
 from app.colonias.router import router as colonias_router
 from app.colonias.modelos import Colonia
 from app.config import settings
@@ -27,14 +29,19 @@ logging.basicConfig(level=logging.INFO)
 
 
 def _cargar_datos_iniciales() -> None:
-    """Primera carga: con la base vacía, deja colonias y un reporte de ejemplo por colonia."""
-    if not settings.auto_seed:
+    """Carga solo el catálogo territorial; el seed sintético es optativo para demos."""
+    if not settings.auto_load_reference_data and not settings.auto_seed:
         return
     try:
         with SessionLocal() as db:
             if db.scalar(select(func.count()).select_from(Colonia)):
                 return
-            resultado = admin_servicio.seed(db)
+            if settings.auto_seed:
+                resultado = admin_servicio.seed(db)
+            else:
+                colonias = admin_servicio.cargar_colonias(db)
+                admin_servicio.recalcular_todas(db)
+                resultado = {"colonias": colonias, "reportes": 0}
         logging.getLogger(__name__).info("Datos iniciales cargados: %s", resultado)
     except Exception:
         logging.getLogger(__name__).exception("No se pudieron cargar los datos iniciales")
@@ -51,6 +58,15 @@ async def ciclo_de_vida(app: FastAPI):
             ingesta.ejecutar, "interval", minutes=settings.meteo_intervalo_min, next_run_time=datetime.now()
         )
         programador.start()
+    if settings.avisos_oficiales_activos:
+        programador.add_job(
+            avisos_ingesta.ejecutar,
+            "interval",
+            minutes=settings.avisos_oficiales_intervalo_min,
+            next_run_time=datetime.now(),
+        )
+        if not programador.running:
+            programador.start()
     yield
     if programador.running:
         programador.shutdown(wait=False)
@@ -78,6 +94,7 @@ for router in (
     reportes_router,
     colonias_router,
     alertas_router,
+    avisos_router,
     guias_router,
     dispositivos_router,
     admin_router,

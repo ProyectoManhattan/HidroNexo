@@ -7,6 +7,7 @@ from app.colonias.modelos import Colonia
 from app.meteorologia import estado as meteo
 from app.riesgo.calculo import resumen_pronostico
 from app.riesgo.modelos import RiesgoColonia
+from app.territorio.perfiles import perfil_para, susceptibilidad
 
 
 def punto(lat: float, lon: float):
@@ -30,6 +31,7 @@ def geojson_riesgo(db: Session) -> dict:
     ).all()
     features = []
     for colonia, geometria, riesgo in filas:
+        perfil = perfil_para(colonia.nombre)
         features.append(
             {
                 "type": "Feature",
@@ -39,13 +41,15 @@ def geojson_riesgo(db: Session) -> dict:
                     "id": colonia.id,
                     "nombre": colonia.nombre,
                     "municipio": colonia.municipio,
-                    "vulnerabilidad": colonia.vulnerabilidad,
+                    "vulnerabilidad": susceptibilidad(perfil, colonia.vulnerabilidad),
+                    "vulnerabilidad_fuente": "perfil_territorial" if perfil else colonia.vulnerabilidad_fuente,
                     "riesgo": riesgo.valor if riesgo else 0.0,
                     "nivel": riesgo.nivel if riesgo else "bajo",
                     "motivo": riesgo.motivo if riesgo else None,
                     "componentes": riesgo.componentes if riesgo else {},
                     "actualizado_en": riesgo.actualizado_en.isoformat() if riesgo else None,
                     "pronostico": resumen_pronostico(meteo.lluvia_de(colonia.id)),
+                    "perfil_territorial": perfil,
                 },
             }
         )

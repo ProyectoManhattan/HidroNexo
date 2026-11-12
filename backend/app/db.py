@@ -8,7 +8,13 @@ class Base(DeclarativeBase):
     pass
 
 
-engine = create_engine(settings.database_url, pool_pre_ping=True)
+opciones_motor = {"pool_pre_ping": True}
+if settings.database_url.startswith("postgresql"):
+    # Supabase instala PostGIS en `extensions`; Docker lo instala en `public`.
+    # Incluir ambos esquemas hace que el mismo código funcione en los dos.
+    opciones_motor["connect_args"] = {"options": "-csearch_path=public,extensions"}
+
+engine = create_engine(settings.database_url, **opciones_motor)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
 

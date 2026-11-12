@@ -37,6 +37,11 @@ def test_lluvia_toma_la_ventana_mas_grave():
     assert componente_lluvia({}) == 0.0
 
 
+def test_lluvia_24h_se_normaliza_con_climatologia_local():
+    assert componente_lluvia({"mm_24h": 56.65}, retorno_2a_24h_mm=113.3) == 0.5
+    assert componente_lluvia({"mm_24h": 113.3}, retorno_2a_24h_mm=113.3) == 1.0
+
+
 def test_reportes_se_saturan():
     assert componente_reportes(30) == 1.0
 

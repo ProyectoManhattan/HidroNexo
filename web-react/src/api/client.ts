@@ -1,6 +1,6 @@
 import { API_URL, CLAVE } from '../config'
 import type {
-  Alerta, AlertaActiva, AlertaManualNueva, Categoria, Categorias, Clima, Colonia, Dispositivo, Guia, Guias, Reporte,
+  Alerta, AlertaActiva, AlertaManualNueva, AvisosOficiales, Categoria, Categorias, Clima, Colonia, Dispositivo, Guia, Guias, Reporte,
   ReporteNuevo, ZonasGeoJSON,
 } from '../types'
 
@@ -91,3 +91,6 @@ export const simularTormenta = (o: OpcionesTormenta = {}) =>
   request<Clima>('POST', '/admin/simulate-storm', { body: { intensidad: 1.0, ...o }, ...op })
 export const terminarTormenta = () => request<Clima>('DELETE', '/admin/simulate-storm', op)
 export const getClima = () => request<Clima>('GET', '/admin/weather', op)
+
+// Alertamientos oficiales de Protección Civil para Veracruz
+export const getAvisosOficiales = () => request<AvisosOficiales>('GET', '/official-alerts')
