@@ -1,6 +1,7 @@
 import * as maplibregl from 'maplibre-gl'
 import type { GeoJSONSource, Map as MLMap } from 'maplibre-gl'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { MAPTILER_KEY } from '../config'
 import { CATEGORIAS, NIVELES, UMBRAL_PROB_ALTA } from '../constants'
 import { seleccionarColonia, useStore } from '../store'
 import type { Reporte, ZonasGeoJSON } from '../types'
@@ -10,6 +11,16 @@ import { popupColonia, popupReporte } from './map/popups'
 const CENTRO: [number, number] = [-96.13, 19.17]
 const ZOOM = 12
 const VACIO = { type: 'FeatureCollection', features: [] } as const
+const CAPAS_ZONA = ['zonas-volumen', 'zonas-fill']
+
+const alturaNivel: maplibregl.ExpressionSpecification = [
+  'match', ['get', 'nivel'],
+  'bajo', 60,
+  'medio', 400,
+  'alto', 900,
+  'critico', 1600,
+  60,
+] as unknown as maplibregl.ExpressionSpecification
 
 const colorNivel: maplibregl.ExpressionSpecification = [
   'match', ['get', 'nivel'],
@@ -69,6 +80,7 @@ export default function MapView() {
   const mapRef = useRef<MLMap | null>(null)
   const encuadrado = useRef(false)
   const [listo, setListo] = useState(false)
+  const [modo3d, setModo3d] = useState(true)
 
   const zonas = useStore((s) => s.zonas)
   const reportes = useStore((s) => s.reportes)
@@ -84,34 +96,122 @@ export default function MapView() {
   // Creacion / limpieza del mapa
   useEffect(() => {
     if (!cont.current) return
+    const estiloBase: maplibregl.StyleSpecification | string = MAPTILER_KEY
+      ? `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`
+      : {
+          version: 8,
+          sources: {
+            osm: {
+              type: 'raster',
+              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+              tileSize: 256,
+              maxzoom: 19,
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+            },
+            terreno: {
+              type: 'raster-dem',
+              tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+              tileSize: 256,
+              encoding: 'terrarium',
+              maxzoom: 14,
+            },
+          },
+          layers: [
+            { type: 'raster', id: 'osm', source: 'osm' },
+            {
+              type: 'hillshade',
+              id: 'sombra-terreno',
+              source: 'terreno',
+              paint: {
+                'hillshade-exaggeration': 0.85,
+                'hillshade-shadow-color': '#0f172a',
+                'hillshade-highlight-color': '#ffffff',
+                'hillshade-accent-color': '#0284c7',
+              },
+            },
+          ],
+        }
+
     const map = new maplibregl.Map({
       container: cont.current,
       center: CENTRO,
       zoom: ZOOM,
       attributionControl: { compact: true },
-      style: {
-        version: 8,
-        sources: {
-          osm: {
-            type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, maxzoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-          },
-        },
-        layers: [{ type: 'raster', id: 'osm', source: 'osm' }],
-      },
+      style: estiloBase,
     })
     mapRef.current = map
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
+    map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'top-right')
 
     const hover = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 8 })
     let popupReport: maplibregl.Popup | null = null
 
     map.on('load', () => {
+      // Terreno 3D (MapTiler Terrain-RGB o AWS Terrarium DEM)
+      if (!map.getSource('terreno')) {
+        map.addSource('terreno', {
+          type: 'raster-dem',
+          url: MAPTILER_KEY
+            ? `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${MAPTILER_KEY}`
+            : undefined,
+          tiles: MAPTILER_KEY
+            ? undefined
+            : ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          encoding: MAPTILER_KEY ? 'mapbox' : 'terrarium',
+          maxzoom: 14,
+        })
+      }
+
+      // Sombreado de relieve (hillshade) para profundidad visual de cuencas y elevaciones
+      if (!map.getLayer('sombra-terreno')) {
+        map.addLayer({
+          id: 'sombra-terreno',
+          type: 'hillshade',
+          source: 'terreno',
+          paint: {
+            'hillshade-exaggeration': 0.85,
+            'hillshade-shadow-color': '#0f172a',
+            'hillshade-highlight-color': '#ffffff',
+            'hillshade-accent-color': '#0284c7',
+          },
+        })
+      }
+
+      // Edificios 3D si la fuente vectorial de MapTiler (openmaptiles) está activa
+      if (map.getSource('openmaptiles') && !map.getLayer('edificios-3d')) {
+        map.addLayer({
+          id: 'edificios-3d',
+          source: 'openmaptiles',
+          'source-layer': 'building',
+          type: 'fill-extrusion',
+          minzoom: 13,
+          paint: {
+            'fill-extrusion-color': '#94a3b8',
+            'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 10],
+            'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+            'fill-extrusion-opacity': 0.85,
+          },
+        })
+      }
+
       map.addSource('zonas', { type: 'geojson', data: VACIO as never })
       map.addSource('reportes', { type: 'geojson', data: VACIO as never })
       map.addLayer({
         id: 'zonas-fill', type: 'fill', source: 'zonas',
         paint: { 'fill-color': colorNivel, 'fill-opacity': 0.45, 'fill-color-transition': { duration: 600 } },
+        layout: { visibility: 'none' },
+      })
+      map.addLayer({
+        id: 'zonas-volumen', type: 'fill-extrusion', source: 'zonas',
+        paint: {
+          'fill-extrusion-color': colorNivel,
+          'fill-extrusion-height': alturaNivel,
+          'fill-extrusion-base': 0,
+          'fill-extrusion-opacity': 0.66,
+          'fill-extrusion-vertical-gradient': true,
+          'fill-extrusion-color-transition': { duration: 600 },
+          'fill-extrusion-height-transition': { duration: 600 },
+        },
       })
       map.addLayer({
         id: 'zonas-line', type: 'line', source: 'zonas',
@@ -139,13 +239,15 @@ export default function MapView() {
           'circle-opacity': 0.9, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2,
         },
       })
+      map.setTerrain({ source: 'terreno', exaggeration: 4.5 })
+      map.jumpTo({ pitch: 58, bearing: -15 })
       setListo(true)
     })
 
     map.on('mousemove', (e) => {
       if (!map.getLayer('zonas-fill')) return
       const rep = map.queryRenderedFeatures(e.point, { layers: ['reportes-circulos'] })
-      const zon = rep.length ? [] : map.queryRenderedFeatures(e.point, { layers: ['zonas-fill'] })
+      const zon = rep.length ? [] : map.queryRenderedFeatures(e.point, { layers: CAPAS_ZONA })
       map.getCanvas().style.cursor = rep.length || zon.length ? 'pointer' : ''
       if (zon.length) hover.setLngLat(e.lngLat).setHTML(popupColonia(zon[0].properties)).addTo(map)
       else hover.remove()
@@ -163,7 +265,7 @@ export default function MapView() {
           .addTo(map)
         return
       }
-      const zon = map.queryRenderedFeatures(e.point, { layers: ['zonas-fill'] })
+      const zon = map.queryRenderedFeatures(e.point, { layers: CAPAS_ZONA })
       if (zon.length) seleccionarColonia(Number(zon[0].properties.id))
     })
 
@@ -188,9 +290,18 @@ export default function MapView() {
     ;(map.getSource('zonas') as GeoJSONSource).setData((zonas ? conPronosticoPlano(zonas) : VACIO) as never)
     if (zonas && !encuadrado.current) {
       const b = limites(zonas)
-      if (b) { map.fitBounds(b, { padding: 40, duration: 0, maxZoom: 15 }); encuadrado.current = true }
+      if (b) {
+        map.fitBounds(b, {
+          padding: 40,
+          duration: 0,
+          maxZoom: 15,
+          pitch: modo3d ? 58 : 0,
+          bearing: modo3d ? -15 : 0,
+        })
+        encuadrado.current = true
+      }
     }
-  }, [zonas, listo])
+  }, [zonas, listo, modo3d])
 
   // Reportes
   useEffect(() => {
@@ -208,9 +319,39 @@ export default function MapView() {
     map.setFilter('zonas-sel', f)
   }, [seleccionada, listo])
 
+  // Vista operativa plana o perspectiva 3D. Las fuentes, filtros y eventos son los mismos.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!listo || !map) return
+    map.setLayoutProperty('zonas-fill', 'visibility', modo3d ? 'none' : 'visible')
+    map.setLayoutProperty('zonas-volumen', 'visibility', modo3d ? 'visible' : 'none')
+    if (map.getLayer('sombra-terreno')) {
+      map.setLayoutProperty('sombra-terreno', 'visibility', modo3d ? 'visible' : 'none')
+    }
+    if (map.getLayer('edificios-3d')) {
+      map.setLayoutProperty('edificios-3d', 'visibility', modo3d ? 'visible' : 'none')
+    }
+    map.setTerrain(modo3d ? { source: 'terreno', exaggeration: 4.5 } : null)
+    map.easeTo({
+      pitch: modo3d ? 58 : 0,
+      bearing: modo3d ? -15 : 0,
+      duration: 700,
+    })
+  }, [modo3d, listo])
+
   return (
     <div className="relative h-full w-full overflow-hidden">
       <div ref={cont} style={{ position: 'absolute', inset: 0 }} />
+      <button
+        type="button"
+        onClick={() => setModo3d((v) => !v)}
+        aria-pressed={modo3d}
+        className="absolute right-14 top-3 z-10 flex items-center gap-1.5 rounded-md border border-slate-300 bg-white/95 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-md backdrop-blur hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#1E5AA8]"
+        title={modo3d ? 'Cambiar a vista operativa plana 2D' : 'Cambiar a perspectiva 3D con volumen'}
+      >
+        <span className={`inline-block h-2 w-2 rounded-full ${modo3d ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+        {modo3d ? '3D Activado' : '2D Activado'}
+      </button>
       <Legend />
     </div>
   )
