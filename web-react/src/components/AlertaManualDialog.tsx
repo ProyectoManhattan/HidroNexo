@@ -88,7 +88,7 @@ function Contenido() {
       </div>
 
       <div className="mt-3">
-        <div className="flex items-center justify-between text-xs font-semibold text-gray-700">
+        <div className="flex items-center justify-between text-sm font-semibold text-gray-700">
           <span>Colonias ({sel.size} seleccionada{sel.size === 1 ? '' : 's'})</span>
           <span className="space-x-2 font-medium text-[#1E5AA8]">
             <button type="button" onClick={() => setSel(new Set(colonias.map((c) => c.id)))} className="hover:underline">Seleccionar todas</button>
@@ -103,7 +103,7 @@ function Contenido() {
           className={campo}
         />
         <ul className="mt-1 max-h-36 overflow-y-auto rounded-md border border-gray-200">
-          {filtradas.length === 0 && <li className="px-2 py-1.5 text-xs text-gray-400">Sin resultados</li>}
+          {filtradas.length === 0 && <li className="px-2 py-1.5 text-sm text-gray-400">Sin resultados</li>}
           {filtradas.map((c) => (
             <li key={c.id}>
               <label className="flex cursor-pointer items-center gap-2 px-2 py-1 text-sm hover:bg-gray-50">
@@ -116,19 +116,19 @@ function Contenido() {
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-3">
-        <label className="block text-xs font-semibold text-gray-700">Tipo
+        <label className="block text-sm font-semibold text-gray-700">Tipo
           <select value={tipo} onChange={(e) => setTipo(e.target.value as Categoria)} className={campo}>
             {(Object.keys(CATEGORIAS) as Categoria[]).map((c) => <option key={c} value={c}>{CATEGORIAS[c].texto}</option>)}
           </select>
         </label>
-        <label className="block text-xs font-semibold text-gray-700">Nivel
+        <label className="block text-sm font-semibold text-gray-700">Nivel
           <select value={nivel} onChange={(e) => setNivel(e.target.value as NivelManual)} className={campo}>
             {NIVELES_MANUAL.map((n) => <option key={n.id} value={n.id}>{n.texto}</option>)}
           </select>
         </label>
       </div>
 
-      <label className="mt-3 block text-xs font-semibold text-gray-700">Mensaje
+      <label className="mt-3 block text-sm font-semibold text-gray-700">Mensaje
         <textarea
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
@@ -137,12 +137,12 @@ function Contenido() {
           placeholder="Texto que recibirán los vecinos de las colonias seleccionadas"
           className={campo}
         />
-        <span className={`block text-right text-[11px] font-normal ${largo < MIN ? 'text-gray-400' : 'text-gray-500'}`}>{largo}/{MAX} (mín. {MIN})</span>
+        <span className={`block text-right text-xs font-normal ${largo < MIN ? 'text-gray-400' : 'text-gray-500'}`}>{largo}/{MAX} (mín. {MIN})</span>
       </label>
 
       <div className="mt-2">
         <ErrorBox texto={error} />
-        {exito && <div className="mb-2 rounded border border-green-200 bg-green-50 px-2 py-1 text-xs text-green-700" role="status">{exito}</div>}
+        {exito && <div className="mb-2 rounded border border-green-200 bg-green-50 px-2 py-1 text-sm text-green-700" role="status">{exito}</div>}
       </div>
 
       <div className="flex justify-end gap-2">

@@ -21,7 +21,7 @@ export default function OfficialAlertsBanner() {
       {abierto && (
         <div className="grid max-h-[48vh] gap-4 overflow-y-auto border-t border-red-200 bg-white px-4 py-4 md:grid-cols-2 md:px-5">
           {avisos.alertas.map((a) => (
-            <article key={a.id} className="rounded-xl border border-slate-200 bg-white p-4 text-[15px] shadow-sm">
+            <article key={a.id} className="rounded-xl border border-slate-200 bg-white p-4 text-base shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <h2 className="text-base font-extrabold text-slate-900">{a.titulo || 'Aviso oficial'}</h2>
                 <span className="shrink-0 rounded bg-cyan-50 px-2.5 py-1 text-xs font-bold text-cyan-900">Vigente</span>
@@ -33,7 +33,7 @@ export default function OfficialAlertsBanner() {
                 <dt>Fenómenos</dt><dd className="font-medium text-slate-800">{a.fenomenos.join(', ') || a.tipo || 'No indicados'}</dd>
                 <dt>Alcance</dt><dd className="font-medium text-slate-800">{a.alcance || 'Consulta la fuente'}</dd>
               </dl>
-              {a.descripcion && <p className="mt-3 line-clamp-4 text-[15px] leading-relaxed text-slate-700">{a.descripcion}</p>}
+              {a.descripcion && <p className="mt-3 line-clamp-4 text-base leading-relaxed text-slate-700">{a.descripcion}</p>}
               <div className="mt-4 flex flex-wrap gap-4 text-sm font-bold">
                 <a href={a.detalle_url} target="_blank" rel="noreferrer" className="text-[var(--color-action-primary)] underline">Ver fuente original</a>
                 {a.documento_url && <a href={a.documento_url} target="_blank" rel="noreferrer" className="text-[var(--color-action-primary)] underline">Abrir boletín</a>}

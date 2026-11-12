@@ -19,7 +19,7 @@ function Miniatura({ url }: { url: string | null }) {
       className="block h-14 w-14 shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-100"
     >
       {fallo ? (
-        <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-400">Sin foto</span>
+        <span className="flex h-full w-full items-center justify-center text-xs text-gray-400">Sin foto</span>
       ) : (
         <img
           src={src}
@@ -93,7 +93,7 @@ export default function ReportsList() {
               onKeyDown={(e) => { if (e.target === e.currentTarget && clic && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); seleccionarColonia(r.colonia_id) } }}
               role={clic ? 'button' : undefined}
               tabIndex={clic ? 0 : undefined}
-              className={`interactive-row py-3 text-[15px] ${clic ? 'cursor-pointer px-2' : ''} ${r.colonia_id != null && r.colonia_id === seleccionada ? 'border-l-4 border-[var(--color-action-primary)] bg-cyan-50/50 pl-3' : ''}`}
+              className={`interactive-row py-3 text-base ${clic ? 'cursor-pointer px-2' : ''} ${r.colonia_id != null && r.colonia_id === seleccionada ? 'border-l-4 border-[var(--color-action-primary)] bg-cyan-50/50 pl-3' : ''}`}
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-black text-white" style={{ background: cat.color }} aria-hidden>{cat.letra}</span>
@@ -111,7 +111,7 @@ export default function ReportsList() {
                   {r.descripcion && <p className="min-w-0 flex-1 text-sm leading-relaxed text-gray-700" title={r.descripcion}>{r.descripcion}</p>}
                 </div>
               )}
-              <div className="mt-2 text-[13px] text-slate-500">Fuente: reporte recibido por el sistema · observación ciudadana no confirmada</div>
+              <div className="mt-2 text-sm text-slate-500">Fuente: reporte recibido por el sistema · observación ciudadana no confirmada</div>
               <div className="mt-3 flex justify-end">
                 <button
                   type="button"

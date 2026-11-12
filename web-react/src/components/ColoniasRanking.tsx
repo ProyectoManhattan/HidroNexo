@@ -19,12 +19,12 @@ function Detalle({ z, reportes, fuente }: { z: ZonaProps; reportes: number; fuen
   const comp = z.componentes ?? { lluvia: 0, reportes: 0, vulnerabilidad: 0 }
   return (
     <div className="mt-3 border-t border-slate-200 pt-3">
-      <div className="text-[15px] text-gray-600">{z.municipio} · actualizado {hace(z.actualizado_en)}</div>
+      <div className="text-base text-gray-600">{z.municipio} · actualizado {hace(z.actualizado_en)}</div>
       <div className="mt-1.5 text-base text-gray-700">Motivo principal: <b>{MOTIVOS[z.motivo] ?? z.motivo}</b></div>
       <div className="text-base text-gray-700">Reportes activos: <b>{reportes}</b></div>
       <div className="mt-3 space-y-2">
         {(['lluvia', 'reportes', 'vulnerabilidad'] as const).map((k) => (
-          <div key={k} className="flex items-center gap-2 text-[15px]">
+          <div key={k} className="flex items-center gap-2 text-base">
             <span className="w-24 capitalize text-gray-600">{k}</span>
             <div className="h-2 flex-1 rounded bg-gray-100">
               <div className="h-full rounded bg-[#126783]" style={{ width: `${Math.min(100, Math.round((comp[k] ?? 0) * 100))}%` }} />

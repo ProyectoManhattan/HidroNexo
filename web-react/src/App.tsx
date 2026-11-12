@@ -54,7 +54,7 @@ export default function App() {
       <a href="#mapa-principal" className="sr-only-focusable z-50 rounded bg-white px-4 py-2 text-blue-800">Saltar al mapa</a>
       <TopBar />
       {!apiOk && !cargandoInicial && (
-        <div className="flex items-center justify-center gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-center text-xs font-medium text-amber-950" role="status">
+        <div className="flex items-center justify-center gap-2 border-b border-amber-300 bg-amber-50 px-4 py-2 text-center text-sm font-medium text-amber-950" role="status">
           <span aria-hidden>◷</span>
           Sin conexión con el servidor. Se conserva la última información recibida mientras reintentamos.
         </div>
@@ -87,7 +87,7 @@ export default function App() {
               <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>
             </span>
             <h2 className="text-xl font-black">Alertas</h2>
-            <span className="ml-auto text-[15px] font-bold text-[#0d5ac7]">Información vigente</span>
+            <span className="ml-auto text-base font-bold text-[#0d5ac7]">Información vigente</span>
           </div>
           {tabs}
           <div className="min-h-0 flex-1 overflow-y-auto" role="tabpanel"><Activa /></div>
