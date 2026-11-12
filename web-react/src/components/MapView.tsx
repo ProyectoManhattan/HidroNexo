@@ -174,7 +174,7 @@ export default function MapView() {
     mapRef.current = map
     map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'top-right')
 
-    const hover = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 8 })
+    const hover = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 8, maxWidth: '300px' })
     let popupReport: maplibregl.Popup | null = null
 
     map.on('load', () => {

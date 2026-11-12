@@ -28,18 +28,18 @@ function lineaTerritorio(p: Record<string, unknown>): string {
         ? { texto: 'Alta', color: '#b54708', fondo: '#fff0e5' }
         : { texto: 'Elevada', color: '#b4232c', fondo: '#fdeced' }
   const metrica = (etiqueta: string, valor: string) =>
-    `<div style="display:flex;flex-direction:column;gap:1px;padding:7px 9px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc">` +
-    `<span style="color:#64748b;font-size:11px;font-weight:700;letter-spacing:.02em;text-transform:uppercase">${esc(etiqueta)}</span>` +
-    `<strong style="color:#1e293b;font-size:14px;line-height:1.25">${esc(valor)}</strong></div>`
+    `<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc">` +
+    `<span style="color:#64748b;font-size:10px;font-weight:700;letter-spacing:.015em;text-transform:uppercase">${esc(etiqueta)}</span>` +
+    `<strong style="flex-shrink:0;color:#1e293b;font-size:12px;line-height:1.2">${esc(valor)}</strong></div>`
   return (
-    `<div style="margin-top:9px;padding-top:9px;border-top:1px solid #e2e8f0">` +
+    `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0">` +
     `<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">` +
-    `<span style="color:#475569;font-size:11px;font-weight:800;letter-spacing:.055em;text-transform:uppercase">Susceptibilidad territorial</span>` +
-    `<span style="padding:2px 8px;border-radius:999px;background:${nivel.fondo};color:${nivel.color};font-size:11px;font-weight:800">${nivel.texto}</span></div>` +
-    `<div style="display:flex;align-items:baseline;gap:3px;margin:3px 0 8px;color:#0b2b70">` +
-    `<strong style="font-size:24px;line-height:1">${esc(puntuacion)}</strong>` +
-    `<span style="color:#64748b;font-size:12px;font-weight:700">/ 100</span></div>` +
-    `<div style="display:grid;gap:6px">` +
+    `<span style="color:#475569;font-size:10px;font-weight:800;letter-spacing:.045em;text-transform:uppercase">Susceptibilidad territorial</span>` +
+    `<span style="padding:2px 7px;border-radius:999px;background:${nivel.fondo};color:${nivel.color};font-size:10px;font-weight:800">${nivel.texto}</span></div>` +
+    `<div style="display:flex;align-items:baseline;gap:3px;margin:2px 0 6px;color:#0b2b70">` +
+    `<strong style="font-size:20px;line-height:1">${esc(puntuacion)}</strong>` +
+    `<span style="color:#64748b;font-size:10px;font-weight:700">/ 100</span></div>` +
+    `<div style="display:grid;gap:4px">` +
     (Number.isFinite(elevacion) ? metrica('Elevación mediana', `${elevacion.toFixed(1)} m s. n. m.`) : '') +
     (Number.isFinite(hand) ? metrica('Altura sobre drenaje (HAND)', `${hand.toFixed(1)} m`) : '') +
     `</div>` +
@@ -51,11 +51,11 @@ export function popupColonia(p: Record<string, unknown>): string {
   const n = nivelInfo(p.nivel as string)
   const motivo = MOTIVOS[p.motivo as keyof typeof MOTIVOS] ?? '—'
   return (
-    `<div style="min-width:230px;font-size:14px">` +
+    `<div style="min-width:280px;font-size:13px">` +
     `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">` +
     `<b>${esc(p.nombre)}</b>` +
     `<span style="background:${n.suave};color:${n.color};font-weight:700;font-size:12px;padding:2px 8px;border-radius:9px">${esc(n.texto.toUpperCase())}</span></div>` +
-    `<div style="color:#5B6675;font-size:13px;margin-top:4px">Motivo principal: ${esc(motivo)}</div>` +
+    `<div style="color:#334155;font-size:15px;font-weight:700;line-height:1.3;margin-top:6px">Motivo principal: <strong style="color:#0b2b70;font-weight:800">${esc(motivo)}</strong></div>` +
     lineaPronostico(p) +
     lineaTerritorio(p) +
     `</div>`

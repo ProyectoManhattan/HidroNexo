@@ -45,7 +45,7 @@ export default function AlertsTray() {
                 <span className="ml-auto text-sm text-slate-500">{hace(a.aprobada_en ?? a.creada_en)}</span>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-slate-700">{a.texto}</p>
-              <div className="mt-2 text-sm text-slate-500">Motivo: {MOTIVOS[a.motivo] ?? a.motivo} · Fuente: Protección Civil</div>
+              <div className="mt-2 text-sm text-slate-500">Motivo: {MOTIVOS[a.motivo] ?? a.motivo}</div>
               <GuiaAlerta alerta={a} />
             </li>
           ))}
