@@ -11,14 +11,18 @@ MOTIVO_SOCIAL = (
     "repositorio y sus sitios no eran accesibles desde el entorno de procesamiento. Al integrarlos se requiere "
     "interpolación areal o por manzanas de AGEB a zona postal (ver metodologia.md)."
 )
-MOTIVO_ANTECEDENTES = (
-    "Sin fuente: no hay registros históricos de inundación ni capas oficiales de zonas inundables en el proyecto. "
-    "El Atlas de Riesgos de Veracruz (2023) está publicado en PDF y el municipal es de 2006. No se infieren "
-    "antecedentes a partir de la cercanía a ríos."
+NOTA_ANTECEDENTES = (
+    "Registros de prensa, avisos y notas del Atlas de Riesgo municipal (data/antecedentes/eventos_inundacion.json), "
+    "asignados de colonia a código postal con el catálogo SEPOMEX. Inventario incompleto: la ausencia de registros no "
+    "implica que no haya habido inundaciones, y el conteo no es una frecuencia. No se infieren antecedentes por cercanía a ríos."
+)
+MOTIVO_ZONA_OFICIAL = (
+    "Sin capa oficial de zonas inundables en formato geográfico (el Atlas de Riesgos estatal 2023 está en PDF y el "
+    "municipal es de 2006); no se puede calcular superficie expuesta."
 )
 
 
-def construir(r, ident, geo, costa_ne, hid, norm, indices, bitacora) -> dict:
+def construir(r, ident, geo, costa_ne, hid, norm, indices, bitacora, ant) -> dict:
     pid = r.id_poligono
     dist = geo.get("distancias_m", {})
     geografia = {
@@ -65,7 +69,7 @@ def construir(r, ident, geo, costa_ne, hid, norm, indices, bitacora) -> dict:
                  "hidromet.precipitacion_24h_mm": hid["precipitacion_24h_mm"],
                  "hidromet.nivel_rio": hid["nivel_rio"],
                  "hidromet.tendencia_nivel_rio": hid["tendencia_nivel_rio"],
-                 "antecedentes.eventos_registrados": None, "antecedentes.zona_inundable_oficial": None,
+                 "antecedentes.eventos_registrados": ant["eventos_registrados"], "antecedentes.zona_inundable_oficial": None,
                  "vulnerabilidad.poblacion": None, "vulnerabilidad.viviendas": None,
                  "vulnerabilidad.indice_marginacion": None, "vulnerabilidad.cobertura_agua": None,
                  "vulnerabilidad.cobertura_drenaje": None}.items():
@@ -81,9 +85,16 @@ def construir(r, ident, geo, costa_ne, hid, norm, indices, bitacora) -> dict:
         "identificacion": ident,
         "caracteristicas_geograficas": geografia,
         "antecedentes_inundacion": {
-            "eventos_registrados": None, "zona_inundable_oficial": None,
-            "superficie_expuesta_km2": None, "porcentaje_superficie_expuesta": None,
-            "fuentes": [], "motivo_null": MOTIVO_ANTECEDENTES,
+            "eventos_registrados": ant["eventos_registrados"],
+            "eventos_posibles_por_nombre_ambiguo": ant["eventos_posibles_por_nombre_ambiguo"],
+            "alertas_preventivas": ant["alertas_preventivas"],
+            "identificado_en_riesgo": ant["identificado_en_riesgo"],
+            "zona_inundable_oficial": None, "superficie_expuesta_km2": None, "porcentaje_superficie_expuesta": None,
+            "motivo_zona_oficial_null": MOTIVO_ZONA_OFICIAL,
+            "registros": ant["registros"],
+            "fuentes": ant["fuentes"],
+            "nota": NOTA_ANTECEDENTES,
+            "motivo_null": None if ant["registros"] else "Sin registros encontrados en la búsqueda; no implica que no haya ocurrido.",
         },
         "vulnerabilidad_social": {
             "poblacion": None, "viviendas": None, "indice_marginacion": None,
@@ -123,6 +134,24 @@ def _cercania(geo):
     return f"{nivel} (a {m:,.0f} m de mar o de cauce mayor modelado)"
 
 
+def _texto_antecedentes(a) -> str:
+    partes = []
+    obs = sorted({(r["nombre"], r["fecha"]) for r in a["registros"] if r["tipo"] == "evento_observado" and r["asignacion"] == "unica"},
+                 key=lambda x: x[1] or "")
+    if obs:
+        partes.append(f"{len(obs)} evento(s) documentado(s): " + ", ".join(f"{n} ({f})" for n, f in obs))
+    amb = sorted({(r["nombre"], r["fecha"]) for r in a["registros"] if r["tipo"] == "evento_observado" and r["asignacion"] == "ambigua"}
+                 - set(obs), key=lambda x: x[1] or "")
+    if amb:
+        partes.append("posible(s) por nombre ambiguo: " + ", ".join(f"{n} ({f})" for n, f in amb))
+    if a["alertas_preventivas"]:
+        partes.append("incluida en alerta preventiva: " + ", ".join(sorted({r["nombre"] for r in a["registros"] if r["tipo"] == "alerta_preventiva"})))
+    if a["identificado_en_riesgo"]:
+        partes.append("identificada como propensa a inundarse: " + ", ".join(sorted({r["nombre"] for r in a["registros"] if r["tipo"] == "riesgo_identificado"})))
+    cols = sorted({r["colonia_fuente"] for r in a["registros"]})
+    return "; ".join(partes) + f" [colonias mencionadas: {', '.join(cols)}]"
+
+
 def diagnostico(p) -> str:
     g, h = p["caracteristicas_geograficas"], p["condiciones_hidrometeorologicas"]
     ident = p["identificacion"]
@@ -136,8 +165,14 @@ def diagnostico(p) -> str:
         partes.append(f"Altura mediana sobre el cauce modelado al que drena: {g['hand_mediana_m']} m.")
     if g["tipo_cuerpo_agua"]:
         partes.append(f"Cuerpo de agua más cercano: {g['tipo_cuerpo_agua'].replace('_', ' ')} a {g['distancia_cuerpo_agua_m']:,.0f} m.")
-    partes.append("Respaldado por: DEM Copernicus 30 m (modelo de superficie; incluye edificios) y cauces modelados, no oficiales.")
-    no = ["antecedentes de inundación", "zona inundable oficial", "población, viviendas y marginación"]
+    a = p["antecedentes_inundacion"]
+    if a["registros"]:
+        partes.append(f"Antecedentes: {_texto_antecedentes(a)}.")
+    partes.append("Respaldado por: DEM Copernicus 30 m (modelo de superficie; incluye edificios), cauces modelados no oficiales"
+                  + (" y registros de prensa/avisos asignados por nombre de colonia." if a["registros"] else "."))
+    no = ["zona inundable oficial", "población, viviendas y marginación"]
+    if not a["registros"]:
+        no.insert(0, "antecedentes de inundación (sin registros en la búsqueda; no implica que no hayan ocurrido)")
     if h["precipitacion_1h_mm"] is None:
         no.append(f"precipitación representativa ({h['motivo_precipitacion_null']})")
     partes.append("No determinado: " + "; ".join(no) + ".")
@@ -161,7 +196,8 @@ def ficha(p) -> str:
         f"- Elevación: {_elev_rel(g['elevacion_relativa_m'])}.",
         f"- Cercanía a cuerpos de agua: {_cercania(g)}.",
         f"- Altura sobre el cauce (HAND): {g['hand_mediana_m'] if g['hand_mediana_m'] is not None else 'no determinada'} m.",
-        "- Antecedentes de inundación: sin información disponible.",
+        "- Antecedentes de inundación: " + (_texto_antecedentes(p["antecedentes_inundacion"]) if p["antecedentes_inundacion"]["registros"]
+                                             else "sin registros encontrados (no implica que no hayan ocurrido)") + ".",
         "- Vulnerabilidad social: sin información disponible (INEGI/CONAPO pendientes).",
         "- Población potencialmente expuesta: sin información disponible.",
         "- Precipitación reciente: " + (

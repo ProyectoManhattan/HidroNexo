@@ -11,6 +11,8 @@ POLIGONOS = DATA / "colonias_veracruz.geojson"
 CONAGUA = FUENTES / "conagua"
 DEM_DIR = FUENTES / "dem"
 NATURAL_EARTH = FUENTES / "natural_earth"
+SEPOMEX = FUENTES / "sepomex_cp_mexico" / "csv" / "CP_VERACRUZ.csv"
+ANTECEDENTES = DATA / "antecedentes" / "eventos_inundacion.json"
 
 FECHA_PROCESO = datetime.now(timezone.utc).replace(microsecond=0)
 
@@ -56,6 +58,17 @@ FUENTES_DOC = {
         "origen": "Natural Earth (dominio público) vía GitHub nvkelso/natural-earth-vector",
         "url": "https://github.com/nvkelso/natural-earth-vector",
         "limitaciones": "Escala 1:10 000 000: no incluye ríos ni lagunas locales cerca de Veracruz; solo se usa para contrastar la costa.",
+    },
+    "sepomex": {
+        "nombre": "Catálogo de códigos postales SEPOMEX (Correos de México), copia de 2021",
+        "origen": "Repositorio Swumplurd/cp-mexico (GitHub). Uso particular; no se redistribuye: queda en data/fuentes/",
+        "url": "https://github.com/Swumplurd/cp-mexico",
+        "limitaciones": "Copia de 2021: puede faltar colonias nuevas. Relaciona nombre de asentamiento con CP, sin geometría.",
+    },
+    "antecedentes": {
+        "nombre": "Antecedentes de inundación curados (data/antecedentes/eventos_inundacion.json)",
+        "origen": "Prensa, avisos y notas sobre el Atlas de Riesgo municipal; búsqueda web del 2026-11-12",
+        "limitaciones": "Inventario incompleto y sesgado a lo que cubre la prensa; resúmenes del buscador, artículos no abiertos. La ausencia de registro no implica ausencia de inundaciones.",
     },
     "conagua_catalogo": {
         "nombre": "CATALOGO_SIH.csv (CONAGUA, Sistema de Información Hidrológica)",

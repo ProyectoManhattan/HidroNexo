@@ -1,6 +1,6 @@
 # Metodología · Perfiles territoriales de HIDRA
 
-Generado el 2026-11-12T02:56:29+00:00 con `python3 -m data.scripts.perfiles_territoriales`.
+Generado el 2026-11-12T03:06:56+00:00 con `python3 -m data.scripts.perfiles_territoriales`.
 
 ## 1. Unidad territorial
 
@@ -28,8 +28,9 @@ Teselas del DEM: Copernicus_DSM_COG_10_N18_00_W096_00_DEM.tif, Copernicus_DSM_CO
 
 **No disponibles** (no estaban en el repositorio y sus sitios no eran accesibles desde el entorno de procesamiento):
 INEGI (Censo 2020 por AGEB/manzana, Marco Geoestadístico, red hidrográfica 1:50 000), CONAPO (marginación urbana 2020),
-CONAGUA `PRECACUM_HORA.csv`, capas oficiales de zonas inundables (Atlas de Riesgos estatal 2023, publicado en PDF; atlas
-municipal de 2006) y registros históricos de inundación. Las variables que dependen de ellas quedan en `null`.
+CONAGUA `PRECACUM_HORA.csv` y capas oficiales de zonas inundables (Atlas de Riesgos estatal 2023, publicado en PDF; atlas
+municipal de 2006). Las variables que dependen de ellas quedan en `null`. Los antecedentes de inundación se compilaron
+de prensa y avisos (sección 5).
 
 Los archivos crudos se guardan en `data/fuentes/`, que **no se sube al repositorio** (`.gitignore`).
 
@@ -71,7 +72,26 @@ HAND mediano (0.0, 2.51, 20.88) m.
   la referencia (escala local o msnm) no está documentada.
 - Todos los datos son del 2023-04-12: son **históricos**, no tiempo real.
 
-## 5. Vulnerabilidad social (pendiente)
+## 5. Antecedentes de inundación
+
+1. **Compilación** (`data/antecedentes/eventos_inundacion.json`): búsqueda web del 2026-11-12
+   en prensa, avisos y notas sobre el Atlas de Riesgo municipal. Cada evento conserva fecha, tipo, colonias **tal como las
+   nombra la fuente** y enlaces. Los artículos no se pudieron abrir desde el entorno (red restringida): el contenido viene
+   de los resúmenes del buscador y debe verificarse en la fuente.
+2. **Tipos**: `evento_observado` (inundación reportada), `alerta_preventiva` (colonias en riesgo ante un fenómeno, sin
+   confirmar inundación) y `riesgo_identificado` (colonias propensas o con inundaciones recurrentes, sin fecha de evento).
+3. **De colonia a código postal**: con el catálogo SEPOMEX (Catálogo de códigos postales SEPOMEX (Correos de México), copia de 2021), comparando nombres
+   normalizados (sin acentos ni prefijos) dentro del municipio indicado por la fuente, o de los tres si no lo indica:
+   - un solo CP y nombre idéntico → asignación única, confianza alta;
+   - un solo CP por coincidencia parcial o alias (posibles erratas de la fuente, marcadas) → única, confianza media;
+   - varios CP pero uno es colonia/fraccionamiento con nombre exacto → ese CP, confianza media;
+   - varios CP sin criterio → **ambigua**: se anota en todos los candidatos con confianza baja y **no** cuenta como evento registrado.
+   El detalle de cada mención está en `antecedentes_asignacion.csv`.
+4. `eventos_registrados` = eventos observados distintos con asignación única al polígono. **No es una frecuencia** y su
+   ausencia no significa que no haya habido inundaciones: la prensa cubre de forma desigual y solo se nombran algunas colonias.
+5. No se usa en el índice preliminar: su cobertura es parcial y sesgada, y metería ese sesgo en la comparación entre zonas.
+
+## 5b. Vulnerabilidad social (pendiente)
 
 Método propuesto al contar con INEGI y CONAPO: (a) distribuir la población de cada AGEB a la zona postal según la
 fracción de sus **manzanas** (preferente) o de su área (respaldo) que cae en la zona; (b) para índices como la
@@ -110,6 +130,15 @@ conjunto", no un umbral físico.
 > inundación y HIDRA no predice inundaciones con él. Hay variables correlacionadas (elevación relativa y HAND), que el
 > promedio simple sobrepondera. Amenaza y exposición no se calculan porque faltan datos representativos.
 
+### Contraste preliminar con antecedentes (no es validación)
+
+| Grupo | Polígonos | Índice mediano | Elevación relativa mediana (m) | HAND mediano (m) |
+|---|---|---|---|---|
+| con evento documentado | 13 | 65.5 | -0.96 | 1.86 |
+| sin evento documentado | 88 | 50.95 | 0.13 | 2.54 |
+
+Si los polígonos con antecedentes muestran índices más altos, es una señal de coherencia, **no una validación**: la muestra es pequeña, los antecedentes dependen de la cobertura de prensa y la asignación colonia → CP tiene incertidumbre. Validar requiere un inventario sistemático de eventos (p. ej., de Protección Civil) y una prueba estadística.
+
 ## 7. Trazabilidad por variable
 
 | Variable | Unidad | Fuente | Método | Resolución | Fecha de observación | Confianza / limitaciones |
@@ -133,6 +162,7 @@ conjunto", no un umbral físico.
 | `precipitacion_24h_mm` | mm (supuesto) | CONAGUA SIH · PRECIPITACION_HORA.csv | Ídem, ventana de 24 h; incompleta si la serie inicia después | puntual | 2023-04-12 | baja: la serie cubre menos de 24 h |
 | `distancia_estacion_km` | km | CONAGUA SIH · CATALOGO_SIH.csv | Distancia de la estación al borde del polígono (0 si está dentro), UTM 14N | puntual | no aplica | alta para la distancia; no implica representatividad |
 | `nivel_rio` | desconocida (probablemente m) | CONAGUA SIH · NIVEL_RIOS_DIA.csv | Último registro de la estación hidrométrica más cercana | puntual | 2023-04-12 | baja: referencia y unidad no documentadas |
+| `eventos_registrados` | número de eventos | Prensa y avisos (data/antecedentes/eventos_inundacion.json) + SEPOMEX | Eventos observados distintos cuya colonia mencionada corresponde sin ambigüedad al CP del polígono | colonia → código postal | 2010–2026 según el evento | baja-media: inventario incompleto, sesgado a cobertura de prensa; no es frecuencia |
 | `poblacion` | personas | INEGI Censo 2020 (no disponible) | Pendiente: interpolación areal de AGEB/manzana a zona postal | AGEB/manzana | no aplica | no calculado |
 | `indice_marginacion` | índice | CONAPO 2020 por AGEB (no disponible) | Pendiente: promedio ponderado por población de las AGEB que intersectan | AGEB | no aplica | no calculado |
 | `indice_susceptibilidad_preliminar` | 0–100 (relativo) | derivado | Promedio simple de subindicadores normalizados por percentil entre los 101 polígonos. HIPÓTESIS DE DISEÑO sin calibrar ni validar | zona postal | no aplica | no validado: no es probabilidad de inundación |

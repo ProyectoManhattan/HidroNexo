@@ -1,6 +1,6 @@
 # Calidad de datos · Perfiles territoriales
 
-Procesado el 2026-11-12T02:56:29+00:00. Nada se eliminó: los problemas se marcan y documentan.
+Procesado el 2026-11-12T03:06:56+00:00. Nada se eliminó: los problemas se marcan y documentan.
 
 ## Resumen
 
@@ -11,6 +11,13 @@ Procesado el 2026-11-12T02:56:29+00:00. Nada se eliminó: los problemas se marca
 - Todos los datos hidrometeorológicos son del **2023-04-12**: históricos, no tiempo real.
 - Estaciones del catálogo a ≤ 5.0 km de algún polígono **sin datos** en los archivos recibidos:
   27 (B28039, B28040, C30018, C30048, C30056, C30136, C30192, C30324, C30468, COPVC, CORVC, COTAXTLA, CPREVISIÓN, CPRVC, ELTEJAR, ETEVC, IFLAPOSTAMED, JAMAPA, LAPOSTAVC, MFAVC, PASOTORO, PDTVC, SJNVC, UGALVANESIME, VERACRUZob…). Conseguir sus series mejoraría mucho la cobertura.
+
+## Antecedentes de inundación
+
+- Menciones de colonias en las fuentes: 53. Asignadas sin ambigüedad: 41; ambiguas: 2; sin
+  coincidencia en SEPOMEX: 10 (Colina de Los Pájaros, Cuenca I y II, Esperanza, Geo Villas del Puerto, Las Reservas, Mangal, Matacocuite, Muñiz, Paso Real, Vergara de Tarimoya).
+- Polígonos con al menos un evento documentado: 13; con algún registro (evento, alerta o riesgo): 22 de 101.
+- Las menciones sin coincidencia pueden ser asentamientos nuevos, nombres coloquiales o erratas de la fuente; requieren revisión manual.
 
 ## Problemas generales de las fuentes
 
@@ -25,6 +32,18 @@ Procesado el 2026-11-12T02:56:29+00:00. Nada se eliminó: los problemas se marca
 | unidades | NIVEL_RIOS_DIA mezcla magnitudes (de −1.1 a 2 561): probablemente elevación del agua (msnm) en unas estaciones y lectura de escala local en otras; sin metadatos no se comparan niveles entre estaciones |
 | estacion_sin_catalogo | Estaciones con datos pero sin coordenadas en el catálogo: LOSHERRERA |
 | coordenada_invalida | 1 estaciones con datos tienen coordenadas inválidas en el catálogo y no se pueden asociar |
+| antecedente_sin_ubicar | 'Las Reservas' (dt_90l_2014) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Vergara de Tarimoya' (dt_90l_2014) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Esperanza' (katia_2017_alerta) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Cuenca I y II' (katia_2017_alerta) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Mangal' (katia_2017_alerta) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Paso Real' (katia_2017_alerta) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_ambiguo | 'Río Medio' (recurrencia_azteca_veracruz) puede ser los CP 91808, 91809 |
+| antecedente_sin_ubicar | 'Muñiz' (onda_tropical_20_2025) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Colina de Los Pájaros' (tormenta_2026_10_02) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Matacocuite' (tormenta_2026_10_02) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_sin_ubicar | 'Geo Villas del Puerto' (tormenta_2026_10_02) no aparece en SEPOMEX para el municipio indicado |
+| antecedente_ambiguo | 'La Carranza' (tormenta_2026_10_02) puede ser los CP 91759, 94297 |
 
 ## Problemas por polígono
 
@@ -43,7 +62,6 @@ Procesado el 2026-11-12T02:56:29+00:00. Nada se eliminó: los problemas se marca
 
 | Variable | Polígonos sin dato |
 |---|---|
-| `antecedentes.eventos_registrados` | 101 de 101 |
 | `antecedentes.zona_inundable_oficial` | 101 de 101 |
 | `hidromet.precipitacion_1h_mm` | 101 de 101 |
 | `hidromet.precipitacion_24h_mm` | 101 de 101 |
@@ -53,6 +71,7 @@ Procesado el 2026-11-12T02:56:29+00:00. Nada se eliminó: los problemas se marca
 | `vulnerabilidad.indice_marginacion` | 101 de 101 |
 | `vulnerabilidad.poblacion` | 101 de 101 |
 | `vulnerabilidad.viviendas` | 101 de 101 |
+| `antecedentes.eventos_registrados` | 88 de 101 |
 
 ## Limitaciones conocidas
 

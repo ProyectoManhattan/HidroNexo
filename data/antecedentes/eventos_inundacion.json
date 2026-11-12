@@ -1,0 +1,240 @@
+{
+  "descripcion": "Antecedentes de inundación documentados para Veracruz, Boca del Río y Medellín de Bravo. Registro curado a partir de prensa, avisos oficiales y notas sobre el Atlas de Riesgo municipal. NO es un inventario completo: la ausencia de un registro no implica que no haya habido inundaciones.",
+  "fecha_compilacion": "2026-11-12",
+  "metodo": "Búsqueda web el 2026-11-12. Los artículos no se pudieron abrir desde el entorno de procesamiento (red restringida): el contenido se tomó de los resúmenes del buscador, por lo que cada registro debe verificarse en la fuente original antes de usarse en decisiones.",
+  "tipos": {
+    "evento_observado": "Inundación o anegamiento reportado como ocurrido",
+    "alerta_preventiva": "Colonias señaladas en riesgo ante un fenómeno; no confirma que se inundaran",
+    "riesgo_identificado": "Colonias que una autoridad o la prensa identifican como propensas o con inundaciones recurrentes, sin fecha de evento"
+  },
+  "eventos": [
+    {
+      "id": "karl_2010",
+      "nombre": "Huracán Karl",
+      "fecha": "2010-09",
+      "precision_fecha": "mes",
+      "tipo": "evento_observado",
+      "fenomeno": "huracán",
+      "descripcion": "Alrededor de 100 colonias anegadas en la zona conurbada Veracruz–Boca del Río; los ríos Jamapa y Cotaxtla explican buena parte de la inundación; unas 500 000 personas damnificadas en el estado.",
+      "municipios": ["Veracruz", "Boca del Río"],
+      "colonias": [
+        {"nombre_fuente": "El Manantial", "municipio": "Boca del Río"}
+      ],
+      "fuentes": [
+        {"medio": "La Jornada", "fecha": "2010-09-20", "url": "https://www.jornada.com.mx/2010/09/20/"},
+        {"medio": "Expansión", "fecha": "2010-09-20", "url": "https://expansion.mx/nacional/2010/09/20/el-numero-de-muertos-en-veracruz-a-causa-de-karl-sube-a-12"},
+        {"medio": "Universidad Veracruzana (Universo)", "fecha": "2010", "url": "https://uv.mx/universo-hemeroteca/416/campus/campus_05.html"},
+        {"medio": "Universidad Veracruzana · Las inundaciones de 2010 en Veracruz, tomo III", "fecha": "2019", "url": "https://www.uv.mx/peccuv/files/2019/07/Inundaciones-en-Veracruz-2010-Tomo-III.pdf"}
+      ],
+      "notas": "Solo una colonia aparece nombrada en los resultados; las ~100 colonias no tienen lista disponible."
+    },
+    {
+      "id": "dt_90l_2014",
+      "nombre": "Depresión tropical (disturbio 90L)",
+      "fecha": "2014-06",
+      "precision_fecha": "mes",
+      "tipo": "evento_observado",
+      "fenomeno": "depresión tropical",
+      "descripcion": "Treinta colonias del puerto con daños; en Boca del Río se desbordó el canal de desagüe Dren B.",
+      "municipios": ["Veracruz", "Boca del Río"],
+      "colonias": [
+        {"nombre_fuente": "Las Amapolas", "municipio": "Veracruz"},
+        {"nombre_fuente": "Floresta", "municipio": "Veracruz"},
+        {"nombre_fuente": "Las Reservas", "municipio": "Veracruz"},
+        {"nombre_fuente": "Vergara de Tarimoya", "municipio": "Veracruz"},
+        {"nombre_fuente": "La Pochota", "municipio": "Veracruz"},
+        {"nombre_fuente": "Villa Rica", "municipio": "Veracruz"},
+        {"nombre_fuente": "Colonias de Santa Fe", "municipio": "Veracruz", "alias": ["Colinas de Santa Fe"], "nota_alias": "Posible errata de la fuente; interpretación no confirmada"},
+        {"nombre_fuente": "Las Brisas", "municipio": "Veracruz"}
+      ],
+      "fuentes": [
+        {"medio": "La Jornada", "fecha": "2014-06-08", "url": "https://www.jornada.com.mx/2014/06/08/estados/028n3est"}
+      ],
+      "notas": "La fuente menciona 30 colonias; solo 8 aparecen nombradas en el resumen."
+    },
+    {
+      "id": "earl_2016",
+      "nombre": "Tormenta tropical Earl",
+      "fecha": "2016-08",
+      "precision_fecha": "mes",
+      "tipo": "evento_observado",
+      "fenomeno": "tormenta tropical",
+      "descripcion": "Los ríos Cotaxtla y Jamapa rebasaron sus límites y se desbordaron en comunidades de los alrededores.",
+      "municipios": [],
+      "colonias": [],
+      "fuentes": [
+        {"medio": "Eje Central", "fecha": "sin fecha visible", "url": "https://www.ejecentral.com.mx/conagua-alerta-por-aumento-en-niveles-de-rios-de-veracruz?p=21"}
+      ],
+      "notas": "Sin colonias ni municipios específicos: no se asigna a polígonos."
+    },
+    {
+      "id": "katia_2017_alerta",
+      "nombre": "Alerta máxima por el huracán Katia",
+      "fecha": "2017-09",
+      "precision_fecha": "mes (inferida: Katia tocó tierra en Veracruz en septiembre de 2017; la nota no muestra fecha)",
+      "tipo": "alerta_preventiva",
+      "fenomeno": "huracán / crecida de los ríos Jamapa y Cotaxtla",
+      "descripcion": "Aviso especial del Comité Estatal de Emergencias para Jamapa, Medellín, Boca del Río y Veracruz por el ascenso drástico de los ríos; ~100 mm en la parte alta de las cuencas.",
+      "municipios": ["Boca del Río", "Veracruz", "Medellín de Bravo"],
+      "colonias": [
+        {"nombre_fuente": "Carranza", "municipio": "Boca del Río"},
+        {"nombre_fuente": "Plan de Ayala", "municipio": "Boca del Río"},
+        {"nombre_fuente": "Miguel Alemán", "municipio": "Boca del Río"},
+        {"nombre_fuente": "López Portillo", "municipio": "Boca del Río"},
+        {"nombre_fuente": "Floresta", "municipio": "Veracruz"},
+        {"nombre_fuente": "Flores del Valle", "municipio": "Veracruz"},
+        {"nombre_fuente": "Esperanza", "municipio": "Medellín de Bravo"},
+        {"nombre_fuente": "Cuenca I y II", "municipio": "Medellín de Bravo", "alias": ["Cuenca"]},
+        {"nombre_fuente": "Mangal", "municipio": "Medellín de Bravo"},
+        {"nombre_fuente": "Copital", "municipio": "Medellín de Bravo"},
+        {"nombre_fuente": "Dos Bocas", "municipio": "Medellín de Bravo"},
+        {"nombre_fuente": "Paso Colorado", "municipio": "Medellín de Bravo"},
+        {"nombre_fuente": "Paso Real", "municipio": "Medellín de Bravo"}
+      ],
+      "fuentes": [
+        {"medio": "El Universal", "fecha": "sin fecha visible", "url": "https://www.eluniversal.com.mx/estados/emiten-alerta-maxima-para-4-municipios-de-veracruz-por-katia/"}
+      ],
+      "notas": "Es una alerta: indica colonias en riesgo, no inundaciones confirmadas."
+    },
+    {
+      "id": "atlas_municipal_veracruz_2025",
+      "nombre": "Atlas de Riesgo municipal de Veracruz: 36 colonias en riesgo de inundación",
+      "fecha": "2025-06",
+      "precision_fecha": "mes de las notas",
+      "tipo": "riesgo_identificado",
+      "fenomeno": "inundación pluvial",
+      "descripcion": "Protección Civil municipal señala 36 colonias con riesgo de inundación; aclara que no se inundarían en su totalidad y que depende de la lluvia.",
+      "municipios": ["Veracruz"],
+      "colonias": [
+        {"nombre_fuente": "Pocitos y Rivera", "municipio": "Veracruz"},
+        {"nombre_fuente": "Acosta Lagunes", "municipio": "Veracruz"},
+        {"nombre_fuente": "Floresta", "municipio": "Veracruz"},
+        {"nombre_fuente": "Chivería", "municipio": "Veracruz"},
+        {"nombre_fuente": "Amapolas", "municipio": "Veracruz"},
+        {"nombre_fuente": "Bonfil", "municipio": "Veracruz"},
+        {"nombre_fuente": "Lorenzo Barcelata", "municipio": "Veracruz"},
+        {"nombre_fuente": "Artículo 123", "municipio": "Veracruz"}
+      ],
+      "fuentes": [
+        {"medio": "Meganoticias", "fecha": "2025", "url": "https://www.meganoticias.mx/veracruz/noticia/36-colonias-en-veracruz-puerto-en-riesgo-de-inundaciones-por-lluvias-alertan/633936"},
+        {"medio": "Imagen de Veracruz", "fecha": "sin fecha visible", "url": "https://imagendeveracruz.mx/veracruz/pc-alerta-riesgo-de-inundaciones-en-36-colonias-de-veracruz-por-temporada-de-lluvias/50692904"},
+        {"medio": "Imagen de Veracruz", "fecha": "sin fecha visible", "url": "https://imagendeveracruz.mx/veracruz/conoce-las-36-colonias-de-veracruz-que-cuentan-con-riesgo-de-inundacion-y-deslaves/50233815"}
+      ],
+      "notas": "Solo 8 de las 36 colonias aparecen nombradas en los resúmenes. Conviene pedir el listado completo a Protección Civil municipal."
+    },
+    {
+      "id": "recurrencia_azteca_veracruz",
+      "nombre": "Colonias con anegamientos recurrentes (prensa)",
+      "fecha": null,
+      "precision_fecha": "sin fecha",
+      "tipo": "riesgo_identificado",
+      "fenomeno": "anegamiento pluvial",
+      "descripcion": "Colonias que registran anegamientos cada temporada de lluvias.",
+      "municipios": ["Veracruz", "Boca del Río"],
+      "colonias": [
+        {"nombre_fuente": "Río Medio", "municipio": "Veracruz"},
+        {"nombre_fuente": "El Coyol", "municipio": "Veracruz"},
+        {"nombre_fuente": "Las Brisas", "municipio": "Veracruz"},
+        {"nombre_fuente": "Playa Linda", "municipio": "Veracruz"},
+        {"nombre_fuente": "Las Vegas I y II", "municipio": "Boca del Río", "alias": ["Las Vegas"]}
+      ],
+      "fuentes": [
+        {"medio": "Azteca Veracruz", "fecha": "sin fecha visible", "url": "https://www.aztecaveracruz.com/tendencia/colonias-veracruz-que-se-inundan-mas-cuando-llueve/"}
+      ]
+    },
+    {
+      "id": "recurrencia_esteban_morales",
+      "nombre": "Inundaciones recurrentes en la zona de la calle Esteban Morales (prensa)",
+      "fecha": null,
+      "precision_fecha": "sin fecha",
+      "tipo": "riesgo_identificado",
+      "fenomeno": "inundación pluvial (hasta ~1 m)",
+      "descripcion": "Zona que se inunda cada temporada de lluvias; el agua alcanzó casi un metro.",
+      "municipios": ["Veracruz"],
+      "colonias": [
+        {"nombre_fuente": "Costa Lagunes", "municipio": "Veracruz", "alias": ["Acosta Lagunes"], "nota_alias": "Probable errata de la fuente por 'Acosta Lagunes'"},
+        {"nombre_fuente": "Positos y Rebea", "municipio": "Veracruz", "alias": ["Pocitos y Rivera"], "nota_alias": "Probable errata de la fuente por 'Pocitos y Rivera'"},
+        {"nombre_fuente": "Los Volcanes", "municipio": "Veracruz"}
+      ],
+      "fuentes": [
+        {"medio": "N+", "fecha": "sin fecha visible", "url": "https://www.nmas.com.mx/veracruz/sociedad/lluvia-causa-severas-inundaciones-en-la-calle-esteban-morales-de-veracruz/"}
+      ]
+    },
+    {
+      "id": "onda_tropical_20_2025",
+      "nombre": "Onda tropical 20",
+      "fecha": "2025-08",
+      "precision_fecha": "mes",
+      "tipo": "evento_observado",
+      "fenomeno": "onda tropical",
+      "descripcion": "Inundaciones en Boca del Río, destacadamente en las calles Tlacotalpan y Agustín Lara; zona ya identificada como de riesgo.",
+      "municipios": ["Boca del Río"],
+      "colonias": [
+        {"nombre_fuente": "Obrera", "municipio": "Boca del Río"},
+        {"nombre_fuente": "Muñiz", "municipio": "Boca del Río"}
+      ],
+      "fuentes": [
+        {"medio": "N+", "fecha": "2025-08", "url": "https://www.nmas.com.mx/veracruz/clima/lluvia-en-veracruz-afectaciones-inundaciones-onda-tropical-20-seguira-lloviendo/"}
+      ]
+    },
+    {
+      "id": "frente_frio_16_2025",
+      "nombre": "Frente frío 16",
+      "fecha": "2025-11-28",
+      "precision_fecha": "día",
+      "tipo": "evento_observado",
+      "fenomeno": "frente frío",
+      "descripcion": "Anegamientos de calles y un deslave en Veracruz puerto.",
+      "municipios": ["Veracruz"],
+      "colonias": [],
+      "fuentes": [
+        {"medio": "e-veracruz", "fecha": "2025-11-28", "url": "https://e-veracruz.mx/nota/2025-11-28/municipios/inundaciones-y-deslave-deja-frente-frio-16-en-veracruz-puerto"}
+      ],
+      "notas": "Sin colonias nombradas en el resumen: no se asigna a polígonos."
+    },
+    {
+      "id": "lluvias_2026_06_01",
+      "nombre": "Lluvias del 1 de junio de 2026",
+      "fecha": "2026-06-01",
+      "precision_fecha": "día",
+      "tipo": "evento_observado",
+      "fenomeno": "lluvia intensa",
+      "descripcion": "Inundaciones, socavones y vehículos varados, principalmente en colonias de la zona norte de Veracruz y en avenidas del centro.",
+      "municipios": ["Veracruz"],
+      "colonias": [],
+      "fuentes": [
+        {"medio": "e-veracruz", "fecha": "2026-06-01", "url": "https://da21w.e-veracruz.mx/nota/2026-06-01/veracruz/lluvias-causan-inundaciones-socavones-y-caos-vial-en-veracruz"}
+      ],
+      "notas": "Solo se nombran avenidas (Cuauhtémoc, Miguel Ángel de Quevedo, Miguel Alemán, Allende, Díaz Mirón, 20 de Noviembre, Lafragua), no colonias: no se asigna a polígonos."
+    },
+    {
+      "id": "tormenta_2026_10_02",
+      "nombre": "Tormenta eléctrica del 2 de octubre de 2026",
+      "fecha": "2026-10-02",
+      "precision_fecha": "día",
+      "tipo": "evento_observado",
+      "fenomeno": "tormenta eléctrica",
+      "descripcion": "Inundaciones de madrugada en colonias de Veracruz y Boca del Río; el agua entró a viviendas.",
+      "municipios": ["Veracruz", "Boca del Río", "Medellín de Bravo"],
+      "colonias": [
+        {"nombre_fuente": "El Tejar", "municipio": null},
+        {"nombre_fuente": "Costa Verde", "municipio": null},
+        {"nombre_fuente": "Las Vegas", "municipio": null},
+        {"nombre_fuente": "Tejería", "municipio": null},
+        {"nombre_fuente": "Floresta", "municipio": null},
+        {"nombre_fuente": "Puente Moreno", "municipio": null},
+        {"nombre_fuente": "Valle Alto", "municipio": null},
+        {"nombre_fuente": "Colina de Los Pájaros", "municipio": null},
+        {"nombre_fuente": "La Boticaria", "municipio": null},
+        {"nombre_fuente": "Matacocuite", "municipio": null},
+        {"nombre_fuente": "Revolución", "municipio": null},
+        {"nombre_fuente": "Geo Villas del Puerto", "municipio": null},
+        {"nombre_fuente": "La Carranza", "municipio": null, "alias": ["Carranza"]}
+      ],
+      "fuentes": [
+        {"medio": "La Silla Rota", "fecha": "2026-10-02", "url": "https://lasillarota.com/veracruz/local/2026/10/2/inundaciones-en-veracruz-boca-del-rio-estas-fueron-las-colonias-afectadas-hoy-2-de-octubre-531108.html"}
+      ],
+      "notas": "La fuente no indica el municipio de cada colonia: se buscan en los tres municipios."
+    }
+  ]
+}

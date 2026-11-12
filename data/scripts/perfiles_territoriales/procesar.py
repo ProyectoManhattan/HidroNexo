@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import pandas as pd
 
-from . import carga, config, geoespacial, hidromet, indicadores, perfiles
+from . import antecedentes, carga, config, geoespacial, hidromet, indicadores, perfiles
 from .calidad import Bitacora
 
 
@@ -26,6 +26,7 @@ def ejecutar() -> dict:
     costa = geoespacial.distancia_costa_natural_earth(g)
     hm = hidromet.Hidromet(cat, prec, niv, bit)
     hid = {r.id_poligono: hm.para_poligono(r.id_poligono, metrico.iloc[i]) for i, r in g.iterrows()}
+    ant = antecedentes.asignar(set(g["id_poligono"]), bit)
 
     # Controles de consistencia física (se marcan, no se eliminan)
     for pid, d in geo.items():
@@ -55,11 +56,15 @@ def ejecutar() -> dict:
         pid = r.id_poligono
         indices = {dim: {k: (None if pd.isna(v) else (int(v) if k == "n_variables" else v)) for k, v in t.loc[pid].items()}
                    for dim, t in ind.items()}
-        lista.append(perfiles.construir(r, ident[pid], geo[pid], costa.get(pid), hid[pid], norm.loc[pid].to_dict(), indices, bit))
+        ant_pid = antecedentes.resumen_poligono(ant["por_cp"].get(pid, []))
+        lista.append(perfiles.construir(r, ident[pid], geo[pid], costa.get(pid), hid[pid], norm.loc[pid].to_dict(), indices, bit, ant_pid))
 
     fuentes = {k: dict(v) for k, v in config.FUENTES_DOC.items()}
     fuentes["dem"]["teselas"] = terreno.tiles
     fuentes["dem"]["fecha_descarga"] = _fecha_archivo(config.DEM_DIR / terreno.tiles[0])
+    if config.SEPOMEX.exists():
+        fuentes["sepomex"]["fecha_descarga"] = _fecha_archivo(config.SEPOMEX)
+    fuentes["antecedentes"]["fecha_compilacion"] = ant["meta"]["fecha_compilacion"]
     fuentes["natural_earth"]["fecha_descarga"] = _fecha_archivo(config.NATURAL_EARTH / "ne_10m_coastline.geojson")
     for clave, archivo in (("conagua_catalogo", "CATALOGO_SIH.csv"), ("conagua_precipitacion", "PRECIPITACION_HORA.csv"), ("conagua_nivel", "NIVEL_RIOS_DIA.csv")):
         fuentes[clave]["fecha_recepcion"] = _fecha_archivo(config.CONAGUA / archivo)
@@ -67,4 +72,4 @@ def ejecutar() -> dict:
     fuentes["conagua_nivel"]["periodo"] = [niv["fecha"].min().isoformat(), niv["fecha"].max().isoformat()]
 
     return {"g": g, "perfiles": lista, "bitacora": bit, "fuentes": fuentes, "tabla": tabla, "normalizado": norm,
-            "hidromet": hm, "terreno": terreno, "precip": prec, "niveles": niv, "catalogo": cat}
+            "hidromet": hm, "antecedentes": ant, "terreno": terreno, "precip": prec, "niveles": niv, "catalogo": cat}
