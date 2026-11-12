@@ -9,7 +9,7 @@ function lineaPronostico(p: Record<string, unknown>): string {
   if (!Number.isFinite(prob) || prob < 0) return ''
   const mm = Number(p.pron_mm_3h ?? 0)
   return (
-    `<div style="color:#1E5AA8;font-size:12px;margin-top:4px">` +
+    `<div style="color:#126783;font-size:13px;margin-top:4px">` +
     `Pronóstico 3 h: ${esc(mm.toFixed(1))} mm · ${esc(Math.round(prob))} % de probabilidad</div>`
   )
 }
@@ -52,7 +52,7 @@ export function popupReporte(p: Record<string, unknown>): string {
   const c = categoriaInfo(p.categoria as string)
   const sev = SEVERIDADES[Number(p.severidad) as 1 | 2 | 3] ?? ''
   const desc = p.descripcion ? `<div style="margin:6px 0">${esc(p.descripcion)}</div>` : ''
-  const col = p.colonia ? `<div style="color:#5B6675;font-size:12px">Colonia: ${esc(p.colonia)}</div>` : ''
+  const col = p.colonia ? `<div style="color:#526273;font-size:13px">Zona postal: ${esc(p.colonia)}</div>` : ''
   return (
     `<div style="min-width:190px;max-width:260px;font-size:13px">` +
     `<div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:${c.color}"></span>` +

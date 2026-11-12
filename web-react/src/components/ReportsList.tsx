@@ -1,16 +1,14 @@
 import { useMemo } from 'react'
-import { resolverReporte } from '../api/client'
 import { SEVERIDADES, categoriaInfo, hace } from '../constants'
-import { comoOperador, seleccionarColonia, useStore } from '../store'
+import { seleccionarColonia, useStore } from '../store'
 import type { Reporte } from '../types'
-import { Badge, ErrorBox, Vacio, useAccion } from './sidebar/ui'
+import { Badge, Vacio } from './sidebar/ui'
 
 export default function ReportsList() {
   const reportes = useStore((s) => s.reportes)
   const filtro = useStore((s) => s.filtro)
   const zonas = useStore((s) => s.zonas)
   const seleccionada = useStore((s) => s.coloniaSeleccionada)
-  const accion = useAccion()
 
   const visibles = useMemo(() => {
     const lluvia = ['inundacion', 'encharcamiento', 'alcantarilla']
@@ -28,12 +26,15 @@ export default function ReportsList() {
     return m
   }, [zonas])
 
-  if (visibles.length === 0) return <Vacio icono="📭" texto="Sin reportes activos" />
+  if (visibles.length === 0) return <Vacio icono="○" texto="Sin reportes activos" detalle="No se han recibido observaciones ciudadanas para este filtro." />
 
   return (
-    <div className="p-3">
-      <ErrorBox texto={accion.error} />
-      <ul className="space-y-2">
+    <div className="p-4">
+      <div className="mb-4">
+        <h2 className="text-base font-extrabold text-slate-900">Reportes ciudadanos</h2>
+        <p className="mt-1 text-sm leading-relaxed text-slate-600">Observaciones sin validación automática por una autoridad. Selecciona una para ubicar su zona postal.</p>
+      </div>
+      <ul className="divide-y divide-slate-200 border-y border-slate-200">
         {visibles.map((r) => {
           const cat = categoriaInfo(r.categoria)
           const colonia = r.colonia_id != null ? nombres.get(r.colonia_id) : undefined
@@ -42,35 +43,23 @@ export default function ReportsList() {
             <li
               key={r.id}
               onClick={() => clic && seleccionarColonia(r.colonia_id)}
-              className={`rounded-lg border bg-white p-2.5 text-sm shadow-sm ${clic ? 'cursor-pointer hover:border-blue-400' : ''} ${
-                r.colonia_id != null && r.colonia_id === seleccionada ? 'border-blue-500 ring-1 ring-blue-300' : 'border-gray-200'
-              }`}
+              onKeyDown={(e) => { if (clic && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); seleccionarColonia(r.colonia_id) } }}
+              role={clic ? 'button' : undefined}
+              tabIndex={clic ? 0 : undefined}
+              className={`interactive-row py-3 text-[15px] ${clic ? 'cursor-pointer px-2' : ''} ${r.colonia_id != null && r.colonia_id === seleccionada ? 'border-l-4 border-[var(--color-action-primary)] bg-cyan-50/50 pl-3' : ''}`}
             >
               <div className="flex flex-wrap items-center gap-2">
-                <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: cat.color }} />
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-black text-white" style={{ background: cat.color }} aria-hidden>{cat.letra}</span>
                 <span className="font-medium text-gray-900">{cat.texto}</span>
                 <Badge className="bg-gray-100 text-gray-600">Severidad {SEVERIDADES[r.severidad] ?? r.severidad}</Badge>
-                <Badge className={r.origen === 'app' ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}>
-                  {r.origen === 'app' ? 'ciudadano' : r.origen === 'panel' ? 'manual' : 'ejemplo'}
+                <Badge className={r.origen === 'app' ? 'bg-cyan-50 text-cyan-900' : 'bg-slate-100 text-slate-700'}>
+                  {r.origen === 'app' ? 'Ciudadano' : r.origen === 'panel' ? 'Operador' : 'Ejemplo'}
                 </Badge>
-                <span className="ml-auto text-xs text-gray-400">{hace(r.creado_en)}</span>
+                <span className="ml-auto text-sm text-gray-500">{hace(r.creado_en)}</span>
               </div>
-              {colonia && <div className="mt-0.5 text-xs text-gray-500">{colonia}</div>}
+              {colonia && <div className="mt-1 text-sm text-gray-600">Zona postal: {colonia}</div>}
               {r.descripcion && <p className="mt-1 truncate text-gray-700" title={r.descripcion}>{r.descripcion}</p>}
-              {(
-                <div className="mt-1.5 text-right">
-                  <button
-                    disabled={accion.cargando !== null}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      void accion.ejecutar(String(r.id), () => comoOperador(() => resolverReporte(r.id)))
-                    }}
-                    className="rounded border border-green-600 px-2 py-0.5 text-xs text-green-700 hover:bg-green-50 disabled:opacity-50"
-                  >
-                    {accion.cargando === String(r.id) ? 'Resolviendo…' : 'Marcar resuelto'}
-                  </button>
-                </div>
-              )}
+              <div className="mt-1 text-[13px] text-slate-500">Fuente: reporte recibido por el sistema · expira automáticamente</div>
             </li>
           )
         })}

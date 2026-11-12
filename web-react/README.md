@@ -17,4 +17,4 @@ npm run build          # compila a dist/
 - `src/components/*`: un archivo por zona del layout (cada uno lo edita un solo dueño).
 
 ## Clave de operador
-El panel es exclusivo de Protección Civil, así que nunca pide clave: la envía solo en el encabezado `X-Clave` en los endpoints de operador. Se configura con `VITE_CLAVE` en `.env` (por defecto `cambiar-esta-clave`) y debe coincidir con la del backend. Ojo: la variable queda incluida en el JS compilado, por lo que es una barrera ligera, no seguridad real.
+La WebApp se despliega en modo de consulta pública y no acepta ni envía claves administrativas. No configures `VITE_CLAVE`: cualquier variable `VITE_*` queda incluida en el JavaScript público. Las acciones de operador requieren una futura sesión segura o un BFF y, hasta entonces, no se muestran como disponibles.
