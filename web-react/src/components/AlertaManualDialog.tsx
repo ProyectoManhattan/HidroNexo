@@ -147,7 +147,7 @@ function Contenido() {
 
       <div className="flex justify-end gap-2">
         <button type="button" onClick={() => abrirDialogoAlertaManual(false)} className="rounded-md px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-100">Cancelar</button>
-        <button type="submit" disabled={enviando || exito !== null} className="rounded-md bg-[#1E5AA8] px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-60">
+        <button type="submit" disabled={enviando || exito !== null} className="rounded-xl bg-[#0d5ac7] px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#0b4ca8] disabled:opacity-60">
           {enviando ? 'Enviando…' : 'Enviar alerta'}
         </button>
       </div>

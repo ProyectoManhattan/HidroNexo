@@ -59,12 +59,12 @@ export default function TopBar() {
 
   return (
     <header className="app-header z-30">
-      <div className="flex min-w-[20rem] items-center gap-4">
+      <div className="flex min-w-[22rem] items-center gap-4">
         <div className="brand-tile">
-          <img src="/hidronexo-logo.png" alt="Logo de HidroNexo" className="h-[5.2rem] w-[5.2rem] object-contain" />
+          <img src="/hidronexo-logo.png" alt="Logo de HidroNexo" className="h-[6rem] w-[6rem] object-contain" />
         </div>
         <div className="min-w-0 text-[#0b2b70]">
-          <h1 className="truncate text-[2rem] leading-none font-black tracking-tight">HidroNexo</h1>
+          <h1 className="truncate text-[2.75rem] leading-none font-black tracking-tight">HidroNexo</h1>
         </div>
       </div>
 

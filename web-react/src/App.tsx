@@ -20,7 +20,7 @@ function BotonAlertaManual({ className = '' }: { className?: string }) {
     <button
       type="button"
       onClick={() => abrirDialogoAlertaManual(true)}
-      className={`inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg bg-[var(--color-danger)] px-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-red-800 ${className}`}
+      className={`inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-2xl border border-[#0d5ac7] bg-[#0d5ac7] px-3.5 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-[#0b4ca8] active:bg-[#093e8a] ${className}`}
       title="Redactar y enviar una alerta a las zonas postales que elijas"
     >
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>
