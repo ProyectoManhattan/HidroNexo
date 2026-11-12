@@ -1,3 +1,6 @@
+import { useMemo, useState } from 'react'
+import { SEVERIDADES, categoriaInfo, hace, urlFotoSegura } from '../constants'
+import { seleccionarColonia, useStore } from '../store'
 import type { Reporte } from '../types'
 import { Badge, Vacio } from './sidebar/ui'
 
@@ -83,7 +86,14 @@ export default function ReportsList() {
                 </Badge>
                 <span className="ml-auto text-sm text-gray-500">{hace(r.creado_en)}</span>
               </div>
-
+              {colonia && <div className="mt-1 text-sm text-gray-600">Zona postal: {colonia}</div>}
+              {(r.descripcion || urlFotoSegura(r.foto_url)) && (
+                <div className="mt-2 flex items-start gap-3">
+                  <Miniatura url={r.foto_url} />
+                  {r.descripcion && <p className="min-w-0 flex-1 text-sm leading-relaxed text-gray-700" title={r.descripcion}>{r.descripcion}</p>}
+                </div>
+              )}
+              <div className="mt-2 text-[13px] text-slate-500">Fuente: reporte recibido por el sistema · observación ciudadana no confirmada</div>
             </li>
           )
         })}

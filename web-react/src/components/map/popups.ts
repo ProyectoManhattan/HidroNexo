@@ -52,6 +52,14 @@ export function popupReporte(p: Record<string, unknown>): string {
   const c = categoriaInfo(p.categoria as string)
   const sev = SEVERIDADES[Number(p.severidad) as 1 | 2 | 3] ?? ''
   const desc = p.descripcion ? `<div style="margin:6px 0">${esc(p.descripcion)}</div>` : ''
+  const col = p.colonia ? `<div style="color:#526273;font-size:13px">Zona postal: ${esc(p.colonia)}</div>` : ''
+  const foto = urlFotoSegura(p.foto_url)
+  const img = foto
+    ? `<a href="${esc(foto)}" target="_blank" rel="noopener noreferrer" title="Ver foto ampliada">` +
+      `<img src="${esc(foto)}" alt="Foto del reporte enviada por el ciudadano" loading="lazy" referrerpolicy="no-referrer" ` +
+      `onerror="this.parentNode.style.display='none'" ` +
+      `style="display:block;width:100%;height:120px;object-fit:cover;border-radius:8px;margin-top:8px;background:#e5e7eb"></a>`
+    : ''
   return (
     `<div style="min-width:190px;max-width:260px;font-size:13px">` +
     `<div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:${c.color}"></span>` +
