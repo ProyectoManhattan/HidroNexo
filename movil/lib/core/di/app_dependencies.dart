@@ -3,6 +3,7 @@ import '../../data/mock_report_repository.dart';
 import '../../data/report_repository.dart';
 import '../../services/location_service.dart';
 import '../../services/phone_service.dart';
+import '../../services/push_service.dart';
 import '../../services/photo_service.dart';
 import '../../widgets/map/map_provider.dart';
 import '../../widgets/map/maplibre_map_provider.dart';
@@ -26,6 +27,14 @@ class AppDependencies {
       AppConfig.useMock ? SimulatedLocationService() : DeviceLocationService();
   static final PhoneService phoneService =
       AppConfig.useMock ? SimulatedPhoneService() : DevicePhoneService();
+
+  /// Push (FCM). En modo mock no hace nada.
+  static final PushService pushService = AppConfig.useMock
+      ? NoopPushService()
+      : FirebasePushService(
+          repository: reportRepository,
+          locationService: locationService,
+        );
 
   // PENDIENTE: la API todavía no recibe archivos (solo `foto_url`), así que
   // la foto sigue simulada y NO se envía con el reporte.

@@ -106,6 +106,28 @@ class ApiReportRepository implements ReportRepository {
     return '$folioPrefix$id';
   }
 
+  @override
+  Future<void> registerDevice({
+    required String token,
+    required double lat,
+    required double lon,
+  }) async {
+    final body = jsonEncode({
+      'token': token,
+      'plataforma': 'android',
+      'colonia_id': null,
+      'lat': lat,
+      'lon': lon,
+    });
+    await _send(
+      () => _client.post(
+        _uri('/devices'),
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      ),
+    );
+  }
+
   // ---- Conversión ----
 
   /// `AV-15`, `av-15` o `15` → 15. Null si no es un folio válido.

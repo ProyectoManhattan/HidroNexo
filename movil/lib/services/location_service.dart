@@ -27,14 +27,16 @@ class LocationException implements Exception {
 
 /// Contrato para obtener la ubicación del usuario.
 abstract class LocationService {
-  Future<UserLocation> getCurrentLocation();
+  /// Con [requestPermission] en false no muestra el diálogo de permiso y
+  /// lanza [LocationException] si todavía no fue concedido.
+  Future<UserLocation> getCurrentLocation({bool requestPermission = true});
 }
 
 /// Ubicación simulada: no pide permisos, no falla en el emulador.
 /// Para GPS real, implementa [LocationService] con `geolocator`.
 class SimulatedLocationService implements LocationService {
   @override
-  Future<UserLocation> getCurrentLocation() async {
+  Future<UserLocation> getCurrentLocation({bool requestPermission = true}) async {
     return const UserLocation(
       neighborhood: 'Col. Centro',
       address: '${AppConfig.zoneFull} (simulada)',
@@ -46,12 +48,12 @@ class SimulatedLocationService implements LocationService {
 /// GPS real con `geolocator`. Pide el permiso la primera vez.
 class DeviceLocationService implements LocationService {
   @override
-  Future<UserLocation> getCurrentLocation() async {
+  Future<UserLocation> getCurrentLocation({bool requestPermission = true}) async {
     if (!await Geolocator.isLocationServiceEnabled()) {
       throw const LocationException('Activa la ubicación (GPS) de tu celular.');
     }
     var permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
+    if (permission == LocationPermission.denied && requestPermission) {
       permission = await Geolocator.requestPermission();
     }
     if (permission == LocationPermission.denied) {

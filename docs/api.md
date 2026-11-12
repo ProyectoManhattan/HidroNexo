@@ -240,7 +240,17 @@ Alerta **manual** de Protección Civil para una o varias colonias. No pasa por l
 
 ### `POST /alerts/{id}/approve` 🔒
 
-Sin cuerpo. Aprueba la alerta, envía el push a los dispositivos de la colonia y la devuelve con `"estado": "aprobada"`.
+Sin cuerpo. Aprueba la alerta y la devuelve de inmediato con `"estado": "aprobada"`; el push (FCM) se envía en segundo plano a los dispositivos que decida `dispositivos_destino`. Cada intento queda auditado y se resume en `GET /alerts/{id}/deliveries`. Sin `FCM_CREDENCIALES_JSON` el push es simulado (solo log). Los tokens que FCM reporta como inválidos se eliminan.
+
+### `GET /alerts/{id}/deliveries`
+
+Resumen de entregas push de la alerta (`404` si no existe):
+
+```json
+{ "total": 120, "enviados": 115, "fallidos": 2, "token_invalidos": 3 }
+```
+
+El push lleva `notification` (título y cuerpo) y `data` con `alerta_id`, `tipo` y `nivel`.
 
 ### `POST /alerts/{id}/discard` 🔒
 
@@ -273,24 +283,35 @@ Una guía. Responde `404` si no existe.
 
 ### `POST /devices`
 
-Registrar el celular y su colonia. Si el token ya existía, solo actualiza la colonia.
+Registrar el celular con su colonia y/o su ubicación. Si el token ya existía, lo actualiza.
 
 ```json
 {
   "token": "token-de-firebase-del-celular",
   "colonia_id": 4,
+  "lat": 19.175,
+  "lon": -96.135,
   "plataforma": "android"
 }
 ```
 
 - `token`: entre 10 y 500 caracteres.
+- Debe venir `colonia_id` **o** `lat` + `lon` (422 si no; `lat` y `lon` van siempre juntas).
+- `lat`: -90 a 90; `lon`: -180 a 180.
+- Solo `lat`/`lon`: la colonia se deriva de la ubicación (404 si cae fuera de toda colonia).
+- Ambos: se guardan los dos. La **ubicación manda** para el envío de alertas; la colonia es respaldo.
 - `plataforma`: `android`, `ios` o `web`.
+- Llamar de nuevo con `lat`/`lon` refresca la ubicación (`ubicacion_actualizada_en`).
 
 Respuesta:
 
 ```json
 { "id": 12, "colonia_id": 4, "plataforma": "android" }
 ```
+
+**A quién llega una alerta de una colonia:** a los dispositivos cuya ubicación (de menos de 24 h)
+cae dentro de esa colonia, más los que no tienen ubicación vigente y declararon esa colonia.
+Un dispositivo ubicado en otra colonia no la recibe aunque la tenga declarada.
 
 ---
 
@@ -337,7 +358,7 @@ El panel se conecta y recibe mensajes con esta forma:
 | `report.created`, `report.updated` | Un reporte |
 | `zone.risk_updated` | `{colonia_id, nombre, valor, nivel, motivo, componentes}` |
 | `alert.drafted` | Una alerta propuesta |
-| `alert.approved` | La alerta, más `dispositivos_notificados` |
+| `alert.approved` | La alerta, más `dispositivos_notificados` (= `entregas.enviados`) y `entregas` `{total, enviados, fallidos, token_invalidos}`. Se publica al terminar el envío en segundo plano |
 | `weather.updated` | El estado del clima |
 
 ---

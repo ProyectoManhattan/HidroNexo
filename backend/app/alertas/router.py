@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -39,9 +39,9 @@ def listar(estado: str | None = "propuesta", db: Session = Depends(get_db)):
     dependencies=[Depends(requiere_clave)],
     summary="Enviar una alerta manual a una o varias colonias (requiere clave)",
 )
-def crear_manual(datos: AlertaManual, db: Session = Depends(get_db)):
+def crear_manual(datos: AlertaManual, tareas: BackgroundTasks, db: Session = Depends(get_db)):
     try:
-        return servicio.crear_manual(db, datos)
+        return servicio.crear_manual(db, datos, tareas)
     except LookupError as error:
         raise HTTPException(404, str(error)) from error
 
@@ -84,11 +84,17 @@ def editar(alerta_id: int, datos: AlertaEdicion, db: Session = Depends(get_db)):
     dependencies=[Depends(requiere_clave)],
     summary="Aprobar y enviar (requiere clave)",
 )
-def aprobar(alerta_id: int, db: Session = Depends(get_db)):
+def aprobar(alerta_id: int, tareas: BackgroundTasks, db: Session = Depends(get_db)):
     alerta = _buscar(db, alerta_id)
     if alerta.estado != "propuesta":
         raise HTTPException(409, f"La alerta ya está {alerta.estado}")
-    return servicio.aprobar(db, alerta)
+    return servicio.aprobar(db, alerta, tareas)
+
+
+@router.get("/{alerta_id}/deliveries", summary="Resumen de entregas push de una alerta")
+def entregas(alerta_id: int, db: Session = Depends(get_db)):
+    _buscar(db, alerta_id)
+    return servicio.resumen_entregas(db, alerta_id)
 
 
 @router.post(
