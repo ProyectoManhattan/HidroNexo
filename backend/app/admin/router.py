@@ -12,6 +12,10 @@ router = APIRouter(prefix="/admin", tags=["admin (demo)"], dependencies=[Depends
 
 class Tormenta(BaseModel):
     intensidad: float = Field(default=1.0, ge=0.0, le=2.0)
+    # Probabilidad de lluvia (%) del pronóstico simulado para las próximas horas
+    probabilidad: float = Field(default=100.0, ge=0.0, le=100.0)
+    # True = "tormenta que viene": todavía no llueve, solo hay pronóstico (para mostrar la anticipación)
+    solo_pronostico: bool = False
 
 
 @router.post("/seed", summary="Borra todo y carga colonias y reportes de data/")
@@ -28,7 +32,7 @@ def reset(db: Session = Depends(get_db)):
 
 @router.post("/simulate-storm", summary="SIMULACIÓN: activa lluvia intensa")
 def simular(datos: Tormenta, db: Session = Depends(get_db)):
-    return servicio.simular_tormenta(db, datos.intensidad)
+    return servicio.simular_tormenta(db, datos.intensidad, datos.probabilidad, datos.solo_pronostico)
 
 
 @router.delete("/simulate-storm", summary="Termina la simulación")

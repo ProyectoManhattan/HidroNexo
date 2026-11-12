@@ -145,7 +145,8 @@ Mapa de riesgo en GeoJSON.
         "nivel": "alto",
         "motivo": "lluvia",
         "componentes": { "lluvia": 1.0, "reportes": 0.45, "vulnerabilidad": 0.6 },
-        "actualizado_en": "2026-11-11T22:15:00Z"
+        "actualizado_en": "2026-11-11T22:15:00Z",
+        "pronostico": { "mm_3h": 15.0, "prob_3h": 80, "prob_6h": 90, "mm_3h_efectivos": 12.0 }
       }
     }
   ]
@@ -155,6 +156,7 @@ Mapa de riesgo en GeoJSON.
 - `nivel`: `bajo`, `medio`, `alto` o `critico`.
 - `motivo`: `lluvia`, `reportes` o `vulnerabilidad`.
 - `componentes`: valores de 0 a 1 para las barras del "¿Por qué?".
+- `pronostico`: lluvia pronosticada para la zona. `mm_3h` son los mm esperados en las próximas 3 h; `prob_3h` y `prob_6h`, la probabilidad máxima de lluvia (%) en las próximas 3 y 6 h (de Open-Meteo, `null` si no hay dato); `mm_3h_efectivos` = `mm_3h × prob_3h / 100`, que es lo que entra al cálculo de riesgo. Así, 20 mm con 30 % de probabilidad cuentan como 6 mm. Es probabilidad de modelos meteorológicos, no un aviso oficial.
 
 ---
 
@@ -298,7 +300,7 @@ Respuesta:
 |---|---|---|
 | `POST /admin/seed` | — | `{"colonias": 11, "reportes": 40}`. Borra todo y carga lo que haya en `data/` |
 | `POST /admin/reset` | — | `{"ok": true}`. Borra reportes, alertas y riesgo; conserva colonias |
-| `POST /admin/simulate-storm` | `{"intensidad": 1.0}` (0 a 2; 1.0 = lluvia fuerte) | Estado del clima |
+| `POST /admin/simulate-storm` | `{"intensidad": 1.0, "probabilidad": 100, "solo_pronostico": false}`. `intensidad` de 0 a 2 (1.0 = lluvia fuerte); `probabilidad` del pronóstico, 0 a 100 (por defecto 100); `solo_pronostico: true` simula una **tormenta que viene**: sin lluvia caída, solo pronóstico | Estado del clima |
 | `DELETE /admin/simulate-storm` | — | Estado del clima |
 | `GET /admin/weather` | — | Estado del clima |
 
@@ -306,14 +308,14 @@ Estado del clima:
 
 ```json
 {
-  "lluvia": { "mm_1h": 20.0, "mm_3h": 40.0, "mm_24h": 80.0, "pronostico_3h": 40.0 },
+  "lluvia": { "mm_1h": 20.0, "mm_3h": 40.0, "mm_24h": 80.0, "pronostico_3h": 40.0, "prob_3h": 80, "prob_6h": 90 },
   "simulacion": true,
   "actualizado_en": "2026-11-11T22:00:00Z",
   "colonias_con_lectura": 120
 }
 ```
 
-`lluvia` es el peor valor actual (global). Cada colonia usa internamente su propia lectura de Open-Meteo (la simulación aplica a todas). `colonias_con_lectura` es opcional e informativo (0 si aún no hay lecturas por colonia).
+`lluvia` es el peor valor actual (global). Cada colonia usa internamente su propia lectura de Open-Meteo (la simulación aplica a todas). `colonias_con_lectura` es opcional e informativo (0 si aún no hay lecturas por colonia). `prob_3h` y `prob_6h` (%) solo vienen cuando Open-Meteo entrega probabilidad o hay simulación.
 
 ---
 

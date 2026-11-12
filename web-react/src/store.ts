@@ -11,6 +11,7 @@ export interface State {
   alertasActivas: AlertaActiva[]
   clima: Clima | null
   lluvia3h: number | null
+  prob3h: number | null
   apiOk: boolean
   wsOk: boolean
   filtro: Filtro
@@ -20,7 +21,7 @@ export interface State {
 }
 
 let state: State = {
-  reportes: [], zonas: null, alertasPropuestas: [], alertasActivas: [], clima: null, lluvia3h: null,
+  reportes: [], zonas: null, alertasPropuestas: [], alertasActivas: [], clima: null, lluvia3h: null, prob3h: null,
   apiOk: false, wsOk: false, filtro: 'todo', coloniaSeleccionada: null,
   dialogoAlertaManual: false,
 }
@@ -67,7 +68,7 @@ export async function refrescarClima() {
   const c = await intentar(api.getClima())
   if (c) aplicarClima(c)
 }
-function aplicarClima(c: Clima) { set({ clima: c, lluvia3h: c.lluvia.mm_3h }) }
+function aplicarClima(c: Clima) { set({ clima: c, lluvia3h: c.lluvia.mm_3h, prob3h: c.lluvia.prob_3h ?? null }) }
 
 export async function refrescarTodo() {
   await Promise.all([refrescarReportes(), refrescarZonas(), refrescarAlertas(), refrescarClima()])

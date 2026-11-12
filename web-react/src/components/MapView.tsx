@@ -1,7 +1,7 @@
 import * as maplibregl from 'maplibre-gl'
 import type { GeoJSONSource, Map as MLMap } from 'maplibre-gl'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { CATEGORIAS, NIVELES } from '../constants'
+import { CATEGORIAS, NIVELES, UMBRAL_PROB_ALTA } from '../constants'
 import { seleccionarColonia, useStore } from '../store'
 import type { Reporte, ZonasGeoJSON } from '../types'
 import Legend from './map/Legend'
@@ -21,6 +21,21 @@ const colorCategoria: maplibregl.ExpressionSpecification = [
   ...Object.entries(CATEGORIAS).flatMap(([k, v]) => [k, v.color]),
   '#5B6675',
 ] as unknown as maplibregl.ExpressionSpecification
+
+/** MapLibre convierte objetos anidados en texto: se copian prob_3h y pron_mm_3h al nivel superior. */
+function conPronosticoPlano(zonas: ZonasGeoJSON) {
+  return {
+    ...zonas,
+    features: zonas.features.map((f) => ({
+      ...f,
+      properties: {
+        ...f.properties,
+        prob_3h: f.properties.pronostico?.prob_3h ?? -1,
+        pron_mm_3h: f.properties.pronostico?.mm_3h ?? 0,
+      },
+    })),
+  }
+}
 
 function reportesGeoJSON(reportes: Reporte[], zonas: ZonasGeoJSON | null) {
   const nombres = new Map(zonas?.features.map((f) => [f.properties.id, f.properties.nombre]))
@@ -102,6 +117,12 @@ export default function MapView() {
         id: 'zonas-line', type: 'line', source: 'zonas',
         paint: { 'line-color': '#8A94A6', 'line-width': 1, 'line-dasharray': [2, 2] },
       })
+      // Lluvia probable: borde azul punteado en zonas con probabilidad alta en las próximas 3 h
+      map.addLayer({
+        id: 'zonas-pronostico', type: 'line', source: 'zonas',
+        filter: ['>=', ['get', 'prob_3h'], UMBRAL_PROB_ALTA],
+        paint: { 'line-color': '#1E5AA8', 'line-width': 2.5, 'line-dasharray': [1.5, 1.5] },
+      })
       map.addLayer({
         id: 'zonas-sel', type: 'line', source: 'zonas', filter: ['==', ['get', 'id'], -1],
         paint: { 'line-color': '#1B2430', 'line-width': 3.5 },
@@ -164,7 +185,7 @@ export default function MapView() {
   useEffect(() => {
     const map = mapRef.current
     if (!listo || !map) return
-    ;(map.getSource('zonas') as GeoJSONSource).setData((zonas ?? VACIO) as never)
+    ;(map.getSource('zonas') as GeoJSONSource).setData((zonas ? conPronosticoPlano(zonas) : VACIO) as never)
     if (zonas && !encuadrado.current) {
       const b = limites(zonas)
       if (b) { map.fitBounds(b, { padding: 40, duration: 0, maxZoom: 15 }); encuadrado.current = true }

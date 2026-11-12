@@ -37,3 +37,6 @@ export function hace(iso?: string | null): string {
   if (s < 3600) return `hace ${Math.floor(s / 60)} min`
   return `hace ${Math.floor(s / 3600)} h`
 }
+
+/** Probabilidad de lluvia (%) a partir de la cual una zona se marca como "lluvia probable" */
+export const UMBRAL_PROB_ALTA = 70

@@ -1,4 +1,4 @@
-import { CATEGORIAS, NIVELES } from '../../constants'
+import { CATEGORIAS, NIVELES, UMBRAL_PROB_ALTA } from '../../constants'
 
 export default function Legend() {
   return (
@@ -11,6 +11,10 @@ export default function Legend() {
             {n.texto}
           </span>
         ))}
+      </div>
+      <div className="mt-2 flex items-center gap-1.5 text-slate-600">
+        <span className="h-3 w-5 rounded-sm border-2 border-dashed border-[#1E5AA8]" />
+        Lluvia probable (≥{UMBRAL_PROB_ALTA} % en 3 h)
       </div>
       <div className="mb-1.5 mt-3 font-bold text-slate-800">Reportes</div>
       <div className="grid grid-cols-1 gap-y-1">

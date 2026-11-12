@@ -61,6 +61,15 @@ export interface ZonaProps {
   motivo: Motivo
   componentes: Componentes
   actualizado_en: string
+  pronostico?: Pronostico
+}
+
+/** Pronóstico de lluvia de la zona (Open-Meteo). prob_* en %, null si no hay dato. */
+export interface Pronostico {
+  mm_3h: number
+  prob_3h: number | null
+  prob_6h: number | null
+  mm_3h_efectivos: number
 }
 
 export interface ZonaFeature {
@@ -109,7 +118,7 @@ export interface AlertaActiva extends Alerta {
 export type Guias = Record<string, Guia>
 
 export interface Clima {
-  lluvia: { mm_1h: number; mm_3h: number; mm_24h: number; pronostico_3h: number }
+  lluvia: { mm_1h: number; mm_3h: number; mm_24h: number; pronostico_3h: number; prob_3h?: number; prob_6h?: number }
   simulacion: boolean
   actualizado_en: string
 }

@@ -13,19 +13,38 @@ log = logging.getLogger(__name__)
 URL = "https://api.open-meteo.com/v1/forecast"
 
 
-def resumir_punto(horas: list[str], precipitacion: list[float | None], momento: datetime) -> dict[str, float]:
-    """Suma la lluvia de la última 1 h, 3 h y 24 h, más el pronóstico de las próximas 3 h."""
+def resumir_punto(
+    horas: list[str],
+    precipitacion: list[float | None],
+    momento: datetime,
+    probabilidad: list[float | None] | None = None,
+) -> dict[str, float]:
+    """Suma la lluvia de la última 1 h, 3 h y 24 h, más el pronóstico de las próximas 3 h.
+
+    Si viene `probabilidad` (precipitation_probability de Open-Meteo, en %), agrega
+    prob_3h y prob_6h: la probabilidad máxima de lluvia en las próximas 3 y 6 horas.
+    """
     actual = momento.replace(minute=0, second=0, microsecond=0, tzinfo=None)
-    pasadas, futuras = [], []
-    for hora, mm in zip(horas, precipitacion):
+    pasadas, futuras, probs_futuras = [], [], []
+    probs = probabilidad if probabilidad is not None else [None] * len(horas)
+    for hora, mm, prob in zip(horas, precipitacion, probs):
         instante = datetime.fromisoformat(hora)
-        (pasadas if instante <= actual else futuras).append(mm or 0.0)
-    return {
+        if instante <= actual:
+            pasadas.append(mm or 0.0)
+        else:
+            futuras.append(mm or 0.0)
+            probs_futuras.append(prob)
+    resumen = {
         "mm_1h": round(sum(pasadas[-1:]), 2),
         "mm_3h": round(sum(pasadas[-3:]), 2),
         "mm_24h": round(sum(pasadas[-24:]), 2),
         "pronostico_3h": round(sum(futuras[:3]), 2),
     }
+    for clave, horas_ventana in (("prob_3h", 3), ("prob_6h", 6)):
+        valores = [p for p in probs_futuras[:horas_ventana] if p is not None]
+        if valores:
+            resumen[clave] = float(max(valores))
+    return resumen
 
 
 LOTE = 50
@@ -40,7 +59,7 @@ def _pedir(puntos: list[tuple[float, float]]) -> list[dict] | None:
             params={
                 "latitude": ",".join(str(p[0]) for p in puntos),
                 "longitude": ",".join(str(p[1]) for p in puntos),
-                "hourly": "precipitation",
+                "hourly": "precipitation,precipitation_probability",
                 "past_days": 1,
                 "forecast_days": 1,
                 "timezone": "UTC",
@@ -64,7 +83,15 @@ def consultar_puntos(puntos: list[tuple[float, float]], momento: datetime) -> li
         if datos is None or len(datos) != len(lote):
             return None
         try:
-            resumenes += [resumir_punto(p["hourly"]["time"], p["hourly"]["precipitation"], momento) for p in datos]
+            resumenes += [
+                resumir_punto(
+                    p["hourly"]["time"],
+                    p["hourly"]["precipitation"],
+                    momento,
+                    p["hourly"].get("precipitation_probability"),
+                )
+                for p in datos
+            ]
         except (KeyError, TypeError, ValueError):
             log.warning("Respuesta de Open-Meteo inesperada; se conserva la última lectura")
             return None

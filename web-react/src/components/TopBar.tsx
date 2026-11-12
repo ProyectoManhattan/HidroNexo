@@ -1,9 +1,10 @@
-import { NARANJA_SIM } from '../constants'
+import { NARANJA_SIM, UMBRAL_PROB_ALTA } from '../constants'
 import { useStore } from '../store'
 import Chip from './bars/Chip'
 
 export default function TopBar() {
   const lluvia3h = useStore((s) => s.lluvia3h)
+  const prob3h = useStore((s) => s.prob3h)
   const apiOk = useStore((s) => s.apiOk)
   const wsOk = useStore((s) => s.wsOk)
   const sim = useStore((s) => s.clima?.simulacion ?? false)
@@ -29,6 +30,13 @@ export default function TopBar() {
         </span>
       )}
       <Chip className="bg-white/15">Lluvia 3 h: {lluvia3h == null ? '—' : `${lluvia3h} mm`}</Chip>
+      {prob3h != null && (
+        <Chip className={prob3h >= UMBRAL_PROB_ALTA ? 'bg-sky-200 text-sky-950' : 'bg-white/15'}>
+          <span title="Probabilidad máxima de lluvia en las próximas 3 h (Open-Meteo)">
+            Prob. lluvia 3 h: {Math.round(prob3h)} %
+          </span>
+        </Chip>
+      )}
       <Chip className={vivo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
         <span className={`h-2 w-2 rounded-full ${vivo ? 'bg-green-600' : 'bg-red-600'}`} />
         {vivo ? 'En vivo' : 'Sin conexión'}

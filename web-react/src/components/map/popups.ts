@@ -3,6 +3,17 @@ import { MOTIVOS, SEVERIDADES, categoriaInfo, hace, nivelInfo } from '../../cons
 const esc = (s: unknown) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 
+/** Usa las propiedades planas que agrega MapView (MapLibre convierte objetos anidados en texto). */
+function lineaPronostico(p: Record<string, unknown>): string {
+  const prob = Number(p.prob_3h)
+  if (!Number.isFinite(prob) || prob < 0) return ''
+  const mm = Number(p.pron_mm_3h ?? 0)
+  return (
+    `<div style="color:#1E5AA8;font-size:12px;margin-top:4px">` +
+    `Pronóstico 3 h: ${esc(mm.toFixed(1))} mm · ${esc(Math.round(prob))} % de probabilidad</div>`
+  )
+}
+
 export function popupColonia(p: Record<string, unknown>): string {
   const n = nivelInfo(p.nivel as string)
   const motivo = MOTIVOS[p.motivo as keyof typeof MOTIVOS] ?? '—'
@@ -11,7 +22,9 @@ export function popupColonia(p: Record<string, unknown>): string {
     `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">` +
     `<b>${esc(p.nombre)}</b>` +
     `<span style="background:${n.suave};color:${n.color};font-weight:700;font-size:10px;padding:2px 8px;border-radius:9px">${esc(n.texto.toUpperCase())}</span></div>` +
-    `<div style="color:#5B6675;font-size:12px;margin-top:4px">Motivo principal: ${esc(motivo)}</div></div>`
+    `<div style="color:#5B6675;font-size:12px;margin-top:4px">Motivo principal: ${esc(motivo)}</div>` +
+    lineaPronostico(p) +
+    `</div>`
   )
 }
 

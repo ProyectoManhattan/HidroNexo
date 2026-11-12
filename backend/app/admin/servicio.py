@@ -108,14 +108,23 @@ def seed(db: Session) -> dict:
     return {"colonias": colonias, "reportes": reportes_cargados}
 
 
-def simular_tormenta(db: Session, intensidad: float) -> dict:
-    """Lluvia simulada; `intensidad` 1.0 satura todas las ventanas de lluvia."""
+def simular_tormenta(
+    db: Session, intensidad: float, probabilidad: float = 100.0, solo_pronostico: bool = False
+) -> dict:
+    """Lluvia simulada; `intensidad` 1.0 satura todas las ventanas de lluvia.
+
+    `probabilidad` (%) es la del pronóstico de las próximas horas: pondera pronostico_3h.
+    `solo_pronostico` simula una tormenta que viene: sin lluvia caída, solo pronóstico.
+    """
+    caida = 0.0 if solo_pronostico else intensidad
     meteo.simular(
         {
-            "mm_1h": 20.0 * intensidad,
-            "mm_3h": 40.0 * intensidad,
-            "mm_24h": 80.0 * intensidad,
+            "mm_1h": 20.0 * caida,
+            "mm_3h": 40.0 * caida,
+            "mm_24h": 80.0 * caida,
             "pronostico_3h": 40.0 * intensidad,
+            "prob_3h": probabilidad,
+            "prob_6h": probabilidad,
         }
     )
     recalcular_todas(db)

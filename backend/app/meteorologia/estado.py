@@ -22,8 +22,8 @@ def guardar_por_colonia(lecturas: dict[int, dict[str, float]], momento: datetime
     global _por_colonia
     _por_colonia = {cid: dict(l) for cid, l in lecturas.items()}
     if lecturas:
-        claves = next(iter(lecturas.values())).keys()
-        guardar({k: max(l[k] for l in lecturas.values()) for k in claves}, momento)
+        claves = {k for l in lecturas.values() for k in l}
+        guardar({k: max(l[k] for l in lecturas.values() if k in l) for k in claves}, momento)
     else:
         guardar(_lluvia, momento)
 

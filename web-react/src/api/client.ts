@@ -80,6 +80,14 @@ export const registrarDispositivo = (d: { token: string; colonia_id: number; pla
 // Admin y demo
 export const adminSeed = () => request<{ colonias: number; reportes: number }>('POST', '/admin/seed', op)
 export const adminReset = () => request<{ ok: boolean }>('POST', '/admin/reset', op)
-export const simularTormenta = (intensidad = 1.0) => request<Clima>('POST', '/admin/simulate-storm', { body: { intensidad }, ...op })
+export interface OpcionesTormenta {
+  intensidad?: number
+  /** Probabilidad (%) del pronóstico simulado */
+  probabilidad?: number
+  /** true = tormenta que viene: todavía no llueve, solo hay pronóstico */
+  solo_pronostico?: boolean
+}
+export const simularTormenta = (o: OpcionesTormenta = {}) =>
+  request<Clima>('POST', '/admin/simulate-storm', { body: { intensidad: 1.0, ...o }, ...op })
 export const terminarTormenta = () => request<Clima>('DELETE', '/admin/simulate-storm', op)
 export const getClima = () => request<Clima>('GET', '/admin/weather', op)
