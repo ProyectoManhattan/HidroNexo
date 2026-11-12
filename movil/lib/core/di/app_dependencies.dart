@@ -12,6 +12,13 @@ import '../../services/pending_report_sender.dart';
 import '../../services/phone_service.dart';
 import '../../services/push_service.dart';
 import '../../services/photo_service.dart';
+import '../../services/mesh/in_memory_mesh.dart';
+import '../../services/mesh/mesh_node.dart';
+import '../../services/mesh/mesh_origins.dart';
+import '../../services/mesh/mesh_store.dart';
+import '../../services/mesh/mesh_transport.dart';
+import '../../services/mesh/nearby_mesh_transport.dart';
+import '../../services/mesh/postal_code_resolver.dart';
 import '../../services/seen_alerts_store.dart';
 import '../../widgets/map/map_provider.dart';
 import '../../widgets/map/maplibre_map_provider.dart';
@@ -72,6 +79,35 @@ class AppDependencies {
     repository: reportRepository,
     locationService: locationService,
     store: PrefsSeenAlertsStore(),
+  );
+
+  // ---- Modo sin internet (malla Bluetooth, experimental) ----
+
+  /// Código postal propio (el fijado a mano manda sobre el GPS).
+  static final PostalCodeResolver cpResolver = PostalCodeResolver.fromApp(
+    manualStore: PrefsManualCpStore(),
+    cache: offlineCache,
+    location: locationService,
+  );
+
+  /// Transporte: Nearby Connections; con USE_MOCK, red en memoria.
+  static final MeshTransport meshTransport =
+      AppConfig.useMock ? InMemoryMeshNetwork().node('demo') : NearbyMeshTransport();
+
+  static final MeshNode meshNode = MeshNode(
+    transport: meshTransport,
+    store: SqlMeshStore(localDatabase),
+    cpResolver: cpResolver,
+    repository: reportRepository,
+    connectivity: connectivity,
+    onShowAlert: (a) => alertWatcher.showExternal(a),
+  );
+
+  static final MeshOrigins meshOrigins = MeshOrigins(
+    node: meshNode,
+    watcher: alertWatcher,
+    queue: pendingQueue,
+    connectivity: connectivity,
   );
 
   /// Fotos reales (cámara/galería). Se suben a `POST /reports/photo` antes de

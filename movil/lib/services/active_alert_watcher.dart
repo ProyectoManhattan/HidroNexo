@@ -39,6 +39,8 @@ class ActiveAlertWatcher extends ChangeNotifier with WidgetsBindingObserver {
   Set<int>? _seen;
   List<ActiveAlert> _active = const [];
   final List<ActiveAlert> _pending = [];
+  final Set<int> _external = {};
+  final StreamController<List<ActiveAlert>> _updates = StreamController<List<ActiveAlert>>.broadcast();
   Timer? _timer;
   bool _running = false;
   bool _fetching = false;
@@ -46,6 +48,10 @@ class ActiveAlertWatcher extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Alertas vigentes de la última consulta exitosa.
   List<ActiveAlert> get active => List.unmodifiable(_active);
+
+  /// Emite las alertas vigentes tras cada consulta exitosa a la API (la malla
+  /// Bluetooth las publica a los vecinos sin internet).
+  Stream<List<ActiveAlert>> get activeUpdates => _updates.stream;
 
   /// Cola por mostrar (más grave primero).
   List<ActiveAlert> get pending => List.unmodifiable(_pending);
@@ -105,11 +111,12 @@ class ActiveAlertWatcher extends ChangeNotifier with WidgetsBindingObserver {
         lon: loc.position.longitude,
       );
       _active = fetched;
+      if (!_updates.isClosed) _updates.add(List.unmodifiable(fetched));
       final cutoff = _now().subtract(maxAge);
       var changed = false;
       // Las que ya no están vigentes salen de la cola.
       final ids = fetched.map((a) => a.id).toSet();
-      changed |= _removeWhere((a) => !ids.contains(a.id));
+      changed |= _removeWhere((a) => !ids.contains(a.id) && !_external.contains(a.id));
       for (final alert in fetched) {
         if (seen.contains(alert.id)) continue;
         if (_pending.any((p) => p.id == alert.id)) continue;
@@ -129,6 +136,17 @@ class ActiveAlertWatcher extends ChangeNotifier with WidgetsBindingObserver {
     } finally {
       _fetching = false;
     }
+  }
+
+  /// Alerta que no viene de la API (malla Bluetooth): entra a la cola para
+  /// mostrarse a pantalla completa, salvo que ya se hubiera confirmado.
+  Future<void> showExternal(ActiveAlert alert) async {
+    final seen = _seen ??= await _store.load();
+    if (seen.contains(alert.id) || _pending.any((p) => p.id == alert.id)) return;
+    _external.add(alert.id);
+    _pending.add(alert);
+    _pending.sort(ActiveAlert.compareBySeverity);
+    _notify();
   }
 
   /// Marca la alerta como confirmada (persistida) y la saca de la cola.
@@ -179,6 +197,7 @@ class ActiveAlertWatcher extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void dispose() {
     stop();
+    _updates.close();
     _disposed = true;
     super.dispose();
   }
