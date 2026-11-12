@@ -9,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 ///  - `cached_alerts`: últimas alertas activas con su guía (JSON).
 ///  - `cached_zones`: GeoJSON de riesgo y listado de zonas (JSON + fecha de guardado).
 ///  - `cached_reports`: última lista de reportes del mapa (JSON + fecha).
+///  - `mesh_messages`: mensajes de la malla Bluetooth guardados para reenviar (máx. 20).
 ///
 /// Para añadir una migración: sube [version] y agrega la clave en [migrations].
 class LocalDatabase {
@@ -57,6 +58,18 @@ class LocalDatabase {
         key TEXT PRIMARY KEY,
         json TEXT NOT NULL,
         saved_at INTEGER NOT NULL
+      )''',
+    ],
+    2: [
+      // Malla Bluetooth (modo sin internet): mensajes que se llevan y reenvían.
+      '''
+      CREATE TABLE mesh_messages (
+        id TEXT PRIMARY KEY,
+        json TEXT NOT NULL,
+        expira_en INTEGER NOT NULL,
+        entregado INTEGER NOT NULL DEFAULT 0,
+        de TEXT NOT NULL,
+        recibida_en INTEGER NOT NULL
       )''',
     ],
   };

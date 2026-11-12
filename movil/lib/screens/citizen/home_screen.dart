@@ -18,6 +18,7 @@ import '../../widgets/pending_report_card.dart';
 import '../../widgets/stale_notice.dart';
 import '../../widgets/report_detail_sheet.dart';
 import '../../widgets/zone_search_field.dart';
+import 'mesh_screen.dart';
 
 /// Pantalla de inicio: clima, búsqueda de zona y mapa de reportes.
 class HomeScreen extends StatefulWidget {
@@ -116,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const _RiskCard(),
+            const _MeshEntry(),
           ],
         );
       },
@@ -222,6 +224,33 @@ class _InfoTile extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Acceso discreto al modo sin internet (experimental).
+class _MeshEntry extends StatelessWidget {
+  const _MeshEntry();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = AppPalette.of(context);
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: ListTile(
+        leading: const Icon(Icons.bluetooth_searching, color: AppColors.blue),
+        title: const Text(
+          'Modo sin internet (experimental)',
+          style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700),
+        ),
+        subtitle: Text(
+          'Alertas y reportes de teléfono a teléfono por Bluetooth.',
+          style: TextStyle(fontSize: 11.5, color: palette.muted),
+        ),
+        trailing: Icon(Icons.chevron_right, color: palette.muted),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        onTap: () => Navigator.of(context).push(MeshScreen.route()),
       ),
     );
   }
