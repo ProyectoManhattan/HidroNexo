@@ -17,7 +17,7 @@ export const CATEGORIAS: Record<Categoria, { color: string; letra: string; texto
   sin_agua: { color: '#66737B', letra: 'T', texto: 'Sin agua / tandeo', grupo: 'agua' },
 }
 
-export const MOTIVOS = { lluvia: 'lluvia', reportes: 'reportes ciudadanos', vulnerabilidad: 'vulnerabilidad' } as const
+export const MOTIVOS = { lluvia: 'lluvia', reportes: 'reportes ciudadanos', vulnerabilidad: 'Vulnerabilidad' } as const
 export const SEVERIDADES = { 1: 'Baja', 2: 'Media', 3: 'Alta' } as const
 export const FILTROS = { todo: 'Todo', lluvia: 'Lluvia', agua: 'Agua (fugas y tandeo)' } as const
 

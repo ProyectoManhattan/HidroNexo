@@ -70,7 +70,7 @@ export default function TopBar() {
 
       <div className="weather-strip" aria-label="Resumen meteorológico">
         <Dato icono="lluvia" etiqueta="Lluvia acumulada" detalle="últimas 3 h" valor={lluvia3h == null ? '—' : `${lluvia3h} mm`} ayuda="Lluvia acumulada usada por el sistema" />
-        <Dato icono="pronostico" etiqueta="Pronóstico de lluvia" detalle="próximas 3 h" valor={prob3h == null ? '—' : `${Math.round(prob3h)} %`} ayuda={`Probabilidad meteorológica. ${UMBRAL_PROB_ALTA}% o más se destaca en el mapa; no es una alerta oficial.`} />
+        <Dato icono="pronostico" etiqueta="Probabilidad máxima de lluvia" detalle="próximas 3 h" valor={prob3h == null ? '—' : `${Math.round(prob3h)} %`} ayuda={`Mayor probabilidad horaria prevista entre todas las zonas durante las próximas 3 horas. ${UMBRAL_PROB_ALTA}% o más se destaca en el mapa; no es una alerta oficial.`} />
         <Dato icono="reloj" etiqueta="Última lectura" valor={hora} ayuda="Hora de la última lectura meteorológica recibida" />
       </div>
 
