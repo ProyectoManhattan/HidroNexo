@@ -296,6 +296,9 @@ Respuesta:
 
 ## 6. Admin y demo 🔒
 
+`GET /weather` devuelve públicamente el estado meteorológico usado en el mapa. Es de solo lectura;
+las operaciones de simulación y administración permanecen protegidas bajo `/admin`.
+
 | Método y ruta | Cuerpo | Respuesta |
 |---|---|---|
 | `POST /admin/seed` | — | `{"colonias": 11, "reportes": 40}`. Borra todo y carga lo que haya en `data/` |
