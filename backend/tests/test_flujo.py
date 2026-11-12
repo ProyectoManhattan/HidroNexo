@@ -56,6 +56,11 @@ def test_admin_requiere_clave(cliente):
     assert cliente.post("/admin/reset").status_code == 401
 
 
+def test_clima_es_publico_y_solo_lectura(cliente):
+    assert cliente.get("/weather").status_code == 200
+    assert "lluvia" in cliente.get("/weather").json()
+
+
 def test_tormenta_propone_alerta_y_se_aprueba(cliente):
     ids = _colonias(cliente)
     cliente.post(

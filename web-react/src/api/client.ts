@@ -22,7 +22,7 @@ function detalleDe(body: unknown): string {
 async function request<T>(method: string, path: string, opts: { body?: unknown; operador?: boolean } = {}): Promise<T> {
   const headers: Record<string, string> = {}
   if (opts.body !== undefined) headers['Content-Type'] = 'application/json'
-  if (opts.operador) headers['X-Clave'] = CLAVE
+  if (opts.operador && CLAVE) headers['X-Clave'] = CLAVE
   let res: Response
   try {
     res = await fetch(API_URL + path, {
@@ -90,7 +90,7 @@ export interface OpcionesTormenta {
 export const simularTormenta = (o: OpcionesTormenta = {}) =>
   request<Clima>('POST', '/admin/simulate-storm', { body: { intensidad: 1.0, ...o }, ...op })
 export const terminarTormenta = () => request<Clima>('DELETE', '/admin/simulate-storm', op)
-export const getClima = () => request<Clima>('GET', '/admin/weather', op)
+export const getClima = () => request<Clima>('GET', '/weather')
 
 // Alertamientos oficiales de Protección Civil para Veracruz
 export const getAvisosOficiales = () => request<AvisosOficiales>('GET', '/official-alerts')

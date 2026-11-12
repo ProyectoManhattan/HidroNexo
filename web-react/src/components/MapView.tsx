@@ -1,5 +1,6 @@
 import * as maplibregl from 'maplibre-gl'
 import type { GeoJSONSource, Map as MLMap } from 'maplibre-gl'
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { MAPTILER_KEY } from '../config'
 import { CATEGORIAS, NIVELES, UMBRAL_PROB_ALTA } from '../constants'
@@ -7,6 +8,9 @@ import { seleccionarColonia, useStore } from '../store'
 import type { Reporte, ZonasGeoJSON } from '../types'
 import Legend from './map/Legend'
 import { popupColonia, popupReporte } from './map/popups'
+
+// MapLibre v6 requiere registrar explícitamente el worker cuando se empaqueta con Vite.
+maplibregl.setWorkerUrl(maplibreWorkerUrl)
 
 const CENTRO: [number, number] = [-96.13, 19.17]
 const ZOOM = 12
