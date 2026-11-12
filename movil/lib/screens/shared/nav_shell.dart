@@ -1,49 +1,33 @@
 import 'package:flutter/material.dart';
 
-import '../core/constants/app_strings.dart';
-import '../core/theme/app_colors.dart';
-import '../core/utils/responsive.dart';
-import '../widgets/floating_nav_bar.dart';
-import 'alerts_screen.dart';
-import 'home_screen.dart';
-import 'report_screen.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/utils/responsive.dart';
+import '../../widgets/floating_nav_bar.dart';
 
-/// Contenedor principal: barra flotante en móvil, riel lateral en pantallas anchas.
-class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+/// Contenedor de navegación reutilizable: barra flotante en móvil y riel
+/// lateral en pantallas anchas.
+class NavShell extends StatefulWidget {
+  const NavShell({super.key, required this.items, required this.pagesBuilder});
+
+  final List<NavItem> items;
+
+  /// Construye las pestañas. Recibe una función para saltar a otra pestaña.
+  final List<Widget> Function(ValueChanged<int> goTo) pagesBuilder;
 
   @override
-  State<MainShell> createState() => _MainShellState();
+  State<NavShell> createState() => _NavShellState();
 }
 
-class _MainShellState extends State<MainShell> {
-  static const List<NavItem> _items = [
-    NavItem(label: AppStrings.navHome, icon: Icons.home_outlined, activeIcon: Icons.home),
-    NavItem(
-      label: AppStrings.navReport,
-      icon: Icons.add_circle_outline,
-      activeIcon: Icons.add_circle,
-    ),
-    NavItem(
-      label: AppStrings.navAlerts,
-      icon: Icons.notifications_none,
-      activeIcon: Icons.notifications,
-    ),
-  ];
-
+class _NavShellState extends State<NavShell> {
   int _index = 0;
 
-  late final List<Widget> _pages = [
-    HomeScreen(onReportTap: () => _go(1)),
-    const ReportScreen(),
-    const AlertsScreen(),
-  ];
+  late final List<Widget> _pages = widget.pagesBuilder(_go);
 
   void _go(int index) => setState(() => _index = index);
 
   @override
   Widget build(BuildContext context) {
-    // IndexedStack conserva el estado de cada pestaña (formulario, mapa).
+    // IndexedStack conserva el estado de cada pestaña.
     final body = IndexedStack(index: _index, children: _pages);
 
     if (Responsive.isExpanded(context)) {
@@ -58,7 +42,7 @@ class _MainShellState extends State<MainShell> {
               indicatorColor: palette.pale,
               labelType: NavigationRailLabelType.all,
               destinations: [
-                for (final item in _items)
+                for (final item in widget.items)
                   NavigationRailDestination(
                     icon: Icon(item.icon),
                     selectedIcon: Icon(item.activeIcon, color: AppColors.blue),
@@ -83,7 +67,7 @@ class _MainShellState extends State<MainShell> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 560),
                 child: FloatingNavBar(
-                  items: _items,
+                  items: widget.items,
                   currentIndex: _index,
                   onTap: _go,
                 ),

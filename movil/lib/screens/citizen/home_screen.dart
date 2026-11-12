@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../controllers/home_controller.dart';
-import '../core/constants/app_strings.dart';
-import '../core/di/app_dependencies.dart';
-import '../core/theme/app_colors.dart';
-import '../core/utils/responsive.dart';
-import '../widgets/app_card.dart';
-import '../widgets/app_toast.dart';
-import '../widgets/filter_chips_bar.dart';
-import '../widgets/hero_header.dart';
-import '../widgets/incident_map.dart';
-import '../widgets/map_legend.dart';
-import '../widgets/page_layout.dart';
-import '../widgets/report_detail_sheet.dart';
-import '../widgets/zone_search_field.dart';
+import '../../controllers/home_controller.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/di/app_dependencies.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/utils/responsive.dart';
+import '../../widgets/app_card.dart';
+import '../../widgets/app_toast.dart';
+import '../../widgets/filter_chips_bar.dart';
+import '../../widgets/hero_header.dart';
+import '../../widgets/incident_map_view.dart';
+import '../../widgets/map_legend.dart';
+import '../../widgets/page_layout.dart';
+import '../../widgets/report_detail_sheet.dart';
+import '../../widgets/zone_search_field.dart';
 
 /// Pantalla de inicio: clima, búsqueda de zona y mapa de reportes.
 class HomeScreen extends StatefulWidget {
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onSelected: _controller.setFilter,
                   ),
                   const SizedBox(height: 10),
-                  IncidentMap(
+                  IncidentMapView(
                     reports: _controller.visibleReports,
                     height: Responsive.mapHeight(context),
                     onReportTap: (report) =>

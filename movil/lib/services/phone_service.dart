@@ -1,8 +1,11 @@
-import 'package:url_launcher/url_launcher.dart';
+/// Contrato para llamadas telefónicas.
+abstract class PhoneService {
+  Future<bool> call(String number);
+}
 
-/// Abre el marcador del teléfono.
-class PhoneService {
-  Future<bool> call(String number) {
-    return launchUrl(Uri(scheme: 'tel', path: number));
-  }
+/// Simulado: no abre el marcador. Para llamadas reales, implementa
+/// [PhoneService] con `url_launcher`.
+class SimulatedPhoneService implements PhoneService {
+  @override
+  Future<bool> call(String number) async => true;
 }

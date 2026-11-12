@@ -11,6 +11,7 @@ class AppColors {
   static const Color ok = Color(0xFF1A9B6C);
   static const Color warn = Color(0xFFE8912D);
   static const Color drain = Color(0xFF5B6F86);
+  static const Color danger = Color(0xFFC9302F);
   static const Color darkInk = Color(0xFF14233B);
 }
 
@@ -52,4 +53,17 @@ class AppPalette {
 
   static AppPalette of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? dark : light;
+}
+
+/// Sombras reutilizables.
+class AppShadows {
+  AppShadows._();
+
+  static List<BoxShadow> get card => [
+        BoxShadow(
+          color: AppColors.blue.withValues(alpha: 0.14),
+          blurRadius: 24,
+          offset: const Offset(0, 8),
+        ),
+      ];
 }

@@ -50,7 +50,7 @@ class ReportDetailSheet extends StatelessWidget {
       context,
       title: report.type.label,
       description: report.description,
-      place: report.place,
+      place: report.address,
       date: report.dateLabel,
       status: report.status.label,
     );

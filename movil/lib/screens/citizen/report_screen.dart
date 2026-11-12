@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../controllers/report_form_controller.dart';
-import '../core/constants/app_config.dart';
-import '../core/constants/app_strings.dart';
-import '../core/di/app_dependencies.dart';
-import '../core/theme/app_colors.dart';
-import '../widgets/app_card.dart';
-import '../widgets/app_toast.dart';
-import '../widgets/hero_header.dart';
-import '../widgets/page_layout.dart';
-import '../widgets/primary_button.dart';
-import '../widgets/report_detail_sheet.dart';
-import '../widgets/report_type_selector.dart';
+import '../../controllers/report_form_controller.dart';
+import '../../core/constants/app_config.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/di/app_dependencies.dart';
+import '../../core/theme/app_colors.dart';
+import '../../models/report_status.dart';
+import '../../widgets/app_card.dart';
+import '../../widgets/app_toast.dart';
+import '../../widgets/hero_header.dart';
+import '../../widgets/page_layout.dart';
+import '../../widgets/primary_button.dart';
+import '../../widgets/report_detail_sheet.dart';
+import '../../widgets/report_type_selector.dart';
 
 /// Formulario para reportar un problema y consultar un folio.
 class ReportScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _ReportScreenState extends State<ReportScreen> {
       description: AppStrings.reportSentBody,
       place: place,
       date: AppStrings.now,
-      status: '$folio · Recibido',
+      status: '$folio · ${ReportStatus.pending.label}',
     );
   }
 
@@ -72,7 +73,7 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     return PageLayout(
-      header: const HeroHeader(
+      header: HeroHeader(
         zoneLabel: AppConfig.zoneShort,
         title: AppStrings.reportTitle,
         subtitle: AppStrings.reportSubtitle,

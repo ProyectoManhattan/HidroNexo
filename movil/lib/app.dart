@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'core/constants/app_strings.dart';
 import 'core/theme/app_theme.dart';
-import 'screens/main_shell.dart';
+import 'screens/citizen/citizen_shell.dart';
 
-/// Widget raíz: configura tema claro/oscuro y la pantalla principal.
+/// Widget raíz: tema claro/oscuro y vista del ciudadano.
 class AguaVerApp extends StatelessWidget {
   const AguaVerApp({super.key});
 
@@ -16,7 +16,7 @@ class AguaVerApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
-      home: const MainShell(),
+      home: const CitizenShell(),
     );
   }
 }

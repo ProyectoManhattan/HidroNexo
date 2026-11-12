@@ -39,7 +39,7 @@ class AppStrings {
   static const String reportSentBody =
       'Gracias por avisar. Guarda tu folio para dar seguimiento.';
   static const String trackTitle = 'Seguimiento de mi reporte';
-  static const String folioHint = 'Escribe tu folio, ej. AV-0241';
+  static const String folioHint = 'Escribe tu folio, ej. AV-001';
   static const String folioNotFound = 'No encontramos ese folio. Revisa el número.';
 
   // Alertas
@@ -52,9 +52,14 @@ class AppStrings {
   static const String callEmergency = 'Emergencia: llamar al 911';
   static const String callFailed = 'No se pudo abrir el marcador.';
 
+  // Mapa
+  static const String mapPlaceholderNote = 'Mapa de demostración · lo integra el backend';
+
   // Genéricos
   static const String understood = 'Entendido';
   static const String date = 'Fecha';
   static const String status = 'Estado';
   static const String now = 'Ahora';
+  static const String today = 'Hoy';
+  static const String callDemo = 'Llamando al 911 (simulado)';
 }

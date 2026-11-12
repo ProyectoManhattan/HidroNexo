@@ -1,15 +1,16 @@
-/// Estados posibles de un reporte.
-enum ReportStatus {
-  confirmed('Confirmado', isPending: false),
-  received('Recibido', isPending: true),
-  inReview('En revisión', isPending: true),
-  attended('Atendido', isPending: false),
-  closed('Cerrado', isPending: false);
+import 'package:flutter/material.dart';
 
-  const ReportStatus(this.label, {required this.isPending});
+import '../core/theme/app_colors.dart';
+
+/// Estados de un reporte.
+enum ReportStatus {
+  pending('Pendiente', AppColors.warn),
+  accepted('Aceptado', AppColors.ok),
+  declined('Declinado', AppColors.danger),
+  attended('Atendido', AppColors.blue);
+
+  const ReportStatus(this.label, this.color);
 
   final String label;
-
-  /// Los estados pendientes se muestran en color de advertencia.
-  final bool isPending;
+  final Color color;
 }

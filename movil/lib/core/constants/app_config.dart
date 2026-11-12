@@ -1,4 +1,4 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../models/coordinates.dart';
 
 /// Valores de configuración editables en un solo lugar.
 class AppConfig {
@@ -8,9 +8,10 @@ class AppConfig {
   static const String zoneShort = 'Centro';
   static const String emergencyNumber = '911';
 
-  // Mapa
-  static const LatLng mapCenter = LatLng(19.1903, -96.1342);
-  static const double mapZoom = 14.5;
+  // Mapa de demostración (el mapa real lo integra el backend)
+  static const Coordinates mapCenter = Coordinates(19.1903, -96.1342);
+  static const double mapSpanLat = 0.012;
+  static const double mapSpanLng = 0.016;
 
   // Diseño responsivo
   static const double maxContentWidth = 720;

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../controllers/alerts_controller.dart';
-import '../core/constants/app_config.dart';
-import '../core/constants/app_strings.dart';
-import '../core/di/app_dependencies.dart';
-import '../core/theme/app_colors.dart';
-import '../widgets/alert_tile.dart';
-import '../widgets/app_card.dart';
-import '../widgets/app_toast.dart';
-import '../widgets/hero_header.dart';
-import '../widgets/page_layout.dart';
-import '../widgets/segmented_tabs.dart';
-import '../widgets/water_service_card.dart';
+import '../../controllers/alerts_controller.dart';
+import '../../core/constants/app_config.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/di/app_dependencies.dart';
+import '../../core/theme/app_colors.dart';
+import '../../widgets/alert_tile.dart';
+import '../../widgets/app_card.dart';
+import '../../widgets/app_toast.dart';
+import '../../widgets/hero_header.dart';
+import '../../widgets/page_layout.dart';
+import '../../widgets/segmented_tabs.dart';
+import '../../widgets/water_service_card.dart';
 
 /// Alertas actuales e historial de la zona.
 class AlertsScreen extends StatefulWidget {
@@ -33,7 +33,8 @@ class _AlertsScreenState extends State<AlertsScreen> {
 
   Future<void> _callEmergency() async {
     final ok = await AppDependencies.phoneService.call(AppConfig.emergencyNumber);
-    if (!ok && mounted) AppToast.show(context, AppStrings.callFailed);
+    if (!mounted) return;
+    AppToast.show(context, ok ? AppStrings.callDemo : AppStrings.callFailed);
   }
 
   @override
@@ -44,7 +45,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
         final palette = AppPalette.of(context);
         final alerts = _controller.visibleAlerts;
         return PageLayout(
-          header: const HeroHeader(
+          header: HeroHeader(
             zoneLabel: AppConfig.zoneShort,
             title: AppStrings.alertsTitle,
             subtitle: AppStrings.alertsSubtitle,

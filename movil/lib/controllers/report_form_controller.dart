@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../data/report_repository.dart';
+import '../models/coordinates.dart';
 import '../models/incident_report.dart';
 import '../models/new_report.dart';
 import '../models/report_type.dart';
@@ -25,16 +25,15 @@ class ReportFormController extends ChangeNotifier {
   final TextEditingController descriptionController = TextEditingController();
 
   ReportType _type = ReportType.flood;
-  String? _locationLabel;
-  LatLng? _position;
+  UserLocation? _location;
   String? _photoName;
 
   ReportType get type => _type;
-  String? get locationLabel => _locationLabel;
+  String? get locationLabel => _location?.address;
   String? get photoName => _photoName;
 
   bool get isValid =>
-      _position != null && descriptionController.text.trim().isNotEmpty;
+      _location != null && descriptionController.text.trim().isNotEmpty;
 
   void selectType(ReportType type) {
     _type = type;
@@ -42,9 +41,7 @@ class ReportFormController extends ChangeNotifier {
   }
 
   Future<void> useMyLocation() async {
-    final location = await _locationService.getCurrentLocation();
-    _locationLabel = location.label;
-    _position = location.position;
+    _location = await _locationService.getCurrentLocation();
     notifyListeners();
   }
 
@@ -57,11 +54,14 @@ class ReportFormController extends ChangeNotifier {
 
   /// Envía el reporte y devuelve el folio. Limpia el formulario al terminar.
   Future<String> submit() async {
+    final location = _location!;
+    final Coordinates position = location.position;
     final folio = await _repository.submit(
       NewReport(
         type: _type,
-        placeLabel: _locationLabel!,
-        position: _position!,
+        neighborhood: location.neighborhood,
+        address: location.address,
+        position: position,
         description: descriptionController.text.trim(),
         photoName: _photoName,
       ),
@@ -74,8 +74,7 @@ class ReportFormController extends ChangeNotifier {
 
   void reset() {
     descriptionController.clear();
-    _locationLabel = null;
-    _position = null;
+    _location = null;
     _photoName = null;
     notifyListeners();
   }

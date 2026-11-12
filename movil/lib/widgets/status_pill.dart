@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../core/theme/app_colors.dart';
 import '../models/report_status.dart';
 
-/// Etiqueta de estado (verde = resuelto, naranja = pendiente).
-class StatusPill extends StatelessWidget {
-  const StatusPill({super.key, required this.status});
+/// Etiqueta de color genérica.
+class InfoPill extends StatelessWidget {
+  const InfoPill({super.key, required this.label, required this.color});
 
-  final ReportStatus status;
+  final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    final color = status.isPending ? AppColors.warn : AppColors.ok;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
@@ -19,9 +18,20 @@ class StatusPill extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        status.label,
+        label,
         style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w800),
       ),
     );
   }
+}
+
+/// Etiqueta con el estado de un reporte.
+class StatusPill extends StatelessWidget {
+  const StatusPill({super.key, required this.status});
+
+  final ReportStatus status;
+
+  @override
+  Widget build(BuildContext context) =>
+      InfoPill(label: status.label, color: status.color);
 }
