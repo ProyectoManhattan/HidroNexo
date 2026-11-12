@@ -17,7 +17,9 @@ docker compose up --build
 
 Las migraciones (`alembic upgrade head`) corren solas al arrancar el contenedor.
 
-Cargar datos de `data/` (borra todo antes):
+**Primera carga:** si la base no tiene colonias, la API carga sola `data/colonias_veracruz.geojson` (sin reportes de ejemplo). Se desactiva con `AUTO_SEED=false`.
+
+Volver a cargar los datos de `data/` (borra todo antes):
 
 ```bash
 curl -X POST localhost:8000/admin/seed -H "X-Clave: cambiar-esta-clave"
@@ -85,6 +87,7 @@ Mensajes del WebSocket: `{"tipo": "<evento>", "datos": {...}}`.
 | GET | `/alerts` | | Bandeja (por defecto, `estado=propuesta`) |
 | GET | `/alerts/active` | | Alertas aprobadas vigentes con su guía (respaldo del push) |
 | PATCH | `/alerts/{id}` | ✔ | Editar texto |
+| POST | `/alerts` | ✔ | Alerta manual a una o varias colonias (se envía de inmediato) |
 | POST | `/alerts/{id}/approve` | ✔ | Aprobar y enviar |
 | POST | `/alerts/{id}/discard` | ✔ | Descartar |
 | GET | `/guides`, `/guides/{tipo}` | | Guías de acción |
@@ -98,7 +101,7 @@ Mensajes del WebSocket: `{"tipo": "<evento>", "datos": {...}}`.
 
 | Archivo | Formato |
 |---|---|
-| `colonias_veracruz.geojson` | FeatureCollection de Polygon/MultiPolygon (EPSG:4326). Propiedades: `nombre` (obligatoria), `municipio`, `vulnerabilidad` (0–1), `vulnerabilidad_fuente` (`real`/`ejemplo`) |
+| `colonias_veracruz.geojson` | FeatureCollection de Polygon/MultiPolygon (EPSG:4326). Propiedades: `nombre` (obligatoria), `municipio`, `vulnerabilidad` (0–1), `vulnerabilidad_fuente` (`real`/`modelada`/`ejemplo`; `modelada` la genera `data/scripts/asignar_vulnerabilidad.py` desde los perfiles territoriales) |
 | `reportes_prueba.json` | Lista de `{"categoria", "severidad", "lat", "lon", "descripcion"}` |
 | `guias/<tipo>.json` | Una guía por categoría (`inundacion`, `encharcamiento`, `alcantarilla`, `fuga`, `sin_agua`) |
 

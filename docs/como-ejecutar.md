@@ -1,8 +1,8 @@
 # Cómo ejecutar el proyecto
 
-Backend (API + base de datos) en Docker y panel web en Python.
+Backend (API + base de datos) en Docker y panel web en React.
 
-**Requisitos:** Git, Docker Desktop (abierto) y Python 3.10 o más nuevo.
+**Requisitos:** Git, Docker Desktop (abierto) y Node.js 22 (`mise install` lo instala).
 
 ## 1. Bajar el proyecto
 
@@ -36,37 +36,37 @@ docker compose up --build
 
 Dejar esta terminal abierta. Comprobar: http://localhost:8000/health debe responder `{"status":"ok"}`. La documentación interactiva está en http://localhost:8000/docs.
 
-## 3. Datos de prueba (mientras `data/` esté vacía)
+## 3. Datos
 
-Copiar los datos **ficticios** de las pruebas (2 colonias). **No subirlos con commit**: los datos reales los prepara quien tiene `data/`.
+Las zonas reales (101, de Veracruz, Boca del Río y Medellín de Bravo) ya están en `data/colonias_veracruz.geojson` (por código postal; ver el README principal). **No hay que cargar nada a mano**: con la base vacía, la API las carga sola al arrancar y crea un reporte de ejemplo por zona.
+
+Las guías de acción (`data/guias/`) todavía no existen. Mientras tanto se pueden copiar las **ficticias** de las pruebas (**no subirlas con commit**):
 
 ```bash
 # Mac / Linux
-cp backend/tests/datos/*.geojson backend/tests/datos/*.json data/ && cp backend/tests/datos/guias/*.json data/guias/
+cp backend/tests/datos/guias/*.json data/guias/
 ```
 
 ```bash
 # Windows
-copy backend\tests\datos\*.geojson data\ && copy backend\tests\datos\*.json data\ && copy backend\tests\datos\guias\*.json data\guias\
+copy backend\tests\datos\guias\*.json data\guias\
 ```
 
 ## 4. Panel web (terminal 2)
 
 ```bash
-cd web
-python -m venv .venv
-source .venv/bin/activate      # Mac / Linux
-.venv\Scripts\activate         # Windows
-pip install -r requirements.txt
-python main.py
+cd web-react
+npm install
+npm run dev
 ```
 
 ## 5. Usarlo
 
-1. Abrir http://localhost:8080
-2. **Modo operador** → clave `cambiar-esta-clave` (la de `CLAVE_UNICA` en `.env`).
-3. **⚙ → Cargar datos (seed)**.
-4. **Simular tormenta** → aparecen alertas propuestas; **Aprobar y enviar**.
+1. Abrir http://localhost:5173
+2. Al inicio no hay reportes: aparecen los que envía la app móvil o se crean desde la API. El panel no pide clave.
+3. **Simular tormenta** → aparecen alertas propuestas; **Aprobar y enviar**.
+4. **Enviar alerta manual** → elegir zonas, tipo, nivel y texto.
+5. **⚙ → Cargar datos (seed)** reinicia todo; **Reiniciar (reset)** conserva las zonas y borra reportes y alertas.
 
 ## Problemas comunes
 
@@ -74,10 +74,9 @@ python main.py
 |---|---|
 | El panel dice "Sin conexión" | El backend no está corriendo; revisar la terminal 1 |
 | `port is already allocated` (5432 u 8000) | Otro programa usa el puerto: cerrar otro PostgreSQL local o cambiar el puerto en `docker-compose.yml` |
-| "Clave incorrecta" | Usar el valor de `CLAVE_UNICA` del archivo `.env` |
-| Pide una "API key" o una clave | No hace falta ninguna API key. La única clave es la de **Modo operador** (`CLAVE_UNICA` en `.env`, por defecto `cambiar-esta-clave`) |
-| El mapa se ve gris, sin calles | El fondo es de OpenStreetMap y necesita internet; las colonias y reportes se ven igual. Para otro proveedor, definir `TEJAS_MAPA` |
-| El mapa no muestra colonias | Falta el paso 3 o el seed (⚙ → Cargar datos) |
+| Las acciones fallan con "Clave inválida" | `VITE_CLAVE` (en `web-react/.env`) debe coincidir con `CLAVE_UNICA` de `.env`; reiniciar `npm run dev` |
+| Sigo viendo solo las zonas anteriores | La base ya tenía colonias y la carga automática solo corre con la base vacía. Usa **⚙ → Cargar datos (seed)** (borra reportes, alertas y dispositivos) o `docker compose down -v` |
+| El mapa no muestra zonas | Falta `data/colonias_veracruz.geojson`, o la base se creó sin él: `docker compose down -v` y levantar de nuevo |
 | Cambié `.env` y no se aplica | `docker compose down` y luego `docker compose up --build` |
 
 Pruebas del backend:

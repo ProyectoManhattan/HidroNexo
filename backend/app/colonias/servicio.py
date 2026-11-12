@@ -4,6 +4,8 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.colonias.modelos import Colonia
+from app.meteorologia import estado as meteo
+from app.riesgo.calculo import resumen_pronostico
 from app.riesgo.modelos import RiesgoColonia
 
 
@@ -43,6 +45,7 @@ def geojson_riesgo(db: Session) -> dict:
                     "motivo": riesgo.motivo if riesgo else None,
                     "componentes": riesgo.componentes if riesgo else {},
                     "actualizado_en": riesgo.actualizado_en.isoformat() if riesgo else None,
+                    "pronostico": resumen_pronostico(meteo.lluvia_de(colonia.id)),
                 },
             }
         )

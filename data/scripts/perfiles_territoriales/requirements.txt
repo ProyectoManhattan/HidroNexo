@@ -1,0 +1,9 @@
+# Solo para generar perfiles territoriales (no los necesita la API)
+pandas>=2.2
+geopandas>=1.0
+shapely>=2.0
+pyproj>=3.6
+rasterio>=1.4
+pysheds>=0.4
+# pysheds 0.5 usa np.in1d, que numpy 2.4 eliminó
+numpy>=2.0,<2.4

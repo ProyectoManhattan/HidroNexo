@@ -1,11 +1,12 @@
 from datetime import timedelta
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app import eventos
 from app.colonias.modelos import Colonia
 from app.config import settings
+from app.historial.modelos import CambioNivel
 from app.meteorologia import estado as meteo
 from app.reportes.modelos import Reporte
 from app.reportes.servicio import filtro_activos
@@ -16,13 +17,13 @@ from app.utiles import ahora
 
 def _suma_severidades(db: Session, colonia_id: int) -> float:
     # TODO: ponderar por confirmaciones y por antigüedad del reporte
-    return float(
-        db.scalar(
-            select(func.coalesce(func.sum(Reporte.severidad), 0)).where(
-                Reporte.colonia_id == colonia_id, filtro_activos()
-            )
-        )
-    )
+    filas = db.execute(
+        select(Reporte.severidad, Reporte.categoria).where(Reporte.colonia_id == colonia_id, filtro_activos())
+    ).all()
+    if not filas:
+        return 0.0
+    lluvia = meteo.lluvia_de(colonia_id)
+    return float(sum(calculo.severidad_efectiva(sev, cat, lluvia) for sev, cat in filas))
 
 
 def recalcular(db: Session, colonia_id: int) -> RiesgoColonia | None:
@@ -33,7 +34,7 @@ def recalcular(db: Session, colonia_id: int) -> RiesgoColonia | None:
     nivel_anterior = actual.nivel if actual else None
 
     resultado = calculo.calcular(
-        lluvia=calculo.componente_lluvia(meteo.lluvia_actual()),
+        lluvia=calculo.componente_lluvia(meteo.lluvia_de(colonia_id)),
         reportes=calculo.componente_reportes(_suma_severidades(db, colonia_id)),
         vulnerabilidad=colonia.vulnerabilidad,
         nivel_anterior=nivel_anterior,
@@ -47,6 +48,28 @@ def recalcular(db: Session, colonia_id: int) -> RiesgoColonia | None:
     actual.motivo = resultado.motivo
     actual.componentes = resultado.componentes
     actual.actualizado_en = ahora()
+
+    if nivel_anterior != resultado.nivel:
+        # El regreso a la normalidad tras una simulación también es simulado: el nivel que se deja era ficticio
+        venia_simulado = db.scalar(
+            select(CambioNivel.simulacion)
+            .where(CambioNivel.zona == colonia.nombre)
+            .order_by(CambioNivel.id.desc())
+            .limit(1)
+        )
+        db.add(
+            CambioNivel(
+                momento=actual.actualizado_en,
+                zona=colonia.nombre,
+                municipio=colonia.municipio,
+                nivel_anterior=nivel_anterior,
+                nivel=resultado.nivel,
+                valor=resultado.valor,
+                motivo=resultado.motivo,
+                componentes=resultado.componentes,
+                simulacion=meteo.en_simulacion() or bool(venia_simulado),
+            )
+        )
 
     cruza = calculo.sube_a_alerta(nivel_anterior, resultado.nivel)
     enfriada = actual.ultima_alerta_en is None or ahora() - actual.ultima_alerta_en > timedelta(

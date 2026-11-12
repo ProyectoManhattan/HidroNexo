@@ -6,19 +6,20 @@ data/colonias_veracruz.geojson
     FeatureCollection de Polygon o MultiPolygon (EPSG:4326) con propiedades:
     nombre (obligatorio), municipio, vulnerabilidad (0–1), vulnerabilidad_fuente ("real"/"ejemplo")
 
-data/reportes_prueba.json
+data/reportes_prueba.json (opcional)
     Lista de objetos: {"categoria", "severidad", "lat", "lon", "descripcion"}
+    Si no existe, el seed no crea reportes: solo habrá los que envíe la ciudadanía.
 """
 import json
 
-from sqlalchemy import delete, func
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.alertas.modelos import Alerta
 from app.colonias.modelos import Colonia
 from app.config import settings
 from app.dispositivos.modelos import Dispositivo
-from app.meteorologia import estado as meteo
+from app.meteorologia import estado as meteo, ingesta
 from app.reportes import servicio as reportes
 from app.reportes.esquemas import ReporteEntrada
 from app.reportes.modelos import Reporte
@@ -70,19 +71,31 @@ def borrar_todo(db: Session, incluir_colonias: bool) -> None:
 def seed(db: Session) -> dict:
     borrar_todo(db, incluir_colonias=True)
     colonias = cargar_colonias(db)
+    # Las colonias tienen IDs nuevos: la lluvia por colonia en memoria quedó con los viejos
+    if settings.meteo_activa:
+        ingesta.ejecutar()
     recalcular_todas(db)
     reportes_cargados = cargar_reportes(db)
     return {"colonias": colonias, "reportes": reportes_cargados}
 
 
-def simular_tormenta(db: Session, intensidad: float) -> dict:
-    """Lluvia simulada; `intensidad` 1.0 satura todas las ventanas de lluvia."""
+def simular_tormenta(
+    db: Session, intensidad: float, probabilidad: float = 100.0, solo_pronostico: bool = False
+) -> dict:
+    """Lluvia simulada; `intensidad` 1.0 satura todas las ventanas de lluvia.
+
+    `probabilidad` (%) es la del pronóstico de las próximas horas: pondera pronostico_3h.
+    `solo_pronostico` simula una tormenta que viene: sin lluvia caída, solo pronóstico.
+    """
+    caida = 0.0 if solo_pronostico else intensidad
     meteo.simular(
         {
-            "mm_1h": 20.0 * intensidad,
-            "mm_3h": 40.0 * intensidad,
-            "mm_24h": 80.0 * intensidad,
+            "mm_1h": 20.0 * caida,
+            "mm_3h": 40.0 * caida,
+            "mm_24h": 80.0 * caida,
             "pronostico_3h": 40.0 * intensidad,
+            "prob_3h": probabilidad,
+            "prob_6h": probabilidad,
         }
     )
     recalcular_todas(db)

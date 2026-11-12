@@ -23,6 +23,13 @@ SATURACION_REPORTES = 10.0
 # Lluvia (mm) que se considera saturación en cada ventana
 SATURACION_LLUVIA = {"mm_1h": 20.0, "mm_3h": 40.0, "mm_24h": 80.0, "pronostico_3h": 40.0}
 
+# Categorías cuya gravedad depende de la lluvia. Las demás (fuga, sin_agua, categorías
+# nuevas) NO se amplifican ni se penalizan: factor 1.0, para no causar falsos negativos.
+CATEGORIAS_LLUVIA = {"inundacion", "encharcamiento", "alcantarilla"}
+
+# Amplificación máxima (+50 %) de la severidad de un reporte con lluvia local en saturación
+AMPLIFICACION_LLUVIA_MAX = 0.5
+
 # Niveles que generan borrador de alerta
 NIVELES_ALERTA = {"alto", "critico"}
 
@@ -39,11 +46,45 @@ def limitar(x: float) -> float:
     return max(0.0, min(1.0, x))
 
 
+def pronostico_efectivo(lluvia: dict[str, float]) -> float:
+    """mm pronosticados en 3 h ponderados por su probabilidad: 20 mm al 30 % cuentan como 6 mm.
+
+    Sin dato de probabilidad (prob_3h) se toma el pronóstico completo, como antes.
+    """
+    mm = lluvia.get("pronostico_3h", 0.0)
+    prob = lluvia.get("prob_3h")
+    if prob is None:
+        return mm
+    return mm * limitar(prob / 100)
+
+
 def componente_lluvia(lluvia: dict[str, float]) -> float:
-    """Toma la ventana más grave (1 h, 3 h, 24 h o pronóstico)."""
+    """Toma la ventana más grave (1 h, 3 h, 24 h o pronóstico ponderado por probabilidad)."""
     if not lluvia:
         return 0.0
-    return limitar(max(lluvia.get(k, 0.0) / tope for k, tope in SATURACION_LLUVIA.items()))
+    ventanas = {**lluvia, "pronostico_3h": pronostico_efectivo(lluvia)}
+    return limitar(max(ventanas.get(k, 0.0) / tope for k, tope in SATURACION_LLUVIA.items()))
+
+
+def resumen_pronostico(lluvia: dict[str, float]) -> dict:
+    """Lo que el panel y la app muestran del pronóstico de una zona."""
+    return {
+        "mm_3h": round(lluvia.get("pronostico_3h", 0.0), 2),
+        "prob_3h": lluvia.get("prob_3h"),
+        "prob_6h": lluvia.get("prob_6h"),
+        "mm_3h_efectivos": round(pronostico_efectivo(lluvia), 2),
+    }
+
+
+def severidad_efectiva(severidad: int, categoria: str, lluvia: dict[str, float]) -> float:
+    """Severidad ajustada por la lluvia local: severidad × (1 + 0.5 · componente_lluvia).
+
+    Solo categorías de CATEGORIAS_LLUVIA se amplifican (factor entre 1.0 y 1.5);
+    el resto conserva su severidad tal cual. Nunca baja de la severidad original.
+    """
+    if categoria not in CATEGORIAS_LLUVIA:
+        return float(severidad)
+    return severidad * (1.0 + AMPLIFICACION_LLUVIA_MAX * componente_lluvia(lluvia))
 
 
 def componente_reportes(suma_severidades: float) -> float:

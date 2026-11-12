@@ -7,7 +7,7 @@
 | Persona | Frente principal | Frente extra | Rama | Carpeta |
 |---|---|---|---|---|
 | **A** | Backend | Contrato OpenAPI (lo coordina) | `backend/*` | `backend/` |
-| **B** | Página web (Protección Civil) | Datos: colonias, vulnerabilidad, seed | `web/*` | `web/`, `data/` |
+| **B** | Página web (Protección Civil) | Datos: colonias, vulnerabilidad, seed | `web/*` | `web-react/`, `data/` |
 | **C** | App móvil (ciudadanía) | IA: prompts, plantillas y guías | `movil/*` | `movil/`, `backend/app/ia/` |
 
 Cada quien trabaja en su carpeta para evitar conflictos. Los cambios a carpetas ajenas van por PR y los revisa el dueño de esa carpeta.
@@ -76,7 +76,7 @@ backend/                 # Persona A
 └── tests/
 data/                    # Persona B: colonias, vulnerabilidad, reportes de prueba
 └── guias/               # Persona C: guías por tipo de problema (como datos)
-web/                     # Persona B: api/, componentes/, paginas/, static/
+web-react/               # Persona B: panel React + Vite + MapLibre
 movil/                   # Persona C: proyecto Flutter (lo genera `flutter create`)
 docs/                    # Plan, reparto y contrato de la API
 ```
