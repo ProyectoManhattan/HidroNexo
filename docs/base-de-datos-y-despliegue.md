@@ -94,8 +94,8 @@ Hay dos rutas excluyentes para preparar Supabase:
 - `supabase/deploy.sql` crea PostGIS y todo el esquema desde el SQL Editor; también marca
   la versión Alembic `0002`, por lo que el backend no intentará recrearlo.
 
-No se deben ejecutar ambas rutas sobre el mismo proyecto. Para Railway se usa
-`Dockerfile.prod` desde la raíz del repositorio.
+No se deben ejecutar ambas rutas sobre el mismo proyecto. Railway usa el
+`Dockerfile` de la raíz, seleccionado explícitamente por `railway.json`.
 
 ## Pendientes antes de abrirlo al público
 

@@ -134,7 +134,14 @@ export default function MapView() {
               maxzoom: 19,
               attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
             },
-            terreno: {
+            'terreno-3d': {
+              type: 'raster-dem',
+              tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+              tileSize: 256,
+              encoding: 'terrarium',
+              maxzoom: 14,
+            },
+            'terreno-sombra': {
               type: 'raster-dem',
               tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
               tileSize: 256,
@@ -147,7 +154,7 @@ export default function MapView() {
             {
               type: 'hillshade',
               id: 'sombra-terreno',
-              source: 'terreno',
+              source: 'terreno-sombra',
               paint: {
                 'hillshade-exaggeration': 0.85,
                 'hillshade-shadow-color': '#0f172a',
@@ -173,8 +180,22 @@ export default function MapView() {
 
     map.on('load', () => {
       // Terreno 3D (MapTiler Terrain-RGB o AWS Terrarium DEM)
-      if (!map.getSource('terreno')) {
-        map.addSource('terreno', {
+      if (!map.getSource('terreno-3d')) {
+        map.addSource('terreno-3d', {
+          type: 'raster-dem',
+          url: MAPTILER_KEY
+            ? `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${MAPTILER_KEY}`
+            : undefined,
+          tiles: MAPTILER_KEY
+            ? undefined
+            : ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          encoding: MAPTILER_KEY ? 'mapbox' : 'terrarium',
+          maxzoom: 14,
+        })
+      }
+      if (!map.getSource('terreno-sombra')) {
+        map.addSource('terreno-sombra', {
           type: 'raster-dem',
           url: MAPTILER_KEY
             ? `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${MAPTILER_KEY}`
@@ -193,7 +214,7 @@ export default function MapView() {
         map.addLayer({
           id: 'sombra-terreno',
           type: 'hillshade',
-          source: 'terreno',
+          source: 'terreno-sombra',
           paint: {
             'hillshade-exaggeration': 0.85,
             'hillshade-shadow-color': '#0f172a',
@@ -265,7 +286,7 @@ export default function MapView() {
           'circle-opacity': 0.9, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2,
         },
       })
-      map.setTerrain({ source: 'terreno', exaggeration: 4.5 })
+      map.setTerrain({ source: 'terreno-3d', exaggeration: 4.5 })
       map.jumpTo({ pitch: 58, bearing: -15 })
       setListo(true)
     })
@@ -357,7 +378,7 @@ export default function MapView() {
     if (map.getLayer('edificios-3d')) {
       map.setLayoutProperty('edificios-3d', 'visibility', modo3d ? 'visible' : 'none')
     }
-    map.setTerrain(modo3d ? { source: 'terreno', exaggeration: 4.5 } : null)
+    map.setTerrain(modo3d ? { source: 'terreno-3d', exaggeration: 4.5 } : null)
     map.easeTo({
       pitch: modo3d ? 58 : 0,
       bearing: modo3d ? -15 : 0,
