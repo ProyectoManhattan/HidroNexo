@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from geoalchemy2 import Geometry
 from sqlalchemy import DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -15,3 +16,6 @@ class Dispositivo(Base):
     colonia_id: Mapped[int | None] = mapped_column(ForeignKey("colonias.id", ondelete="SET NULL"), index=True)
     plataforma: Mapped[str] = mapped_column(String(20), default="android")
     actualizado_en: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    # Última ubicación reportada por la app (la ubicación manda sobre la colonia declarada)
+    ubicacion = mapped_column(Geometry("POINT", srid=4326))
+    ubicacion_actualizada_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
