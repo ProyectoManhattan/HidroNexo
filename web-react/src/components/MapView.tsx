@@ -290,7 +290,10 @@ export default function MapView() {
     map.on('mousemove', (e) => {
       if (!map.getLayer('zonas-fill')) return
       const rep = map.queryRenderedFeatures(e.point, { layers: ['reportes-circulos'] })
-      const zon = rep.length ? [] : map.queryRenderedFeatures(e.point, { layers: CAPAS_ZONA })
+      // La ficha del reporte tiene prioridad: mientras permanezca abierta no se
+      // superpone la ficha informativa de la zona postal al mover el cursor.
+      const reporteSeleccionado = popupReport?.isOpen() ?? false
+      const zon = rep.length || reporteSeleccionado ? [] : map.queryRenderedFeatures(e.point, { layers: CAPAS_ZONA })
       map.getCanvas().style.cursor = rep.length || zon.length ? 'pointer' : ''
       if (zon.length) hover.setLngLat(e.lngLat).setHTML(popupColonia(zon[0].properties)).addTo(map)
       else hover.remove()
@@ -302,7 +305,8 @@ export default function MapView() {
       const rep = map.queryRenderedFeatures(e.point, { layers: ['reportes-circulos'] })
       if (rep.length) {
         popupReport?.remove()
-        popupReport = new maplibregl.Popup({ offset: 12, maxWidth: '280px' })
+        hover.remove()
+        popupReport = new maplibregl.Popup({ offset: 12, maxWidth: '280px', className: 'report-popup' })
           .setLngLat((rep[0].geometry as unknown as { coordinates: number[] }).coordinates as [number, number])
           .setHTML(popupReporte(rep[0].properties))
           .addTo(map)
