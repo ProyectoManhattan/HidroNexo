@@ -4,10 +4,8 @@ from nicegui import ui
 
 from componentes.estado import Estado
 from componentes.estilos import CATEGORIAS, MOTIVOS, NIVELES, SEVERIDADES, categoria, hace, nivel, segundos_desde
-from config import CENTRO_MAPA, ZOOM_MAPA
+from config import ATRIBUCION_MAPA, CENTRO_MAPA, TEJAS_MAPA, ZOOM_MAPA
 
-TEJAS = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-ATRIBUCION = "&copy; OpenStreetMap &copy; CARTO"
 
 CSS = (
     """
@@ -68,7 +66,7 @@ class Mapa:
         with ui.element("div").classes("relative w-full grow"):
             self.m = ui.leaflet(center=CENTRO_MAPA, zoom=ZOOM_MAPA).classes("absolute inset-0 w-full h-full")
             self.m.clear_layers()
-            self.m.tile_layer(url_template=TEJAS, options={"attribution": ATRIBUCION, "maxZoom": 19})
+            self.m.tile_layer(url_template=TEJAS_MAPA, options={"attribution": ATRIBUCION_MAPA, "maxZoom": 19})
             self.m.on("map-click", al_hacer_clic)
             self._leyenda()
 
