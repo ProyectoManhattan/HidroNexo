@@ -63,7 +63,7 @@ npm run dev
 ## 5. Usarlo
 
 1. Abrir http://localhost:5173
-2. Ya se ven los reportes de ejemplo, uno por zona. El panel no pide clave.
+2. Al inicio no hay reportes: aparecen los que envía la app móvil o se crean desde la API. El panel no pide clave.
 3. **Simular tormenta** → aparecen alertas propuestas; **Aprobar y enviar**.
 4. **Enviar alerta manual** → elegir zonas, tipo, nivel y texto.
 5. **⚙ → Cargar datos (seed)** reinicia todo; **Reiniciar (reset)** conserva las zonas y borra reportes y alertas.

@@ -98,8 +98,8 @@ Las pruebas de flujo usan una base aparte (`<base>_test`) y nunca la principal.
 ## Datos
 
 - [data/colonias_veracruz.geojson](data/colonias_veracruz.geojson): límites reales por **código postal** (fuente SEPOMEX vía [open-mexico/mexico-geojson](https://github.com/open-mexico/mexico-geojson), licencia MIT), no por colonia. Cubre los municipios de **Veracruz, Boca del Río y Medellín de Bravo** (101 zonas); cada zona se asigna a su municipio con los límites del Marco Geoestadístico de INEGI vía [PhantomInsights/mexico-geojson](https://github.com/PhantomInsights/mexico-geojson) (MIT). Un código postal que cruza un límite municipal queda en el municipio de su punto interior. Se regeneran con `python3 data/scripts/generar_colonias.py`; para ampliar la zona se agregan municipios a `MUNICIPIOS` en ese script.
-- La **vulnerabilidad base es de ejemplo** (0.5 en todas las zonas) hasta contar con datos reales de Protección Civil o del atlas de riesgos. Mientras tanto, una tormenta simulada pone en riesgo a todas las zonas por igual.
-- Los reportes de ejemplo son de demostración (origen `seed`). Los datos de `backend/tests/datos/` son ficticios y solo sirven para las pruebas.
+- La **vulnerabilidad base es modelada**: sale de la susceptibilidad física de [data/perfiles/](data/perfiles/) (relieve, cauces, distancia al mar) con `python3 data/scripts/asignar_vulnerabilidad.py`. Es un índice relativo sin calibrar que no incluye factores sociales.
+- El seed ya no crea reportes de ejemplo. Los datos de `backend/tests/datos/` son ficticios y solo sirven para las pruebas.
 
 ## Estado actual
 

@@ -17,10 +17,7 @@ docker compose up --build
 
 Las migraciones (`alembic upgrade head`) corren solas al arrancar el contenedor.
 
-**Primera carga:** si la base no tiene colonias, la API carga únicamente el catálogo
-geográfico de `data/colonias_veracruz.geojson`. Los reportes empiezan vacíos y llegan
-por `POST /reports` desde Flutter o por el panel. `AUTO_SEED=true` queda reservado para
-una demo desechable; en producción debe permanecer en `false`.
+
 
 Crear una demo sintética explícita (borra todo antes; no usar en producción):
 
@@ -104,7 +101,7 @@ Mensajes del WebSocket: `{"tipo": "<evento>", "datos": {...}}`.
 
 | Archivo | Formato |
 |---|---|
-| `colonias_veracruz.geojson` | FeatureCollection de Polygon/MultiPolygon (EPSG:4326). Propiedades: `nombre` (obligatoria), `municipio`, `vulnerabilidad` (0–1), `vulnerabilidad_fuente` (`real`/`ejemplo`) |
+| `colonias_veracruz.geojson` | FeatureCollection de Polygon/MultiPolygon (EPSG:4326). Propiedades: `nombre` (obligatoria), `municipio`, `vulnerabilidad` (0–1), `vulnerabilidad_fuente` (`real`/`modelada`/`ejemplo`; `modelada` la genera `data/scripts/asignar_vulnerabilidad.py` desde los perfiles territoriales) |
 | `reportes_prueba.json` | Lista de `{"categoria", "severidad", "lat", "lon", "descripcion"}` |
 | `guias/<tipo>.json` | Una guía por categoría (`inundacion`, `encharcamiento`, `alcantarilla`, `fuga`, `sin_agua`) |
 

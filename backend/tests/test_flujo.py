@@ -131,14 +131,13 @@ def test_alerta_manual_valida_datos(cliente):
     assert cliente.post("/alerts", json={**ok, "texto": "corto"}, headers=CLAVE).status_code == 422
 
 
-def test_reportes_de_ejemplo_uno_por_colonia(cliente):
+def test_seed_sin_archivo_de_reportes_no_crea_reportes(cliente, tmp_path, monkeypatch):
     from app.admin import servicio
+    from app.config import settings
     from app.db import SessionLocal
 
     cliente.post("/admin/reset", headers=CLAVE)
+    monkeypatch.setattr(settings, "data_dir", tmp_path)
     with SessionLocal() as db:
-        assert servicio.cargar_reportes_demo(db) == len(_colonias(cliente))
-    reportes = cliente.get("/reports").json()
-    assert len(reportes) == len(_colonias(cliente))
-    assert sorted(r["colonia_id"] for r in reportes) == sorted(_colonias(cliente).values())
-    assert all(r["origen"] == "seed" for r in reportes)
+        assert servicio.cargar_reportes(db) == 0
+    assert cliente.get("/reports").json() == []
