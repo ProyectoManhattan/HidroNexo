@@ -1,4 +1,4 @@
-# AguaVer | Bitácora de uso de inteligencia artificial
+# HidroNexo | Bitácora de uso de inteligencia artificial
 **Instituto Tecnológico de Veracruz** · Hackathon Tech Week 2026 · Reto: **Agua y lluvia**
 **Equipo:** Proyecto Manhattan  
 **Repositorio:** [ProyectoManhattan/Proyecto_Agua_Lluvia](https://github.com/ProyectoManhattan/Proyecto_Agua_Lluvia)
