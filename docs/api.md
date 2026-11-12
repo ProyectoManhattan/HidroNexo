@@ -98,7 +98,7 @@ Listar reportes. Parámetros opcionales en la URL:
 | `activos` | `true` | Por defecto `true`; con `false` incluye resueltos y expirados |
 | `bbox` | `-96.14,19.17,-96.13,19.18` | Solo lo que cae en el rectángulo: lon mín, lat mín, lon máx, lat máx |
 
-Respuesta: lista de reportes.
+Respuesta: lista de reportes, ordenada por `prioridad` descendente y, a igualdad, por `creado_en` descendente (más reciente primero). Cada reporte incluye el campo adicional `prioridad` (número): la severidad ajustada por la lluvia local de su colonia. Inundación, encharcamiento y alcantarilla tapada se amplifican hasta x1.5 según la lluvia; fuga y falta de agua conservan su severidad (x1.0). `prioridad` solo viene en este endpoint; en `POST` y en los eventos `report.*` es `null`.
 
 ### `POST /reports/{id}/resolve` 🔒
 
@@ -308,9 +308,12 @@ Estado del clima:
 {
   "lluvia": { "mm_1h": 20.0, "mm_3h": 40.0, "mm_24h": 80.0, "pronostico_3h": 40.0 },
   "simulacion": true,
-  "actualizado_en": "2026-11-11T22:00:00Z"
+  "actualizado_en": "2026-11-11T22:00:00Z",
+  "colonias_con_lectura": 120
 }
 ```
+
+`lluvia` es el peor valor actual (global). Cada colonia usa internamente su propia lectura de Open-Meteo (la simulación aplica a todas). `colonias_con_lectura` es opcional e informativo (0 si aún no hay lecturas por colonia).
 
 ---
 

@@ -6,8 +6,10 @@ from sqlalchemy.orm import Session
 from app import eventos
 from app.colonias.servicio import colonia_de_punto, punto
 from app.config import settings
+from app.meteorologia import estado as meteo
 from app.reportes.esquemas import ReporteEntrada, ReporteSalida
 from app.reportes.modelos import Reporte
+from app.riesgo.calculo import severidad_efectiva
 from app.utiles import ahora
 
 
@@ -39,7 +41,7 @@ def listar(
     colonia_id: int | None = None,
     solo_activos: bool = True,
     bbox: tuple[float, float, float, float] | None = None,
-) -> list[Reporte]:
+) -> list[ReporteSalida]:
     consulta = select(Reporte).order_by(Reporte.creado_en.desc())
     if solo_activos:
         consulta = consulta.where(filtro_activos())
@@ -51,7 +53,24 @@ def listar(
         consulta = consulta.where(
             func.ST_Intersects(Reporte.ubicacion, func.ST_MakeEnvelope(*bbox, 4326))
         )
-    return list(db.scalars(consulta.limit(1000)))
+    return ordenar_por_prioridad(db.scalars(consulta.limit(1000)))
+
+
+def ordenar_por_prioridad(reportes) -> list[ReporteSalida]:
+    """Calcula `prioridad` con la lluvia de la colonia de cada reporte y ordena
+    por prioridad desc, luego creado_en desc."""
+    lluvias: dict[int | None, dict[str, float]] = {}
+    salida = []
+    for r in reportes:
+        if r.colonia_id not in lluvias:
+            lluvias[r.colonia_id] = (
+                meteo.lluvia_de(r.colonia_id) if r.colonia_id is not None else meteo.lluvia_actual()
+            )
+        item = ReporteSalida.model_validate(r)
+        item.prioridad = round(severidad_efectiva(r.severidad, r.categoria, lluvias[r.colonia_id]), 4)
+        salida.append(item)
+    salida.sort(key=lambda x: (x.prioridad, x.creado_en), reverse=True)
+    return salida
 
 
 def resolver(db: Session, reporte: Reporte) -> Reporte:

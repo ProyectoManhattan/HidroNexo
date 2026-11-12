@@ -35,5 +35,8 @@ class ReporteSalida(BaseModel):
     estado: str
     creado_en: datetime
     expira_en: datetime
+    # Aditivo: severidad efectiva (ajustada por lluvia local). Solo lo llena GET /reports;
+    # en POST y eventos es null.
+    prioridad: float | None = None
 
     model_config = {"from_attributes": True}
