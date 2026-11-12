@@ -1,4 +1,4 @@
-import { MOTIVOS, SEVERIDADES, categoriaInfo, hace, nivelInfo } from '../../constants'
+import { MOTIVOS, SEVERIDADES, categoriaInfo, hace, nivelInfo, urlFotoSegura } from '../../constants'
 
 const esc = (s: unknown) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
@@ -53,12 +53,19 @@ export function popupReporte(p: Record<string, unknown>): string {
   const sev = SEVERIDADES[Number(p.severidad) as 1 | 2 | 3] ?? ''
   const desc = p.descripcion ? `<div style="margin:6px 0">${esc(p.descripcion)}</div>` : ''
   const col = p.colonia ? `<div style="color:#5B6675;font-size:12px">Colonia: ${esc(p.colonia)}</div>` : ''
+  const foto = urlFotoSegura(p.foto_url)
+  const img = foto
+    ? `<a href="${esc(foto)}" target="_blank" rel="noopener noreferrer" title="Ver foto ampliada">` +
+      `<img src="${esc(foto)}" alt="Foto del reporte enviada por el ciudadano" loading="lazy" referrerpolicy="no-referrer" ` +
+      `onerror="this.parentNode.style.display='none'" ` +
+      `style="display:block;width:100%;height:120px;object-fit:cover;border-radius:6px;margin-top:6px;background:#e5e7eb"></a>`
+    : ''
   return (
     `<div style="min-width:190px;max-width:260px;font-size:13px">` +
     `<div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:${c.color}"></span>` +
     `<b>${esc(c.texto)}</b></div>` +
     `<div style="color:#5B6675;font-size:12px;margin-top:2px">Severidad ${esc(sev)} · ${esc(hace(p.creado_en as string))}</div>` +
-    `${desc}${col}</div>`
+    `${desc}${col}${img}</div>`
   )
 }
 
