@@ -8,11 +8,15 @@ class AppConfig {
   static const String zoneShort = 'Centro';
   static const String emergencyNumber = '911';
 
-  /// Dirección del backend. Se cambia al compilar:
-  ///   flutter run --dart-define=API_URL=http://192.168.1.10:8000
+  /// Dirección del backend. Por defecto, el servicio desplegado en Railway.
+  /// Para usar el backend local al compilar:
+  ///   flutter run --dart-define=API_URL=http://10.0.2.2:8000          (emulador)
+  ///   flutter run --dart-define=API_URL=http://192.168.1.10:8000      (celular físico)
   /// 10.0.2.2 es el localhost de la computadora visto desde el emulador de Android.
-  static const String apiUrl =
-      String.fromEnvironment('API_URL', defaultValue: 'http://10.0.2.2:8000');
+  static const String apiUrl = String.fromEnvironment(
+    'API_URL',
+    defaultValue: 'https://proyectoagualluvia-production.up.railway.app',
+  );
 
   /// `--dart-define=USE_MOCK=true` usa datos de ejemplo sin backend.
   static const bool useMock = bool.fromEnvironment('USE_MOCK');

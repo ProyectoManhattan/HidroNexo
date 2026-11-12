@@ -78,7 +78,8 @@ El panel es exclusivo de Protección Civil y no pide clave: la lleva configurada
 
 ```bash
 cd movil
-flutter run                                              # emulador: usa http://10.0.2.2:8000
+flutter run                                              # usa el backend desplegado en Railway
+flutter run --dart-define=API_URL=http://10.0.2.2:8000   # emulador contra el backend local
 flutter run --dart-define=API_URL=http://192.168.1.10:8000   # celular físico: IP de tu computadora
 flutter run --dart-define=USE_MOCK=true                  # sin backend, con datos de ejemplo
 flutter test
