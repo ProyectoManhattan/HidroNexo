@@ -21,6 +21,7 @@ from app.db import SessionLocal
 from app.dispositivos.router import router as dispositivos_router
 from app.guias.router import router as guias_router
 from app.meteorologia import ingesta
+from app.meteorologia.router import router as meteorologia_router
 from app.reportes.router import router as reportes_router
 from app.tiempo_real import conexiones
 from app.tiempo_real.router import router as tiempo_real_router
@@ -97,6 +98,7 @@ for router in (
     avisos_router,
     guias_router,
     dispositivos_router,
+    meteorologia_router,
     admin_router,
     tiempo_real_router,
 ):
