@@ -15,6 +15,7 @@ export interface State {
   prob3h: number | null
   apiOk: boolean
   wsOk: boolean
+  cargandoInicial: boolean
   filtro: Filtro
   coloniaSeleccionada: number | null
   /** Dialogo de alerta manual abierto */
@@ -23,7 +24,7 @@ export interface State {
 
 let state: State = {
   reportes: [], zonas: null, alertasPropuestas: [], alertasActivas: [], clima: null, avisosOficiales: null, lluvia3h: null, prob3h: null,
-  apiOk: false, wsOk: false, filtro: 'todo', coloniaSeleccionada: null,
+  apiOk: false, wsOk: false, cargandoInicial: true, filtro: 'todo', coloniaSeleccionada: null,
   dialogoAlertaManual: false,
 }
 const subs = new Set<() => void>()
@@ -115,7 +116,7 @@ export function iniciar(): () => void {
     suscribir('official_alerts.updated', (m) => m.tipo === 'official_alerts.updated' && set({ avisosOficiales: m.datos })),
   ]
   conectar()
-  void refrescarTodo()
+  void refrescarTodo().finally(() => set({ cargandoInicial: false }))
   poll = setInterval(() => void refrescarTodo(), POLL_MS)
   return () => {
     quitar.forEach((q) => q())

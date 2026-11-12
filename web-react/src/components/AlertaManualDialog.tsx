@@ -1,9 +1,9 @@
 import { useMemo, useState, type FormEvent } from 'react'
-import { crearAlertaManual } from '../api/client'
+import { ApiError, crearAlertaManual } from '../api/client'
 import { CATEGORIAS } from '../constants'
 import { abrirDialogoAlertaManual, comoOperador, getState, useStore } from '../store'
 import type { AlertaManualNueva, Categoria } from '../types'
-import { ErrorBox, mensajeError } from './sidebar/ui'
+import { ErrorBox } from './sidebar/ui'
 
 type NivelManual = AlertaManualNueva['nivel']
 const NIVELES_MANUAL: { id: NivelManual; texto: string }[] = [
@@ -13,6 +13,11 @@ const NIVELES_MANUAL: { id: NivelManual; texto: string }[] = [
 ]
 const MIN = 10
 const MAX = 1000
+
+function mensajeError(e: unknown): string {
+  if (e instanceof ApiError) return e.estado === 0 ? 'Sin conexión con la API' : e.message
+  return e instanceof Error ? e.message : 'Error desconocido'
+}
 
 const campo = 'mt-1 w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-[#1E5AA8] focus:outline-none focus:ring-1 focus:ring-[#1E5AA8]'
 

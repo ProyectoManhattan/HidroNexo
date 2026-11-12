@@ -1,6 +1,6 @@
 import type { Categoria, Nivel } from './types'
 
-export const AZUL = '#1E5AA8'
+export const AZUL = '#126783'
 export const NARANJA_SIM = '#F28C28'
 
 export const NIVELES: Record<Nivel, { color: string; suave: string; texto: string }> = {
@@ -11,11 +11,11 @@ export const NIVELES: Record<Nivel, { color: string; suave: string; texto: strin
 }
 
 export const CATEGORIAS: Record<Categoria, { color: string; letra: string; texto: string; grupo: 'lluvia' | 'agua' }> = {
-  inundacion: { color: '#1E5AA8', letra: 'I', texto: 'Inundación', grupo: 'lluvia' },
-  encharcamiento: { color: '#3A8DDE', letra: 'E', texto: 'Encharcamiento', grupo: 'lluvia' },
-  alcantarilla: { color: '#6B4FA0', letra: 'A', texto: 'Alcantarilla tapada', grupo: 'lluvia' },
-  fuga: { color: '#0FA3A3', letra: 'F', texto: 'Fuga de agua', grupo: 'agua' },
-  sin_agua: { color: '#8A5A2B', letra: 'T', texto: 'Sin agua / tandeo', grupo: 'agua' },
+  inundacion: { color: '#126783', letra: 'I', texto: 'Inundación', grupo: 'lluvia' },
+  encharcamiento: { color: '#2F8198', letra: 'E', texto: 'Encharcamiento', grupo: 'lluvia' },
+  alcantarilla: { color: '#536D78', letra: 'A', texto: 'Alcantarilla tapada', grupo: 'lluvia' },
+  fuga: { color: '#25877F', letra: 'F', texto: 'Fuga de agua', grupo: 'agua' },
+  sin_agua: { color: '#66737B', letra: 'T', texto: 'Sin agua / tandeo', grupo: 'agua' },
 }
 
 export const MOTIVOS = { lluvia: 'lluvia', reportes: 'reportes ciudadanos', vulnerabilidad: 'vulnerabilidad' } as const
