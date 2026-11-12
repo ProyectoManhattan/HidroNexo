@@ -144,3 +144,5 @@ Los prompts de la sección 3 son reconstruidos, no copias exactas. Los pesos y u
 
 ## 7. Conclusiones
 La IA se usó como apoyo en la planeación, el código, el procesamiento de datos y las pruebas, principalmente con Claude y, en menor medida, con ChatGPT, Gemini y Antigravity. Las decisiones de diseño y lo que llega a la población siguieron a cargo del equipo: el riesgo se calcula con una fórmula explicable, las alertas se redactan con plantillas y cada una debe ser aprobada por una persona de Protección Civil. La redacción de alertas con un modelo de lenguaje quedó diseñada y pendiente de implementar.
+
+link de ficha de pagina: https://docs.google.com/document/d/1hnwR137wn47bNE5shQEVcQ4w3mKlv_jlZW-Ga2jVXn4/edit?usp=sharing
