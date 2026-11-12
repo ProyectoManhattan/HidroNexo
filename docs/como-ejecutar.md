@@ -1,8 +1,8 @@
 # Cómo ejecutar el proyecto
 
-Backend (API + base de datos) en Docker y panel web en Python.
+Backend (API + base de datos) en Docker y panel web en React.
 
-**Requisitos:** Git, Docker Desktop (abierto) y Python 3.10 o más nuevo.
+**Requisitos:** Git, Docker Desktop (abierto) y Node.js 22 (`mise install` lo instala).
 
 ## 1. Bajar el proyecto
 
@@ -36,34 +36,31 @@ docker compose up --build
 
 Dejar esta terminal abierta. Comprobar: http://localhost:8000/health debe responder `{"status":"ok"}`. La documentación interactiva está en http://localhost:8000/docs.
 
-## 3. Datos de prueba (mientras `data/` esté vacía)
+## 3. Datos
 
-Copiar los datos **ficticios** de las pruebas (2 colonias). **No subirlos con commit**: los datos reales los prepara quien tiene `data/`.
+Las zonas reales ya están en `data/colonias_veracruz.geojson` (por código postal; ver el README principal). Si todavía no hay reportes de prueba ni guías en `data/`, copiar los **ficticios** de las pruebas. **No subirlos con commit.** Ojo: no copiar el `.geojson` de pruebas, porque pisaría las zonas reales.
 
 ```bash
 # Mac / Linux
-cp backend/tests/datos/*.geojson backend/tests/datos/*.json data/ && cp backend/tests/datos/guias/*.json data/guias/
+cp backend/tests/datos/reportes_prueba.json data/ && cp backend/tests/datos/guias/*.json data/guias/
 ```
 
 ```bash
 # Windows
-copy backend\tests\datos\*.geojson data\ && copy backend\tests\datos\*.json data\ && copy backend\tests\datos\guias\*.json data\guias\
+copy backend\tests\datos\reportes_prueba.json data\ && copy backend\tests\datos\guias\*.json data\guias\
 ```
 
 ## 4. Panel web (terminal 2)
 
 ```bash
-cd web
-python -m venv .venv
-source .venv/bin/activate      # Mac / Linux
-.venv\Scripts\activate         # Windows
-pip install -r requirements.txt
-python main.py
+cd web-react
+npm install
+npm run dev
 ```
 
 ## 5. Usarlo
 
-1. Abrir http://localhost:8080
+1. Abrir http://localhost:5173
 2. **Modo operador** → clave `cambiar-esta-clave` (la de `CLAVE_UNICA` en `.env`).
 3. **⚙ → Cargar datos (seed)**.
 4. **Simular tormenta** → aparecen alertas propuestas; **Aprobar y enviar**.
@@ -75,7 +72,7 @@ python main.py
 | El panel dice "Sin conexión" | El backend no está corriendo; revisar la terminal 1 |
 | `port is already allocated` (5432 u 8000) | Otro programa usa el puerto: cerrar otro PostgreSQL local o cambiar el puerto en `docker-compose.yml` |
 | "Clave incorrecta" | Usar el valor de `CLAVE_UNICA` del archivo `.env` |
-| El mapa no muestra colonias | Falta el paso 3 o el seed (⚙ → Cargar datos) |
+| El mapa no muestra zonas | Falta el seed (⚙ → Cargar datos) o `data/colonias_veracruz.geojson` |
 | Cambié `.env` y no se aplica | `docker compose down` y luego `docker compose up --build` |
 
 Pruebas del backend:
