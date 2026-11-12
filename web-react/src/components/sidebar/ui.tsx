@@ -3,19 +3,19 @@ import { nivelInfo } from '../../constants'
 export function NivelPill({ nivel }: { nivel?: string | null }) {
   const n = nivelInfo(nivel)
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[13px] font-bold" style={{ background: n.suave, color: n.color }}>
+    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold" style={{ background: n.suave, color: n.color }}>
       <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />{n.texto}
     </span>
   )
 }
 
 export function Badge({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <span className={`inline-block rounded px-2 py-0.5 text-[13px] font-semibold ${className}`}>{children}</span>
+  return <span className={`inline-block rounded px-2 py-0.5 text-sm font-semibold ${className}`}>{children}</span>
 }
 
 export function ErrorBox({ texto }: { texto: string | null }) {
   if (!texto) return null
-  return <div className="mb-2 rounded border border-red-200 bg-red-50 px-2 py-1 text-xs text-red-700">{texto}</div>
+  return <div className="mb-2 rounded border border-red-200 bg-red-50 px-2 py-1 text-sm text-red-700">{texto}</div>
 }
 
 export function Vacio({ icono, texto, detalle }: { icono: string; texto: string; detalle?: string }) {

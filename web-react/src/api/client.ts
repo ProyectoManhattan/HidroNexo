@@ -1,4 +1,4 @@
-import { API_URL } from '../config'
+import { API_URL, CLAVE } from '../config'
 import type {
   Alerta, AlertaActiva, AlertaManualNueva, AvisosOficiales, Categoria, Categorias, Clima, Colonia, Dispositivo, Guia, Guias, Reporte,
   ReporteNuevo, ZonasGeoJSON,
@@ -22,8 +22,7 @@ function detalleDe(body: unknown): string {
 async function request<T>(method: string, path: string, opts: { body?: unknown; operador?: boolean } = {}): Promise<T> {
   const headers: Record<string, string> = {}
   if (opts.body !== undefined) headers['Content-Type'] = 'application/json'
-  // La WebApp pública no envía credenciales administrativas. Esas operaciones
-  // requieren una futura sesión segura/BFF; nunca una clave expuesta como VITE_*.
+  if (opts.operador && CLAVE) headers['X-Clave'] = CLAVE
   let res: Response
   try {
     res = await fetch(API_URL + path, {

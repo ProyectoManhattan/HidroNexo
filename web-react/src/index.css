@@ -103,7 +103,7 @@ a { text-underline-offset: 3px; }
   background: #fff;
 }
 .information-panel { font-size: 1rem; }
-.information-panel .text-sm { font-size: .95rem !important; line-height: 1.45; }
+.information-panel .text-sm { font-size: 1rem !important; line-height: 1.5; }
 
 @media (max-width: 1280px) and (min-width: 768px) {
   .app-header { grid-template-columns: minmax(20rem, 1fr) minmax(30rem, 1.8fr); }
@@ -176,7 +176,7 @@ a { text-underline-offset: 3px; }
   display: block;
   margin-bottom: .2rem;
   color: #aebec8;
-  font-size: .69rem;
+  font-size: .8125rem;
   font-weight: 700;
   letter-spacing: .055em;
   text-transform: uppercase;

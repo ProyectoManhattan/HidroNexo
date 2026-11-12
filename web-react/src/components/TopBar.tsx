@@ -34,7 +34,7 @@ function Dato({ icono, etiqueta, valor, ayuda }: { icono: Icono; etiqueta: strin
     <div className="weather-card" title={ayuda}>
       <Icon tipo={icono} className="h-10 w-10 shrink-0 text-[#0d5ac7]" />
       <span className="min-w-0">
-        <span className="block truncate text-[13px] font-medium text-[#17326b]">{etiqueta}</span>
+        <span className="block truncate text-sm font-medium text-[#17326b]">{etiqueta}</span>
         <strong className="block text-[1.55rem] leading-tight font-extrabold tracking-tight text-[#0b2b70]">{valor}</strong>
       </span>
     </div>
@@ -74,8 +74,8 @@ export default function TopBar() {
       <div className="system-card">
         <span className={`h-3 w-3 rounded-full ${vivo ? 'bg-emerald-500 shadow-[0_0_0_6px_rgb(34_197_94/.12)]' : 'bg-amber-500'}`} aria-hidden />
         <span>
-          <span className="block text-[13px] font-medium text-[#17326b]">Estado del sistema</span>
-          <strong className={`block text-[15px] ${vivo ? 'text-emerald-700' : 'text-amber-700'}`}>{cargando ? 'Cargando datos' : vivo ? 'Datos en vivo' : apiOk ? 'Reconectando' : 'Últimos datos'}</strong>
+          <span className="block text-sm font-medium text-[#17326b]">Estado del sistema</span>
+          <strong className={`block text-base ${vivo ? 'text-emerald-700' : 'text-amber-700'}`}>{cargando ? 'Cargando datos' : vivo ? 'Datos en vivo' : apiOk ? 'Reconectando' : 'Últimos datos'}</strong>
         </span>
         {sim && <span className="ml-2 rounded-md px-2 py-1 text-xs font-extrabold text-white" style={{ background: NARANJA_SIM }}>Simulación</span>}
       </div>

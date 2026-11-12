@@ -25,7 +25,7 @@ export default function Legend() {
           </span>
         ))}
       </div>
-      <div className="mt-2 text-[13px] text-slate-500 max-sm:hidden">Tamaño = severidad · observaciones no confirmadas</div>
+      <div className="mt-2 text-sm text-slate-500 max-sm:hidden">Tamaño = severidad · observaciones no confirmadas</div>
     </div>
   )
 }

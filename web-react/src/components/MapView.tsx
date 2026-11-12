@@ -427,7 +427,7 @@ export default function MapView() {
               <span className="h-2.5 w-8 rounded" style={{ background: 'linear-gradient(90deg,#2E8B57,#E9C46A,#F28C28,#C62828)' }} />
               <span className="text-slate-500">Baja</span><span>→</span><span className="text-slate-500">Elevada</span>
             </div>
-            <div className="mt-1 text-[13px] font-semibold text-slate-700">Índice preliminar, no probabilidad</div>
+            <div className="mt-1 text-sm font-semibold text-slate-700">Índice preliminar, no probabilidad</div>
           </div>
         )}
       </div>
