@@ -81,7 +81,7 @@ def test_ejecutar_conserva_ultima_lectura_si_falla(monkeypatch):
     previo = {"mm_1h": 3.0, "mm_3h": 3.0, "mm_24h": 3.0, "pronostico_3h": 0.0}
     estado.guardar_por_colonia({1: previo}, MOMENTO)
     monkeypatch.setattr(ingesta, "centroides", lambda: {1: (19.17, -96.13)})
-    monkeypatch.setattr(ingesta, "consultar_por_colonia", lambda c, m: None)
+    monkeypatch.setattr(ingesta, "consultar_por_celda", lambda c, m: None)
     publicados = []
     monkeypatch.setattr(ingesta.eventos, "publicar", lambda *a: publicados.append(a))
     ingesta.ejecutar()
@@ -94,7 +94,9 @@ def test_ejecutar_por_colonia_y_fallback_sin_bd(monkeypatch):
     monkeypatch.setattr(ingesta.eventos, "publicar", lambda *a: publicados.append(a))
     l1 = {"mm_1h": 1.0, "mm_3h": 1.0, "mm_24h": 1.0, "pronostico_3h": 0.0}
     monkeypatch.setattr(ingesta, "centroides", lambda: {1: (19.17, -96.13)})
-    monkeypatch.setattr(ingesta, "consultar_por_colonia", lambda c, m: {1: l1})
+    celda = (19.15, -96.15)
+    monkeypatch.setattr(ingesta, "consultar_por_celda", lambda c, m: ({1: celda}, {celda: l1}))
+    monkeypatch.setattr(ingesta, "guardar_historial", lambda *a: None)
     ingesta.ejecutar()
     assert estado.lluvia_de(1) == l1 and publicados[0][0] == "weather.updated"
 
