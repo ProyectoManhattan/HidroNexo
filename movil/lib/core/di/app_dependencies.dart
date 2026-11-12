@@ -36,9 +36,10 @@ class AppDependencies {
           locationService: locationService,
         );
 
-  // PENDIENTE: la API todavía no recibe archivos (solo `foto_url`), así que
-  // la foto sigue simulada y NO se envía con el reporte.
-  static final PhotoService photoService = SimulatedPhotoService();
+  /// Fotos reales (cámara/galería). Se suben a `POST /reports/photo` antes de
+  /// crear el reporte. En modo mock, simulada.
+  static final PhotoService photoService =
+      AppConfig.useMock ? SimulatedPhotoService() : DevicePhotoService();
 
   /// Mapa real (MapLibre) con riesgo por zona; en modo mock, el de demostración.
   static MapProvider mapProvider = AppConfig.useMock

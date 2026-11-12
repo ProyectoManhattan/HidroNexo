@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../controllers/report_form_controller.dart';
@@ -9,6 +11,7 @@ import '../../data/report_repository.dart';
 import '../../models/incident_report.dart';
 import '../../models/report_status.dart';
 import '../../services/location_service.dart';
+import '../../services/photo_service.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_toast.dart';
 import '../../widgets/hero_header.dart';
@@ -58,13 +61,22 @@ class _ReportScreenState extends State<ReportScreen> {
       return;
     }
     final place = _controller.locationLabel ?? '';
-    final String folio;
-    try {
-      folio = await _controller.submit();
-    } on RepositoryException catch (e) {
-      if (!mounted) return;
-      AppToast.show(context, e.message);
-      return;
+    String folio;
+    var withoutPhoto = false;
+    while (true) {
+      try {
+        folio = await _controller.submit(withoutPhoto: withoutPhoto);
+        break;
+      } on PhotoUploadException catch (e) {
+        if (!mounted) return;
+        final choice = await _askPhotoFailure(e.message);
+        if (choice == null || !mounted) return;
+        withoutPhoto = !choice;
+      } on RepositoryException catch (e) {
+        if (!mounted) return;
+        AppToast.show(context, e.message);
+        return;
+      }
     }
     if (!mounted) return;
     await ReportDetailSheet.show(
@@ -75,6 +87,61 @@ class _ReportScreenState extends State<ReportScreen> {
       date: AppStrings.now,
       status: '$folio · ${ReportStatus.pending.label}',
     );
+  }
+
+  /// true = reintentar, false = enviar sin foto, null = cancelar.
+  Future<bool?> _askPhotoFailure(String reason) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(AppStrings.photoUploadFailedTitle),
+        content: Text('$reason\n\n${AppStrings.photoUploadFailedBody}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(AppStrings.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(AppStrings.sendWithoutPhoto),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(AppStrings.retry),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _choosePhoto() async {
+    final source = await showModalBottomSheet<PhotoSource>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera_outlined),
+              title: const Text(AppStrings.photoFromCamera),
+              onTap: () => Navigator.pop(context, PhotoSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text(AppStrings.photoFromGallery),
+              onTap: () => Navigator.pop(context, PhotoSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (source == null) return;
+    try {
+      await _controller.pickPhoto(source);
+    } catch (_) {
+      if (!mounted) return;
+      AppToast.show(context, AppStrings.photoPickFailed);
+    }
   }
 
   Future<void> _track() async {
@@ -168,7 +235,7 @@ class _ReportScreenState extends State<ReportScreen> {
             borderRadius: BorderRadius.circular(12),
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
-              onTap: _controller.pickPhoto,
+              onTap: _choosePhoto,
               child: Padding(
                 padding: const EdgeInsets.all(14),
                 child: Column(
@@ -198,19 +265,38 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
             ),
           ),
-          if (_controller.photoName != null)
+          if (_controller.photo != null)
             Padding(
-              padding: const EdgeInsets.only(top: 6),
+              padding: const EdgeInsets.only(top: 8),
               child: Row(
                 children: [
-                  const Icon(Icons.check, size: 14, color: AppColors.ok),
-                  const SizedBox(width: 4),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      File(_controller.photo!.path),
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stack) => Container(
+                        width: 72,
+                        height: 72,
+                        color: palette.pale,
+                        child: const Icon(Icons.image_outlined),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      _controller.photoName!,
+                      _controller.photo!.name,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 11, color: AppColors.ok),
+                      style: const TextStyle(fontSize: 11),
                     ),
+                  ),
+                  IconButton(
+                    tooltip: AppStrings.removePhoto,
+                    onPressed: _controller.removePhoto,
+                    icon: const Icon(Icons.close),
                   ),
                 ],
               ),

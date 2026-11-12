@@ -14,6 +14,7 @@ class ReportDetailSheet extends StatelessWidget {
     required this.place,
     required this.date,
     required this.status,
+    this.photoUrl,
   });
 
   final String title;
@@ -21,6 +22,7 @@ class ReportDetailSheet extends StatelessWidget {
   final String place;
   final String date;
   final String status;
+  final String? photoUrl;
 
   static Future<void> show(
     BuildContext context, {
@@ -29,6 +31,7 @@ class ReportDetailSheet extends StatelessWidget {
     required String place,
     required String date,
     required String status,
+    String? photoUrl,
   }) {
     return showModalBottomSheet<void>(
       context: context,
@@ -41,6 +44,7 @@ class ReportDetailSheet extends StatelessWidget {
         place: place,
         date: date,
         status: status,
+        photoUrl: photoUrl,
       ),
     );
   }
@@ -53,6 +57,7 @@ class ReportDetailSheet extends StatelessWidget {
       place: report.address,
       date: report.dateLabel,
       status: report.status.label,
+      photoUrl: report.photoUrl,
     );
   }
 
@@ -73,6 +78,10 @@ class ReportDetailSheet extends StatelessWidget {
             Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 8),
             Text(description, style: TextStyle(color: palette.muted, fontSize: 13, height: 1.5)),
+            if (photoUrl != null) ...[
+              const SizedBox(height: 10),
+              _DetailPhoto(url: photoUrl!),
+            ],
             const SizedBox(height: 10),
             _DetailRow(label: AppStrings.location, value: place),
             _DetailRow(label: AppStrings.date, value: date),
@@ -83,6 +92,39 @@ class ReportDetailSheet extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailPhoto extends StatelessWidget {
+  const _DetailPhoto({required this.url});
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = AppPalette.of(context);
+    Widget placeholder(Widget child) => Container(
+          height: 160,
+          alignment: Alignment.center,
+          color: palette.pale,
+          child: child,
+        );
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 220),
+        child: Image.network(
+          url,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, progress) =>
+              progress == null ? child : placeholder(const CircularProgressIndicator(strokeWidth: 2)),
+          errorBuilder: (context, error, stack) => placeholder(
+            Text(AppStrings.photoLoadFailed, style: TextStyle(color: palette.muted, fontSize: 12)),
+          ),
         ),
       ),
     );

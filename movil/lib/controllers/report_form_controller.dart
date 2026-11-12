@@ -8,6 +8,11 @@ import '../models/report_type.dart';
 import '../services/location_service.dart';
 import '../services/photo_service.dart';
 
+/// La foto no se pudo subir. El reporte NO se envió y el formulario sigue intacto.
+class PhotoUploadException extends RepositoryException {
+  const PhotoUploadException(super.message);
+}
+
 /// Estado y lógica del formulario de reportes.
 class ReportFormController extends ChangeNotifier {
   ReportFormController({
@@ -31,14 +36,17 @@ class ReportFormController extends ChangeNotifier {
   ReportType _type = ReportType.flood;
   int _severity = 2;
   UserLocation? _location;
-  String? _photoName;
+  PickedPhoto? _photo;
+
+  /// URL de la foto ya subida, para no resubirla si falla el envío del reporte.
+  String? _uploadedUrl;
   bool _sending = false;
 
   ReportType get type => _type;
   int get severity => _severity;
   bool get sending => _sending;
   String? get locationLabel => _location?.address;
-  String? get photoName => _photoName;
+  PickedPhoto? get photo => _photo;
 
   bool get isValid =>
       _location != null && descriptionController.text.trim().isNotEmpty;
@@ -59,22 +67,43 @@ class ReportFormController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> pickPhoto() async {
-    final name = await _photoService.pickPhotoName();
-    if (name == null) return;
-    _photoName = name;
+  Future<void> pickPhoto(PhotoSource source) async {
+    final picked = await _photoService.pickPhoto(source);
+    if (picked == null) return;
+    _photo = picked;
+    _uploadedUrl = null;
+    notifyListeners();
+  }
+
+  void removePhoto() {
+    _photo = null;
+    _uploadedUrl = null;
     notifyListeners();
   }
 
   /// Envía el reporte y devuelve el folio. Limpia el formulario solo si se envió.
   /// Lanza [RepositoryException] si falla: el formulario conserva lo escrito.
-  Future<String> submit() async {
+  /// Si la foto no se pudo subir lanza [PhotoUploadException] sin crear el
+  /// reporte; la pantalla puede reintentar o llamar con [withoutPhoto] true.
+  Future<String> submit({bool withoutPhoto = false}) async {
     if (_sending) throw const RepositoryException('Ya se está enviando el reporte.');
     final location = _location!;
     final Coordinates position = location.position;
     _sending = true;
     notifyListeners();
     try {
+      String? photoUrl;
+      final photo = withoutPhoto ? null : _photo;
+      if (photo != null) {
+        photoUrl = _uploadedUrl;
+        if (photoUrl == null) {
+          try {
+            photoUrl = _uploadedUrl = await _repository.uploadPhoto(photo);
+          } on RepositoryException catch (e) {
+            throw PhotoUploadException(e.message);
+          }
+        }
+      }
       final folio = await _repository.submit(
         NewReport(
           type: _type,
@@ -83,7 +112,7 @@ class ReportFormController extends ChangeNotifier {
           position: position,
           description: descriptionController.text.trim(),
           severity: _severity,
-          photoName: _photoName,
+          photoUrl: photoUrl,
         ),
       );
       reset();
@@ -101,7 +130,8 @@ class ReportFormController extends ChangeNotifier {
     descriptionController.clear();
     _severity = 2;
     _location = null;
-    _photoName = null;
+    _photo = null;
+    _uploadedUrl = null;
     notifyListeners();
   }
 
