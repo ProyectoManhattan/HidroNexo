@@ -38,7 +38,7 @@ Dejar esta terminal abierta. Comprobar: http://localhost:8000/health debe respon
 
 ## 3. Datos
 
-Las zonas reales ya están en `data/colonias_veracruz.geojson` (por código postal; ver el README principal). **No hay que cargar nada a mano**: con la base vacía, la API las carga sola al arrancar y crea un reporte de ejemplo por zona.
+Las zonas reales (101, de Veracruz, Boca del Río y Medellín de Bravo) ya están en `data/colonias_veracruz.geojson` (por código postal; ver el README principal). **No hay que cargar nada a mano**: con la base vacía, la API las carga sola al arrancar y crea un reporte de ejemplo por zona.
 
 Las guías de acción (`data/guias/`) todavía no existen. Mientras tanto se pueden copiar las **ficticias** de las pruebas (**no subirlas con commit**):
 
@@ -75,6 +75,7 @@ npm run dev
 | El panel dice "Sin conexión" | El backend no está corriendo; revisar la terminal 1 |
 | `port is already allocated` (5432 u 8000) | Otro programa usa el puerto: cerrar otro PostgreSQL local o cambiar el puerto en `docker-compose.yml` |
 | Las acciones fallan con "Clave inválida" | `VITE_CLAVE` (en `web-react/.env`) debe coincidir con `CLAVE_UNICA` de `.env`; reiniciar `npm run dev` |
+| Sigo viendo solo las zonas anteriores | La base ya tenía colonias y la carga automática solo corre con la base vacía. Usa **⚙ → Cargar datos (seed)** (borra reportes, alertas y dispositivos) o `docker compose down -v` |
 | El mapa no muestra zonas | Falta `data/colonias_veracruz.geojson`, o la base se creó sin él: `docker compose down -v` y levantar de nuevo |
 | Cambié `.env` y no se aplica | `docker compose down` y luego `docker compose up --build` |
 
