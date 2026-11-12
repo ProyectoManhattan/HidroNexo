@@ -5,6 +5,7 @@ import '../models/incident_report.dart';
 import '../models/new_report.dart';
 import '../models/report_status.dart';
 import '../models/report_type.dart';
+import '../services/photo_service.dart';
 import 'report_repository.dart';
 
 /// Datos de ejemplo en memoria. Las coordenadas son aproximadas.
@@ -143,6 +144,10 @@ class MockReportRepository implements ReportRepository {
     }
     return null;
   }
+
+  /// No sube nada: devuelve la ruta local para que el flujo sea coherente.
+  @override
+  Future<String> uploadPhoto(PickedPhoto photo) async => photo.path;
 
   @override
   Future<String> submit(NewReport report) async {

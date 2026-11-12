@@ -1,9 +1,38 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { resolverReporte } from '../api/client'
-import { SEVERIDADES, categoriaInfo, hace } from '../constants'
+import { SEVERIDADES, categoriaInfo, hace, urlFotoSegura } from '../constants'
 import { comoOperador, seleccionarColonia, useStore } from '../store'
 import type { Reporte } from '../types'
 import { Badge, ErrorBox, Vacio, useAccion } from './sidebar/ui'
+
+function Miniatura({ url }: { url: string | null }) {
+  const [fallo, setFallo] = useState(false)
+  const src = urlFotoSegura(url)
+  if (!src) return null
+  return (
+    <a
+      href={src}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      title="Ver foto ampliada"
+      className="block h-14 w-14 shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-100"
+    >
+      {fallo ? (
+        <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-400">Sin foto</span>
+      ) : (
+        <img
+          src={src}
+          alt="Foto del reporte enviada por el ciudadano"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={() => setFallo(true)}
+          className="h-full w-full object-cover"
+        />
+      )}
+    </a>
+  )
+}
 
 export default function ReportsList() {
   const reportes = useStore((s) => s.reportes)
@@ -56,7 +85,12 @@ export default function ReportsList() {
                 <span className="ml-auto text-xs text-gray-400">{hace(r.creado_en)}</span>
               </div>
               {colonia && <div className="mt-0.5 text-xs text-gray-500">{colonia}</div>}
-              {r.descripcion && <p className="mt-1 truncate text-gray-700" title={r.descripcion}>{r.descripcion}</p>}
+              {(r.descripcion || urlFotoSegura(r.foto_url)) && (
+                <div className="mt-1 flex items-start gap-2">
+                  <Miniatura url={r.foto_url} />
+                  {r.descripcion && <p className="min-w-0 flex-1 truncate text-gray-700" title={r.descripcion}>{r.descripcion}</p>}
+                </div>
+              )}
               {(
                 <div className="mt-1.5 text-right">
                   <button

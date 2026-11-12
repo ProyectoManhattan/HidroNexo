@@ -15,6 +15,14 @@ class Settings(BaseSettings):
     fcm_credenciales_json: str = ""
     data_dir: Path = RAIZ_REPO / "data"
 
+    # Fotos de reportes. Producción: Supabase Storage (bucket público). La service key
+    # solo vive en el servidor; nunca se loguea ni se devuelve.
+    supabase_url: str = ""
+    supabase_service_key: str = ""
+    supabase_bucket: str = "reportes-fotos"
+    # Respaldo local (desarrollo/tests) cuando no hay credenciales de Supabase. Disco efímero en Railway.
+    media_dir: Path = RAIZ_REPO / "backend" / "media"
+
     # Producción: las colonias son datos geográficos de referencia; los reportes
     # ciudadanos llegan exclusivamente desde los clientes.
     auto_load_reference_data: bool = True

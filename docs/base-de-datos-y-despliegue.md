@@ -84,6 +84,9 @@ CLAVE_UNICA=una-clave-larga-y-aleatoria
 DATA_DIR=/data
 AUTO_LOAD_REFERENCE_DATA=true
 AUTO_SEED=false
+SUPABASE_URL=https://PROYECTO.supabase.co
+SUPABASE_SERVICE_KEY=la-service-role-key
+SUPABASE_BUCKET=reportes-fotos
 METEO_ACTIVA=true
 AVISOS_OFICIALES_ACTIVOS=true
 ```
@@ -96,6 +99,25 @@ Hay dos rutas excluyentes para preparar Supabase:
 
 No se deben ejecutar ambas rutas sobre el mismo proyecto. Railway usa el
 `Dockerfile` de la raíz, seleccionado explícitamente por `railway.json`.
+
+## Fotos de reportes (Supabase Storage)
+
+`POST /reports/photo` sube las fotos a Supabase Storage. Sin `SUPABASE_URL` y
+`SUPABASE_SERVICE_KEY` el backend guarda en disco local (`MEDIA_DIR`, servido en `/media`):
+solo sirve para desarrollo, porque el disco de Railway es efímero y las fotos se perderían.
+
+1. En Supabase: Storage > New bucket, nombre `reportes-fotos`, marcar **Public bucket**.
+2. Opcional: limitar el bucket a 5 MB y a los tipos `image/jpeg`, `image/png`, `image/webp`.
+3. En Railway, añadir `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (Settings > API > `service_role`)
+   y `SUPABASE_BUCKET` (`reportes-fotos` por defecto).
+4. El backend solo acepta en `foto_url` URLs que empiecen por
+   `SUPABASE_URL/storage/v1/object/public/<bucket>/`.
+
+**La service key va únicamente en Railway.** Nunca en la app móvil, en Vercel/web ni en el
+repositorio: salta todas las políticas de acceso. El backend no la registra ni la devuelve.
+
+Riesgo conocido: `POST /reports/photo` es público y no tiene límite de frecuencia ni
+moderación de contenido; cualquiera puede subir imágenes (hasta 5 MB cada una) al bucket.
 
 ## Pendientes antes de abrirlo al público
 

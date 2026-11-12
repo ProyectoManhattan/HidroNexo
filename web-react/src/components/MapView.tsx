@@ -82,7 +82,7 @@ function reportesGeoJSON(reportes: Reporte[], zonas: ZonasGeoJSON | null) {
       id: r.id,
       geometry: { type: 'Point' as const, coordinates: [r.lon, r.lat] },
       properties: {
-        id: r.id, categoria: r.categoria, severidad: r.severidad, descripcion: r.descripcion,
+        id: r.id, categoria: r.categoria, severidad: r.severidad, descripcion: r.descripcion, foto_url: r.foto_url ?? null,
         creado_en: r.creado_en, colonia: r.colonia_id != null ? nombres.get(r.colonia_id) ?? null : null,
       },
     })),
