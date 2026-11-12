@@ -1,8 +1,34 @@
-import { useMemo } from 'react'
-import { SEVERIDADES, categoriaInfo, hace } from '../constants'
-import { seleccionarColonia, useStore } from '../store'
 import type { Reporte } from '../types'
 import { Badge, Vacio } from './sidebar/ui'
+
+function Miniatura({ url }: { url: string | null }) {
+  const [fallo, setFallo] = useState(false)
+  const src = urlFotoSegura(url)
+  if (!src) return null
+  return (
+    <a
+      href={src}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      title="Ver foto ampliada"
+      className="block h-14 w-14 shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-100"
+    >
+      {fallo ? (
+        <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-400">Sin foto</span>
+      ) : (
+        <img
+          src={src}
+          alt="Foto del reporte enviada por el ciudadano"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={() => setFallo(true)}
+          className="h-full w-full object-cover"
+        />
+      )}
+    </a>
+  )
+}
 
 export default function ReportsList() {
   const reportes = useStore((s) => s.reportes)
@@ -57,9 +83,7 @@ export default function ReportsList() {
                 </Badge>
                 <span className="ml-auto text-sm text-gray-500">{hace(r.creado_en)}</span>
               </div>
-              {colonia && <div className="mt-1 text-sm text-gray-600">Zona postal: {colonia}</div>}
-              {r.descripcion && <p className="mt-1 truncate text-gray-700" title={r.descripcion}>{r.descripcion}</p>}
-              <div className="mt-1 text-[13px] text-slate-500">Fuente: reporte recibido por el sistema · expira automáticamente</div>
+
             </li>
           )
         })}

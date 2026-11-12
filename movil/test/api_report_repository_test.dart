@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:agua_lluvia/data/api_report_repository.dart';
 import 'package:agua_lluvia/data/report_repository.dart';
@@ -6,6 +7,7 @@ import 'package:agua_lluvia/models/coordinates.dart';
 import 'package:agua_lluvia/models/new_report.dart';
 import 'package:agua_lluvia/models/report_status.dart';
 import 'package:agua_lluvia/models/report_type.dart';
+import 'package:agua_lluvia/services/photo_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -178,5 +180,60 @@ void main() {
   test('getRiskZones falla si la respuesta no es un GeoJSON', () async {
     final repo = build((r) => _json([1, 2]));
     expect(repo.getRiskZones(), throwsA(isA<RepositoryException>()));
+  });
+
+  group('fotos', () {
+    late PickedPhoto photo;
+
+    setUp(() {
+      final dir = Directory.systemTemp.createTempSync('foto_test');
+      addTearDown(() => dir.deleteSync(recursive: true));
+      final file = File('${dir.path}/evidencia.png')..writeAsBytesSync([1, 2, 3, 4]);
+      photo = PickedPhoto(path: file.path, name: 'evidencia.png');
+    });
+
+    test('sube la foto por multipart con campo foto y content-type según la extensión', () async {
+      final repo = build((_) => _json({'foto_url': 'http://api.test/media/a.png'}, 201));
+      final url = await repo.uploadPhoto(photo);
+      expect(url, 'http://api.test/media/a.png');
+      final post = requests.single;
+      expect(post.url.path, '/reports/photo');
+      expect(post.headers['content-type'], startsWith('multipart/form-data'));
+      expect(post.body, contains('name="foto"'));
+      expect(post.body, contains('filename="evidencia.png"'));
+      expect(post.body.toLowerCase(), contains('content-type: image/png'));
+    });
+
+    test('submit envía foto_url cuando hay foto subida', () async {
+      final repo = build((_) => _json(_report(30), 201));
+      await repo.submit(const NewReport(
+        type: ReportType.flood,
+        neighborhood: '',
+        address: '',
+        position: Coordinates(19.1, -96.1),
+        description: 'x',
+        severity: 1,
+        photoUrl: 'http://api.test/media/a.png',
+      ));
+      expect(jsonDecode(requests.single.body)['foto_url'], 'http://api.test/media/a.png');
+    });
+
+    test('413, 415 y 503 dan mensajes claros', () async {
+      for (final (code, text) in [(413, '5 MB'), (415, 'JPG, PNG o WebP'), (503, 'almacenamiento')]) {
+        final repo = build((_) => http.Response('{"detail":"x"}', code));
+        await expectLater(
+          repo.uploadPhoto(photo),
+          throwsA(isA<RepositoryException>().having((e) => e.message, 'message', contains(text))),
+        );
+      }
+    });
+
+    test('sin red al subir lanza RepositoryException', () async {
+      final repo = ApiReportRepository(
+        baseUrl: 'http://api.test',
+        client: MockClient((_) async => throw http.ClientException('sin red')),
+      );
+      await expectLater(repo.uploadPhoto(photo), throwsA(isA<RepositoryException>()));
+    });
   });
 }

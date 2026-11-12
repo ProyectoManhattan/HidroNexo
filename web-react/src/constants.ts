@@ -40,3 +40,14 @@ export function hace(iso?: string | null): string {
 
 /** Probabilidad de lluvia (%) a partir de la cual una zona se marca como "lluvia probable" */
 export const UMBRAL_PROB_ALTA = 70
+
+/** Devuelve la URL normalizada solo si es http(s); si no, null (las fotos vienen de datos de ciudadanos). */
+export function urlFotoSegura(url: unknown): string | null {
+  if (typeof url !== 'string') return null
+  try {
+    const u = new URL(url.trim())
+    return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : null
+  } catch {
+    return null
+  }
+}

@@ -10,7 +10,7 @@ class NewReport {
     required this.position,
     required this.description,
     required this.severity,
-    this.photoName,
+    this.photoUrl,
   });
 
   final ReportType type;
@@ -21,5 +21,7 @@ class NewReport {
 
   /// 1 = baja, 2 = media, 3 = alta (lo que espera la API).
   final int severity;
-  final String? photoName;
+
+  /// URL de la foto ya subida (`POST /reports/photo`), si hay.
+  final String? photoUrl;
 }

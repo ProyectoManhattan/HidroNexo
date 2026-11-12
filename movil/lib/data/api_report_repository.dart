@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart' show MediaType;
 
 import '../core/constants/app_config.dart';
 import '../models/alert_item.dart';
@@ -11,6 +12,7 @@ import '../models/incident_report.dart';
 import '../models/new_report.dart';
 import '../models/report_status.dart';
 import '../models/report_type.dart';
+import '../services/photo_service.dart';
 import 'report_repository.dart';
 
 /// Implementación contra el backend FastAPI (ver docs/api.md).
@@ -93,6 +95,7 @@ class ApiReportRepository implements ReportRepository {
       'lat': report.position.latitude,
       'lon': report.position.longitude,
       'descripcion': report.description,
+      if (report.photoUrl != null) 'foto_url': report.photoUrl,
     });
     final data = await _send(
       () => _client.post(
@@ -104,6 +107,33 @@ class ApiReportRepository implements ReportRepository {
     final id = (data is Map ? data['id'] : null) as int?;
     if (id == null) throw const RepositoryException('Respuesta inesperada del servidor.');
     return '$folioPrefix$id';
+  }
+
+  @override
+  Future<String> uploadPhoto(PickedPhoto photo) async {
+    final http.MultipartFile file;
+    try {
+      file = await http.MultipartFile.fromPath(
+        'foto',
+        photo.path,
+        filename: photo.name,
+        contentType: MediaType.parse(photo.mimeType),
+      );
+    } on FileSystemException {
+      throw const RepositoryException('No se pudo leer la foto elegida.');
+    }
+    final data = await _send(
+      () async {
+        final request = http.MultipartRequest('POST', _uri('/reports/photo'))..files.add(file);
+        return http.Response.fromStream(await _client.send(request));
+      },
+      errorMessage: _photoErrorMessage,
+    );
+    final url = (data is Map ? data['foto_url'] : null) as String?;
+    if (url == null || url.isEmpty) {
+      throw const RepositoryException('Respuesta inesperada del servidor.');
+    }
+    return url;
   }
 
   @override
@@ -207,11 +237,14 @@ class ApiReportRepository implements ReportRepository {
     return data.whereType<Map<String, dynamic>>().toList();
   }
 
-  Future<dynamic> _send(Future<http.Response> Function() request) async {
+  Future<dynamic> _send(
+    Future<http.Response> Function() request, {
+    String Function(http.Response)? errorMessage,
+  }) async {
     try {
       final response = await request().timeout(AppConfig.apiTimeout);
       if (response.statusCode >= 400) {
-        throw RepositoryException(_errorMessage(response));
+        throw RepositoryException((errorMessage ?? _errorMessage)(response));
       }
       return jsonDecode(utf8.decode(response.bodyBytes));
     } on TimeoutException {
@@ -223,6 +256,18 @@ class ApiReportRepository implements ReportRepository {
     } on FormatException {
       throw const RepositoryException('Respuesta inesperada del servidor.');
     }
+  }
+
+  static String _photoErrorMessage(http.Response response) {
+    switch (response.statusCode) {
+      case 413:
+        return 'La foto pesa demasiado (máximo 5 MB).';
+      case 415:
+        return 'Formato de foto no permitido. Usa JPG, PNG o WebP.';
+      case 503:
+        return 'El almacenamiento de fotos no está disponible por ahora.';
+    }
+    return _errorMessage(response);
   }
 
   static String _errorMessage(http.Response response) {

@@ -35,7 +35,18 @@ class AppStrings {
   static const String locationAdded = 'Ubicación agregada';
   static const String photoOptional = 'Foto (opcional)';
   static const String attachPhoto = 'Adjuntar una foto';
-  static const String attachPhotoHint = 'Puedes elegirla desde tu celular';
+  static const String attachPhotoHint = 'Toma una foto o elígela de tu galería';
+  static const String photoFromCamera = 'Tomar foto';
+  static const String photoFromGallery = 'Elegir de la galería';
+  static const String removePhoto = 'Quitar foto';
+  static const String photoPickFailed = 'No se pudo abrir la cámara o la galería.';
+  static const String photoUploadFailedTitle = 'No se pudo subir la foto';
+  static const String photoUploadFailedBody =
+      'Tu reporte no se ha perdido. Puedes reintentar o enviarlo sin foto.';
+  static const String retry = 'Reintentar';
+  static const String sendWithoutPhoto = 'Enviar sin foto';
+  static const String cancel = 'Cancelar';
+  static const String photoLoadFailed = 'No se pudo cargar la foto.';
   static const String description = 'Descripción';
   static const String descriptionHint = 'Cuéntanos qué ves…';
   static const String sendReport = 'Enviar reporte';

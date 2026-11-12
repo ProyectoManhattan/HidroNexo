@@ -1,6 +1,7 @@
 import '../models/alert_item.dart';
 import '../models/incident_report.dart';
 import '../models/new_report.dart';
+import '../services/photo_service.dart';
 
 /// Falla al hablar con el backend (red, tiempo de espera o respuesta inválida).
 /// [message] se puede mostrar al ciudadano.
@@ -30,6 +31,9 @@ abstract class ReportRepository {
 
   /// Riesgo por zona en GeoJSON (`FeatureCollection`). Vacío si no hay datos.
   Future<Map<String, dynamic>> getRiskZones();
+
+  /// Sube una foto y devuelve su URL pública (para `NewReport.photoUrl`).
+  Future<String> uploadPhoto(PickedPhoto photo);
 
   /// Envía un reporte y devuelve su folio.
   Future<String> submit(NewReport report);

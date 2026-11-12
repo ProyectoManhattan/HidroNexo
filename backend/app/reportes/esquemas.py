@@ -2,6 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, field_validator
 
+from app import almacenamiento
 from app.catalogos import CATEGORIAS
 
 
@@ -13,6 +14,13 @@ class ReporteEntrada(BaseModel):
     descripcion: str | None = Field(default=None, max_length=500)
     foto_url: str | None = None
     dispositivo_id: str | None = None
+
+    @field_validator("foto_url")
+    @classmethod
+    def foto_url_propia(cls, valor: str | None) -> str | None:
+        if valor is not None and not almacenamiento.url_foto_valida(valor):
+            raise ValueError("foto_url debe ser una URL devuelta por POST /reports/photo")
+        return valor
 
     @field_validator("categoria")
     @classmethod

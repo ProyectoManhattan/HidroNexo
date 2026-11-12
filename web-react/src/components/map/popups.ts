@@ -1,4 +1,4 @@
-import { MOTIVOS, SEVERIDADES, categoriaInfo, hace, nivelInfo } from '../../constants'
+import { MOTIVOS, SEVERIDADES, categoriaInfo, hace, nivelInfo, urlFotoSegura } from '../../constants'
 
 const esc = (s: unknown) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
@@ -52,13 +52,12 @@ export function popupReporte(p: Record<string, unknown>): string {
   const c = categoriaInfo(p.categoria as string)
   const sev = SEVERIDADES[Number(p.severidad) as 1 | 2 | 3] ?? ''
   const desc = p.descripcion ? `<div style="margin:6px 0">${esc(p.descripcion)}</div>` : ''
-  const col = p.colonia ? `<div style="color:#526273;font-size:13px">Zona postal: ${esc(p.colonia)}</div>` : ''
   return (
     `<div style="min-width:190px;max-width:260px;font-size:13px">` +
     `<div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:${c.color}"></span>` +
     `<b>${esc(c.texto)}</b></div>` +
     `<div style="color:#5B6675;font-size:12px;margin-top:2px">Severidad ${esc(sev)} · ${esc(hace(p.creado_en as string))}</div>` +
-    `${desc}${col}</div>`
+    `${desc}${col}${img}</div>`
   )
 }
 
