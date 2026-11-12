@@ -1,12 +1,13 @@
 from datetime import timedelta
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.alertas import servicio
 from app.alertas.esquemas import AlertaConGuia, AlertaEdicion, AlertaManual, AlertaSalida
 from app.alertas.modelos import Alerta
+from app.colonias.servicio import colonia_de_punto
 from app.db import get_db
 from app.guias.servicio import obtener_guia
 from app.seguridad import requiere_clave
@@ -49,12 +50,24 @@ def crear_manual(datos: AlertaManual, tareas: BackgroundTasks, db: Session = Dep
 @router.get(
     "/active",
     response_model=list[AlertaConGuia],
-    summary="Alertas aprobadas vigentes (respaldo si falla el push)",
+    summary="Alertas aprobadas vigentes de una zona (la app las consulta y las muestra en pantalla completa)",
 )
-def activas(colonia_id: int | None = None, db: Session = Depends(get_db)):
+def activas(
+    colonia_id: int | None = None,
+    lat: float | None = Query(default=None, ge=-90, le=90),
+    lon: float | None = Query(default=None, ge=-180, le=180),
+    db: Session = Depends(get_db),
+):
+    if (lat is None) != (lon is None):
+        raise HTTPException(422, "lat y lon deben enviarse juntas")
     consulta = select(Alerta).where(
         Alerta.estado == "aprobada", Alerta.aprobada_en > ahora() - timedelta(hours=VIGENCIA_HORAS)
     )
+    if lat is not None:
+        # La ubicación manda sobre colonia_id: es la misma regla que usa el envío push.
+        colonia_id = colonia_de_punto(db, lat, lon)
+        if colonia_id is None:
+            return []
     if colonia_id:
         consulta = consulta.where(Alerta.colonia_id == colonia_id)
     return [

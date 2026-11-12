@@ -73,6 +73,16 @@ class AppStrings {
   static const String callEmergency = 'Emergencia: llamar al 911';
   static const String callFailed = 'No se pudo abrir el marcador.';
 
+  // Alerta en pantalla completa
+  static const String alertScreenTitle = 'Alerta de protección civil';
+  static const String alertSimulation = 'SIMULACIÓN';
+  static const String alertSimulationNote = 'Es un ejercicio: no hay una emergencia real.';
+  static const String alertAcknowledge = 'Enterado';
+  static const String alertLife911 = 'Ante riesgo para la vida, llama al 911.';
+  static const String alertWhatToDo = 'Qué hacer';
+  static String alertLevelTitle(String level) => 'Riesgo $level';
+  static String alertRemaining(int n) => 'Hay $n alerta${n == 1 ? '' : 's'} más después de esta.';
+
   // Mapa
   static const String mapPlaceholderNote =
       'Mapa de demostración · mapa real pendiente';

@@ -29,12 +29,15 @@ function Icon({ tipo, className = 'h-8 w-8' }: { tipo: Icono; className?: string
   )
 }
 
-function Dato({ icono, etiqueta, valor, ayuda }: { icono: Icono; etiqueta: string; valor: string; ayuda?: string }) {
+function Dato({ icono, etiqueta, detalle, valor, ayuda }: { icono: Icono; etiqueta: string; detalle?: string; valor: string; ayuda?: string }) {
   return (
     <div className="weather-card" title={ayuda}>
       <Icon tipo={icono} className="h-10 w-10 shrink-0 text-[#0d5ac7]" />
       <span className="min-w-0">
-        <span className="block truncate text-sm font-medium text-[#17326b]">{etiqueta}</span>
+        <span className="block text-sm leading-tight font-semibold text-[#17326b]">
+          <span className="block">{etiqueta}</span>
+          {detalle && <span className="block font-medium text-[#3b5486]">{detalle}</span>}
+        </span>
         <strong className="block text-[1.55rem] leading-tight font-extrabold tracking-tight text-[#0b2b70]">{valor}</strong>
       </span>
     </div>
@@ -66,8 +69,8 @@ export default function TopBar() {
       </div>
 
       <div className="weather-strip" aria-label="Resumen meteorológico">
-        <Dato icono="lluvia" etiqueta="Lluvia acumulada (últimas 3 h)" valor={lluvia3h == null ? '—' : `${lluvia3h} mm`} ayuda="Lluvia acumulada usada por el sistema" />
-        <Dato icono="pronostico" etiqueta="Pronóstico de lluvia (próximas 3 h)" valor={prob3h == null ? '—' : `${Math.round(prob3h)} %`} ayuda={`Probabilidad meteorológica. ${UMBRAL_PROB_ALTA}% o más se destaca en el mapa; no es una alerta oficial.`} />
+        <Dato icono="lluvia" etiqueta="Lluvia acumulada" detalle="últimas 3 h" valor={lluvia3h == null ? '—' : `${lluvia3h} mm`} ayuda="Lluvia acumulada usada por el sistema" />
+        <Dato icono="pronostico" etiqueta="Pronóstico de lluvia" detalle="próximas 3 h" valor={prob3h == null ? '—' : `${Math.round(prob3h)} %`} ayuda={`Probabilidad meteorológica. ${UMBRAL_PROB_ALTA}% o más se destaca en el mapa; no es una alerta oficial.`} />
         <Dato icono="reloj" etiqueta="Última lectura" valor={hora} ayuda="Hora de la última lectura meteorológica recibida" />
       </div>
 

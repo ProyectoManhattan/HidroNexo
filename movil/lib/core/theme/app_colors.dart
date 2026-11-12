@@ -12,6 +12,12 @@ class AppColors {
   static const Color warn = Color(0xFFE8912D);
   static const Color drain = Color(0xFF5B6F86);
   static const Color danger = Color(0xFFC9302F);
+  // Niveles de alerta (el texto encima usa [alertMediumInk] en ámbar, blanco en el resto).
+  static const Color alertCritical = Color(0xFFC9302F);
+  static const Color alertHigh = Color(0xFFB85000);
+  static const Color alertMedium = Color(0xFFFFC107);
+  static const Color alertMediumInk = Color(0xFF3A2A00);
+  static const Color alertLow = Color(0xFF0B5EC2);
   static const Color darkInk = Color(0xFF14233B);
 }
 

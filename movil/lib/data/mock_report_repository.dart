@@ -1,4 +1,5 @@
 import '../core/constants/app_strings.dart';
+import '../models/active_alert.dart';
 import '../models/alert_item.dart';
 import '../models/coordinates.dart';
 import '../models/incident_report.dart';
@@ -118,6 +119,25 @@ class MockReportRepository implements ReportRepository {
           ),
         )
         .toList();
+  }
+
+  /// Alerta de ejemplo para ver la pantalla completa sin backend.
+  @override
+  Future<List<ActiveAlert>> getActiveAlertsAt({required double lat, required double lon}) async {
+    return [
+      ActiveAlert(
+        id: 1,
+        type: ReportType.flood,
+        level: AlertLevel.alto,
+        zoneName: 'Col. Centro',
+        motivo: 'lluvia',
+        text: 'Lluvia intensa en tu colonia. Hay riesgo de inundación en calles bajas durante las próximas horas.',
+        simulated: true,
+        approvedAt: DateTime.now(),
+        guideTitle: 'Qué hacer ante una inundación',
+        steps: ReportType.flood.tips,
+      ),
+    ];
   }
 
   @override
