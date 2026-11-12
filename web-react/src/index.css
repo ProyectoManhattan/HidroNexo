@@ -33,6 +33,7 @@
 
 * { box-sizing: border-box; }
 html, body, #root { min-height: 100%; height: 100%; margin: 0; }
+html, body { overflow: hidden; }
 body {
   background: var(--color-background);
   color: var(--color-text-primary);
@@ -57,7 +58,7 @@ a { text-underline-offset: 3px; }
 .app-header {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(19rem, 1.05fr) minmax(34rem, 2.35fr) minmax(12rem, .7fr);
+  grid-template-columns: minmax(20rem, 1.05fr) minmax(34rem, 2.3fr) minmax(12rem, .75fr);
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
@@ -71,10 +72,7 @@ a { text-underline-offset: 3px; }
   height: 5.35rem;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: 1.15rem 1.15rem 0 1.15rem;
-  color: #fff;
-  background: linear-gradient(145deg, #183c85, #0b2b70);
-  box-shadow: 0 8px 22px rgb(29 78 216 / .2);
+  background: transparent;
 }
 .weather-strip {
   display: grid;
@@ -104,9 +102,11 @@ a { text-underline-offset: 3px; }
   border-radius: 0 1rem 1rem 0;
   background: #fff;
 }
+.information-panel { font-size: 1rem; }
+.information-panel .text-sm { font-size: .95rem !important; line-height: 1.45; }
 
 @media (max-width: 1280px) and (min-width: 768px) {
-  .app-header { grid-template-columns: minmax(18rem, 1fr) minmax(30rem, 1.8fr); }
+  .app-header { grid-template-columns: minmax(20rem, 1fr) minmax(30rem, 1.8fr); }
   .system-card { position: absolute; right: 1.25rem; top: .8rem; min-height: 3.5rem; background: rgb(255 255 255 / .95); }
   .weather-strip { grid-column: 1 / -1; }
 }

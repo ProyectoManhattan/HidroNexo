@@ -5,8 +5,8 @@ import 'core/theme/app_theme.dart';
 import 'screens/citizen/citizen_shell.dart';
 
 /// Widget raíz: tema claro/oscuro y vista del ciudadano.
-class AguaVerApp extends StatelessWidget {
-  const AguaVerApp({super.key});
+class HidroNexoApp extends StatelessWidget {
+  const HidroNexoApp({super.key});
 
   @override
   Widget build(BuildContext context) {

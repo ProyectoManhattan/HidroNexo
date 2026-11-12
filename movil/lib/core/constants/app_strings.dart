@@ -2,7 +2,7 @@
 class AppStrings {
   AppStrings._();
 
-  static const String appName = 'AguaVer';
+  static const String appName = 'HidroNexo';
 
   // Navegación
   static const String navHome = 'Inicio';
@@ -11,7 +11,8 @@ class AppStrings {
 
   // Inicio
   static const String temperature = '28°C';
-  static const String weatherQuote = '“baja probabilidad de encharcamiento hoy”';
+  static const String weatherQuote =
+      '“baja probabilidad de encharcamiento hoy”';
   static const String searchHint = 'Buscar colonia o ubicación';
   static const String zoneUpdated = 'Zona actualizada';
   static const String rainRisk = 'Riesgo de lluvia';
@@ -22,7 +23,8 @@ class AppStrings {
 
   // Reportar
   static const String reportTitle = 'Reportar un problema';
-  static const String reportSubtitle = 'Tu reporte ayuda a avisar a toda la comunidad.';
+  static const String reportSubtitle =
+      'Tu reporte ayuda a avisar a toda la comunidad.';
   static const String whatIsHappening = '¿Qué está pasando?';
   static const String severityLabel = '¿Qué tan grave es?';
   static const String severityLow = 'Baja';
@@ -39,7 +41,8 @@ class AppStrings {
   static const String photoFromCamera = 'Tomar foto';
   static const String photoFromGallery = 'Elegir de la galería';
   static const String removePhoto = 'Quitar foto';
-  static const String photoPickFailed = 'No se pudo abrir la cámara o la galería.';
+  static const String photoPickFailed =
+      'No se pudo abrir la cámara o la galería.';
   static const String photoUploadFailedTitle = 'No se pudo subir la foto';
   static const String photoUploadFailedBody =
       'Tu reporte no se ha perdido. Puedes reintentar o enviarlo sin foto.';
@@ -55,21 +58,24 @@ class AppStrings {
   static const String reportSentBody =
       'Gracias por avisar. Guarda tu folio para dar seguimiento.';
   static const String trackTitle = 'Seguimiento de mi reporte';
-  static const String folioHint = 'Escribe tu folio, ej. AV-15';
-  static const String folioNotFound = 'No encontramos ese folio. Revisa el número.';
+  static const String folioHint = 'Escribe tu folio, ej. HN-15';
+  static const String folioNotFound =
+      'No encontramos ese folio. Revisa el número.';
 
   // Alertas
   static const String alertsTitle = 'Alertas de tu zona';
   static const String alertsSubtitle = 'Cada aviso trae lo que debes hacer.';
   static const String waterNormal = 'Servicio de agua normal';
-  static const String waterNormalDetail = 'Sin cortes programados en tu colonia.';
+  static const String waterNormalDetail =
+      'Sin cortes programados en tu colonia.';
   static const String upToDate = 'Al día';
   static const String whatToDo = 'Qué hacer';
   static const String callEmergency = 'Emergencia: llamar al 911';
   static const String callFailed = 'No se pudo abrir el marcador.';
 
   // Mapa
-  static const String mapPlaceholderNote = 'Mapa de demostración · mapa real pendiente';
+  static const String mapPlaceholderNote =
+      'Mapa de demostración · mapa real pendiente';
 
   // Genéricos
   static const String understood = 'Entendido';
