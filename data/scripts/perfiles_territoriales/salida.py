@@ -67,6 +67,8 @@ def escribir(r) -> list:
                 "nivel_rio", "fecha_nivel_rio", "datos_hidromet_historicos",
                 "eventos_inundacion_registrados", "eventos_posibles_nombre_ambiguo", "alertas_preventivas",
                 "identificado_en_riesgo", "colonias_con_antecedentes",
+                "estacion_climatologica", "distancia_estacion_climatologica_km", "lluvia_anual_media_mm",
+                "lluvia_24h_retorno_2a_mm", "lluvia_24h_retorno_10a_mm", "lluvia_24h_retorno_100a_mm",
                 "indice_susceptibilidad_preliminar", "categoria_relativa", "n_variables_faltantes", "observaciones"]
     with ruta.open("w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
@@ -74,6 +76,7 @@ def escribir(r) -> list:
         for p in perfiles:
             g, h, s = p["caracteristicas_geograficas"], p["condiciones_hidrometeorologicas"], p["indicadores"]["susceptibilidad"]
             a = p["antecedentes_inundacion"]
+            c = p.get("climatologia_precipitacion") or {}
             w.writerow([p["id_poligono"], p["nombre"], p["tipo_unidad"], p["municipio"], p["identificacion"]["area_km2"],
                         p["identificacion"]["centroide"]["lon"], p["identificacion"]["centroide"]["lat"],
                         g["elevacion_minima_m"], g["elevacion_media_m"], g["elevacion_mediana_m"], g["elevacion_maxima_m"],
@@ -85,6 +88,9 @@ def escribir(r) -> list:
                         h["fecha_nivel_rio"], h["datos_historicos"],
                         a["eventos_registrados"], a["eventos_posibles_por_nombre_ambiguo"], a["alertas_preventivas"],
                         a["identificado_en_riesgo"], "; ".join(sorted({x["colonia_fuente"] for x in a["registros"]})),
+                        c.get("estacion_referencia"), c.get("distancia_km"), c.get("lluvia_anual_media_mm"),
+                        (c.get("lluvia_24h_retorno_mm") or {}).get("2"), (c.get("lluvia_24h_retorno_mm") or {}).get("10"),
+                        (c.get("lluvia_24h_retorno_mm") or {}).get("100"),
                         s["indice_preliminar"], s["categoria_relativa"],
                         len(p["calidad_informacion"]["variables_faltantes"]), " | ".join(p["calidad_informacion"]["observaciones"])])
     rutas.append(ruta)
@@ -101,6 +107,36 @@ def escribir(r) -> list:
                         " ".join(m["codigos_postales"]), " ".join(m["cps_sin_poligono"]), " | ".join(m["asentamientos_sepomex"]), m["nota_alias"]])
     rutas.append(ruta)
 
+    clim = r.get("climatologia")
+    if clim:
+        ruta = config.SALIDA / "climatologia_precipitacion.json"
+        ruta.write_text(json.dumps(_limpio({k: v for k, v in clim.items() if not k.startswith("_")}), ensure_ascii=False, indent=1),
+                        encoding="utf-8")
+        rutas.append(ruta)
+        ruta = config.SALIDA / "climatologia_mensual.csv"
+        with ruta.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(["estacion", "nombre", "periodo", "mes", "lluvia_media_mm", "lluvia_mediana_mm", "anios_usados",
+                        "prob_diaria_ge_1mm", "prob_diaria_ge_25mm", "prob_diaria_ge_50mm", "prob_diaria_ge_100mm",
+                        "p90_dia_humedo_mm", "p99_dia_humedo_mm", "max_diario_mm", "pct_lluvia_anual", "nacional_normal_1991_2020_mm"])
+            for est, e in clim["estaciones"].items():
+                for mes, v in e["climatologia"]["meses"].items():
+                    w.writerow([est, e["nombre"], e["climatologia"]["periodo"], mes, v["lluvia_media_mm"], v["lluvia_mediana_mm"],
+                                v["anios_usados"], v["prob_diaria_ge_1mm"], v["prob_diaria_ge_25mm"], v["prob_diaria_ge_50mm"],
+                                v["prob_diaria_ge_100mm"], v["p90_dia_humedo_mm"], v["p99_dia_humedo_mm"], v["max_diario_mm"],
+                                v["pct_lluvia_anual"], v["nacional_normal_1991_2020_mm"]])
+        rutas.append(ruta)
+        ruta = config.SALIDA / "contraste_lluvia_antecedentes.csv"
+        cols = ["evento", "nombre", "tipo", "fecha", "estacion", "ventana", "dias_con_dato", "resultado", "max_24h_mm",
+                "fecha_max_24h", "24h_percentil_en_el_mes", "24h_periodo_retorno_anual_anios", "24h_categoria",
+                "max_72h_mm", "72h_periodo_retorno_anual_anios", "72h_categoria", "advertencia"]
+        with ruta.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
+            w.writeheader()
+            for f in clim["contraste_antecedentes"]:
+                w.writerow(_limpio(f))
+        rutas.append(ruta)
+
     ruta = config.SALIDA / "metodologia.md"
     ruta.write_text(_metodologia(r, perfiles), encoding="utf-8")
     rutas.append(ruta)
@@ -114,6 +150,74 @@ def escribir(r) -> list:
 def _rango(perfiles, f):
     v = [x for x in (f(p) for p in perfiles) if x is not None]
     return (min(v), float(np.median(v)), max(v)) if v else (None, None, None)
+
+
+def _seccion_climatologia(clim) -> str:
+    if not clim:
+        return "## 4b. Climatología de precipitación\n\nSin series diarias del SMN en `data/fuentes/smn/`."
+    filas = []
+    for est, e in clim["estaciones"].items():
+        ex = e["extremos"]
+        rl = ex.get("24h", {}).get("niveles_retorno", {})
+        filas.append(f"| {est} {e['nombre']} | {e['municipio']} | {e['calidad']['inicio']} a {e['calidad']['fin']} | "
+                     f"{ex['anios_validos']} | {', '.join(map(str, e['calidad']['anios_sospechosos_excluidos'])) or '—'} | "
+                     f"{e['climatologia']['lluvia_anual_media_mm']} | {', '.join(e['climatologia']['meses_mas_lluviosos'])} | "
+                     + (" / ".join(f"{rl[t]['gumbel_mm']}" for t in ("2", "10", "100")) if rl else "no apta") + " |")
+    cont = []
+    for f in clim["contraste_antecedentes"]:
+        if f.get("resultado"):
+            continue
+        cont.append(f"| {f['nombre']} ({f['fecha']}) | {f['estacion']} | {f['max_24h_mm']} mm el {f['fecha_max_24h']} | "
+                    f"{f['24h_periodo_retorno_anual_anios']} | {f['24h_categoria']} |{' ⚠️ precisión de mes' if f.get('advertencia') else ''} |")
+    sin = ", ".join(f"{d['fecha']} ({d['estacion']}, {d['mm_24h']} mm)" for d in clim["dias_extremos_sin_antecedente"][:8])
+    return f"""## 4b. Climatología de precipitación y modelo de evaluación de lluvia
+
+**Fuente**: series diarias de la Base de Datos Climatológica Nacional (CONAGUA-SMN), emitidas el 06/11/2026.
+Unidad: mm/día; según la convención del SMN, cada valor corresponde a las 24 h que terminan a las 08:00 (verificar).
+Referencia nacional: lluvia mensual normal 1991-2020 transcrita de *Información estadística para la Planeación Hídrica*
+(SEMARNAT-CONAGUA, 2026, pág. 6): junio a octubre concentran la lluvia en todo el país.
+
+| Estación | Municipio | Registro | Años válidos (extremos) | Años excluidos | Lluvia anual media (mm) | Meses más lluviosos | 24 h con retorno de 2 / 10 / 100 años (mm) |
+|---|---|---|---|---|---|---|---|
+{chr(10).join(filas)}
+
+**Control de homogeneidad.** Se comparó la lluvia anual de 30192 (Veracruz) y 30048 (El Copital, ~22 km) en los días en que
+ambas tienen dato. En los años sin indicios de problema la razón fue 0.96–1.52; entre 1981 y 2006 cayó a 0.01–0.76 de forma
+continua, lo que indica **subregistro en 30192** (no un cambio climático plausible entre estaciones tan cercanas). Esos años y
+el de 30048 con la anomalía inversa se **excluyen de las estadísticas sin borrarse** del archivo original. Sin este control,
+la lluvia anual de Veracruz salía en ~635 mm en lugar de ~1 600 mm.
+
+**Método.**
+1. Años válidos: >= {int(climatologia_criterio('min_dias_anio')*100)} % de días con dato en el año y en junio–octubre.
+2. Climatología mensual: meses >= 90 % completos; normal 1991-2020 si tiene >= 15 años válidos, si no, todo el registro válido.
+3. Extremos: máximos anuales de 24 h y de 72 h (suma móvil de 3 días) ajustados a **Gumbel** (principal; intervalo de
+   confianza de 90 % por remuestreo) y **GEV** (contraste). Los niveles de 50–100 años extrapolan más allá del registro.
+4. `evaluar(mm, mes)`: percentil de la lluvia entre los días de ese mes y periodo de retorno anual. Categorías (criterio de
+   diseño): habitual < P90; alta P90–P99; muy alta >= P99; extraordinaria si el periodo de retorno es >= 10 años.
+   Desde la terminal: `python3 -m data.scripts.perfiles_territoriales lluvia 120 --mes 9`.
+5. Cada polígono usa la **serie larga más cercana** como referencia climatológica. La climatología cambia poco a esta escala;
+   **no** sirve como lluvia en tiempo real ni sustituye una estación local.
+
+**Contraste con los antecedentes documentados** (no es validación: pocos eventos, fechas imprecisas):
+
+| Evento | Estación | Máximo de 24 h en la ventana | Retorno (años) | Categoría | |
+|---|---|---|---|---|---|
+{chr(10).join(cont)}
+
+Con precisión de mes, el máximo del mes puede ser de otro día (p. ej., en septiembre de 2017 el máximo es del día 23, no de
+los días de Katia). Karl (2010) no se puede contrastar: 30192 no tiene datos de 2007 a 2013 y 30048 tiene 2010 incompleto.
+
+**Días muy lluviosos sin antecedente en el registro** (candidatos a investigar, no se afirma que hubo inundación): {sin}.
+
+**Uso propuesto en el motor de riesgo (hipótesis).** En vez de umbrales fijos de saturación (p. ej., 80 mm/24 h), normalizar
+la lluvia observada o pronosticada con la climatología local: percentil del mes y periodo de retorno. Para Veracruz, la lluvia
+que se supera una vez cada 2 años en 24 h (~113 mm) es una referencia local más defendible que un valor genérico.
+"""
+
+
+def climatologia_criterio(nombre):
+    from . import climatologia
+    return {"min_dias_anio": climatologia.MIN_DIAS_ANIO}[nombre]
 
 
 def _contraste(perfiles) -> str:
@@ -214,6 +318,8 @@ HAND mediano {_rango(perfiles, lambda p: p['caracteristicas_geograficas']['hand_
   la referencia (escala local o msnm) no está documentada.
 - Todos los datos son del {F['conagua_precipitacion']['periodo'][0][:10]}: son **históricos**, no tiempo real.
 
+{_seccion_climatologia(r.get("climatologia"))}
+
 ## 5. Antecedentes de inundación
 
 1. **Compilación** (`data/antecedentes/eventos_inundacion.json`): búsqueda web del {r['fuentes']['antecedentes']['fecha_compilacion']}
@@ -289,6 +395,22 @@ python3 -m data.scripts.perfiles_territoriales ficha 91700
 """
 
 
+def _calidad_smn(clim) -> str:
+    if not clim:
+        return "Sin series."
+    filas = []
+    for est, e in clim["estaciones"].items():
+        c = e["calidad"]
+        inc = ", ".join(f"{a} ({p} %)" for a, p in list(c["anios_incompletos"].items())[:20])
+        filas.append(f"| {est} {e['nombre']} | {c['inicio']} a {c['fin']} | {c['pct_dias_con_dato']} % | {c['anios_completos']} | "
+                     f"{c['anios_completos_normal_1991_2020']} de 30 | {inc or '—'} | {', '.join(map(str, c['anios_sospechosos_excluidos'])) or '—'} | "
+                     f"{'sí' if e['apta_para_extremos'] else 'no (serie corta)'} |")
+    return ("| Estación | Registro | Días con dato | Años completos | Años completos 1991-2020 | Años incompletos (% de días) | "
+            "Años sospechosos excluidos | Apta para extremos |\n|---|---|---|---|---|---|---|---|\n" + "\n".join(filas) +
+            "\n\nNo hay valores negativos ni mayores a 300 mm/día. La estación 30389 (San José Novillero, Boca del Río) tiene "
+            "~4 años: sus estadísticas son ilustrativas y no se usan para periodos de retorno.")
+
+
 def _calidad(r, perfiles) -> str:
     bit = r["bitacora"]
     cob = Counter(p["condiciones_hidrometeorologicas"]["cobertura_meteorologica"] for p in perfiles)
@@ -333,6 +455,10 @@ Procesado el {config.FECHA_PROCESO.isoformat()}. Nada se eliminó: los problemas
   coincidencia en SEPOMEX: {n_sin} ({sin_lista}).
 - Polígonos con al menos un evento documentado: {n_pol_ev}; con algún registro (evento, alerta o riesgo): {n_pol_any} de {n_pol}.
 - Las menciones sin coincidencia pueden ser asentamientos nuevos, nombres coloquiales o erratas de la fuente; requieren revisión manual.
+
+## Series diarias del SMN
+
+{_calidad_smn(r.get("climatologia"))}
 
 ## Problemas generales de las fuentes
 

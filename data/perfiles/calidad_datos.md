@@ -1,6 +1,6 @@
 # Calidad de datos · Perfiles territoriales
 
-Procesado el 2026-11-12T03:06:56+00:00. Nada se eliminó: los problemas se marcan y documentan.
+Procesado el 2026-11-12T03:36:16+00:00. Nada se eliminó: los problemas se marcan y documentan.
 
 ## Resumen
 
@@ -18,6 +18,16 @@ Procesado el 2026-11-12T03:06:56+00:00. Nada se eliminó: los problemas se marca
   coincidencia en SEPOMEX: 10 (Colina de Los Pájaros, Cuenca I y II, Esperanza, Geo Villas del Puerto, Las Reservas, Mangal, Matacocuite, Muñiz, Paso Real, Vergara de Tarimoya).
 - Polígonos con al menos un evento documentado: 13; con algún registro (evento, alerta o riesgo): 22 de 101.
 - Las menciones sin coincidencia pueden ser asentamientos nuevos, nombres coloquiales o erratas de la fuente; requieren revisión manual.
+
+## Series diarias del SMN
+
+| Estación | Registro | Días con dato | Años completos | Años completos 1991-2020 | Años incompletos (% de días) | Años sospechosos excluidos | Apta para extremos |
+|---|---|---|---|---|---|---|---|
+| 30048 EL COPITAL | 1961-05-01 a 2017-12-31 | 93.5 % | 49 | 21 de 30 | 1961 (62 %), 1988 (67 %), 2000 (67 %), 2001 (75 %), 2005 (50 %), 2007 (58 %), 2010 (58 %), 2017 (74 %) | 2017 | sí |
+| 30192 VERACRUZ (OBS) | 1951-01-01 a 2022-03-24 | 73.7 % | 51 | 21 de 30 | 1974 (0 %), 1975 (0 %), 1976 (0 %), 1977 (0 %), 1978 (0 %), 1979 (0 %), 1980 (0 %), 1986 (73 %), 1988 (58 %), 1989 (42 %), 1990 (25 %), 2006 (67 %), 2007 (8 %), 2008 (0 %), 2009 (0 %), 2010 (0 %), 2011 (0 %), 2012 (0 %), 2013 (0 %), 2018 (48 %) | 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 | sí |
+| 30389 SAN JOSÉ NOVILLERO | 2019-03-27 a 2023-07-06 | 73.1 % | 2 | 1 de 30 | 2019 (76 %), 2021 (55 %), 2023 (40 %) | — | no (serie corta) |
+
+No hay valores negativos ni mayores a 300 mm/día. La estación 30389 (San José Novillero, Boca del Río) tiene ~4 años: sus estadísticas son ilustrativas y no se usan para periodos de retorno.
 
 ## Problemas generales de las fuentes
 
@@ -44,6 +54,9 @@ Procesado el 2026-11-12T03:06:56+00:00. Nada se eliminó: los problemas se marca
 | antecedente_sin_ubicar | 'Matacocuite' (tormenta_2026_10_02) no aparece en SEPOMEX para el municipio indicado |
 | antecedente_sin_ubicar | 'Geo Villas del Puerto' (tormenta_2026_10_02) no aparece en SEPOMEX para el municipio indicado |
 | antecedente_ambiguo | 'La Carranza' (tormenta_2026_10_02) puede ser los CP 91759, 94297 |
+| inhomogeneidad | Estación SMN 30048 (EL COPITAL): años [2017] con posible subregistro frente a la estación vecina; excluidos de las estadísticas |
+| inhomogeneidad | Estación SMN 30192 (VERACRUZ (OBS)): años [1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006] con posible subregistro frente a la estación vecina; excluidos de las estadísticas |
+| serie_corta | Estación SMN 30389 (SAN JOSÉ NOVILLERO): 2 años válidos; no apta para periodos de retorno |
 
 ## Problemas por polígono
 

@@ -22,7 +22,7 @@ MOTIVO_ZONA_OFICIAL = (
 )
 
 
-def construir(r, ident, geo, costa_ne, hid, norm, indices, bitacora, ant) -> dict:
+def construir(r, ident, geo, costa_ne, hid, norm, indices, bitacora, ant, clim) -> dict:
     pid = r.id_poligono
     dist = geo.get("distancias_m", {})
     geografia = {
@@ -101,6 +101,7 @@ def construir(r, ident, geo, costa_ne, hid, norm, indices, bitacora, ant) -> dic
             "cobertura_agua": None, "cobertura_drenaje": None, "motivo_null": MOTIVO_SOCIAL,
         },
         "condiciones_hidrometeorologicas": hid,
+        "climatologia_precipitacion": clim,
         "indicadores": indicadores,
         "calidad_informacion": {
             "cobertura_geografica": "DEM y geometría: completa; estaciones: " + hid["cobertura_meteorologica"],
@@ -176,6 +177,13 @@ def diagnostico(p) -> str:
     if h["precipitacion_1h_mm"] is None:
         no.append(f"precipitación representativa ({h['motivo_precipitacion_null']})")
     partes.append("No determinado: " + "; ".join(no) + ".")
+    c = p.get("climatologia_precipitacion") or {}
+    if c.get("estacion_referencia"):
+        partes.append(
+            f"Clima de lluvia (estación SMN {c['estacion_referencia']} {c['nombre_estacion']}, a {c['distancia_km']} km): "
+            f"{c['lluvia_anual_media_mm']:.0f} mm/año, temporada {', '.join(c['meses_mas_lluviosos'])}; una lluvia de "
+            f"{c['lluvia_24h_retorno_mm']['10']:.0f} mm en 24 h se espera en promedio una vez cada 10 años."
+        )
     if h["aviso"]:
         partes.append(h["aviso"] + ".")
     return " ".join(partes)
@@ -203,6 +211,13 @@ def ficha(p) -> str:
         "- Precipitación reciente: " + (
             f"{h['precipitacion_1h_mm']} mm en 1 h al {h['ultima_observacion']}" if h["precipitacion_1h_mm"] is not None
             else f"no asignada — {h['motivo_precipitacion_null']}"
+        ) + ".",
+        "- Clima de lluvia: " + (
+            f"{p['climatologia_precipitacion']['lluvia_anual_media_mm']:.0f} mm/año; meses más lluviosos "
+            f"{', '.join(p['climatologia_precipitacion']['meses_mas_lluviosos'])}; 24 h con retorno de 10 años ≈ "
+            f"{p['climatologia_precipitacion']['lluvia_24h_retorno_mm']['10']:.0f} mm "
+            f"(estación SMN {p['climatologia_precipitacion']['estacion_referencia']}, a {p['climatologia_precipitacion']['distancia_km']} km)"
+            if p.get("climatologia_precipitacion", {}).get("estacion_referencia") else "sin serie histórica"
         ) + ".",
         "- Estaciones meteorológicas cercanas: " + (", ".join(f"{e['estacion']} ({e['distancia_km']} km)" for e in est) or "ninguna") + ".",
         "- Estaciones hidrométricas cercanas: " + (", ".join(f"{e['estacion']} ({e['distancia_km']} km)" for e in hid) or "ninguna") + ".",

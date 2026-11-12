@@ -1,6 +1,6 @@
 # Metodología · Perfiles territoriales de HIDRA
 
-Generado el 2026-11-12T03:06:56+00:00 con `python3 -m data.scripts.perfiles_territoriales`.
+Generado el 2026-11-12T03:36:16+00:00 con `python3 -m data.scripts.perfiles_territoriales`.
 
 ## 1. Unidad territorial
 
@@ -71,6 +71,56 @@ HAND mediano (0.0, 2.51, 20.88) m.
 - **Niveles**: un solo registro por estación; la tendencia queda `null`. No se comparan niveles entre estaciones porque
   la referencia (escala local o msnm) no está documentada.
 - Todos los datos son del 2023-04-12: son **históricos**, no tiempo real.
+
+## 4b. Climatología de precipitación y modelo de evaluación de lluvia
+
+**Fuente**: series diarias de la Base de Datos Climatológica Nacional (CONAGUA-SMN), emitidas el 06/11/2026.
+Unidad: mm/día; según la convención del SMN, cada valor corresponde a las 24 h que terminan a las 08:00 (verificar).
+Referencia nacional: lluvia mensual normal 1991-2020 transcrita de *Información estadística para la Planeación Hídrica*
+(SEMARNAT-CONAGUA, 2026, pág. 6): junio a octubre concentran la lluvia en todo el país.
+
+| Estación | Municipio | Registro | Años válidos (extremos) | Años excluidos | Lluvia anual media (mm) | Meses más lluviosos | 24 h con retorno de 2 / 10 / 100 años (mm) |
+|---|---|---|---|---|---|---|---|
+| 30048 EL COPITAL | MEDELLÍN DE BRAVO | 1961-05-01 a 2017-12-31 | 46 | 2017 | 1337.6 | jul, sep, ago, jun | 102.3 / 155.5 / 221.7 |
+| 30192 VERACRUZ (OBS) | VERACRUZ | 1951-01-01 a 2022-03-24 | 29 | 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 | 1617.9 | jul, sep, ago, jun | 113.3 / 166.1 / 232.0 |
+| 30389 SAN JOSÉ NOVILLERO | BOCA DEL RÍO | 2019-03-27 a 2023-07-06 | 2 | — | 543.0 | jun, jul, oct, sep | no apta |
+
+**Control de homogeneidad.** Se comparó la lluvia anual de 30192 (Veracruz) y 30048 (El Copital, ~22 km) en los días en que
+ambas tienen dato. En los años sin indicios de problema la razón fue 0.96–1.52; entre 1981 y 2006 cayó a 0.01–0.76 de forma
+continua, lo que indica **subregistro en 30192** (no un cambio climático plausible entre estaciones tan cercanas). Esos años y
+el de 30048 con la anomalía inversa se **excluyen de las estadísticas sin borrarse** del archivo original. Sin este control,
+la lluvia anual de Veracruz salía en ~635 mm en lugar de ~1 600 mm.
+
+**Método.**
+1. Años válidos: >= 80 % de días con dato en el año y en junio–octubre.
+2. Climatología mensual: meses >= 90 % completos; normal 1991-2020 si tiene >= 15 años válidos, si no, todo el registro válido.
+3. Extremos: máximos anuales de 24 h y de 72 h (suma móvil de 3 días) ajustados a **Gumbel** (principal; intervalo de
+   confianza de 90 % por remuestreo) y **GEV** (contraste). Los niveles de 50–100 años extrapolan más allá del registro.
+4. `evaluar(mm, mes)`: percentil de la lluvia entre los días de ese mes y periodo de retorno anual. Categorías (criterio de
+   diseño): habitual < P90; alta P90–P99; muy alta >= P99; extraordinaria si el periodo de retorno es >= 10 años.
+   Desde la terminal: `python3 -m data.scripts.perfiles_territoriales lluvia 120 --mes 9`.
+5. Cada polígono usa la **serie larga más cercana** como referencia climatológica. La climatología cambia poco a esta escala;
+   **no** sirve como lluvia en tiempo real ni sustituye una estación local.
+
+**Contraste con los antecedentes documentados** (no es validación: pocos eventos, fechas imprecisas):
+
+| Evento | Estación | Máximo de 24 h en la ventana | Retorno (años) | Categoría | |
+|---|---|---|---|---|---|
+| Depresión tropical (disturbio 90L) (2014-06) | 30048 | 31.0 mm el 2014-06-20 | 1.0 | alta | ⚠️ precisión de mes |
+| Depresión tropical (disturbio 90L) (2014-06) | 30192 | 205.2 mm el 2014-06-06 | 38.8 | extraordinaria | ⚠️ precisión de mes |
+| Tormenta tropical Earl (2016-08) | 30048 | 100.0 mm el 2016-08-22 | 1.9 | muy alta | ⚠️ precisión de mes |
+| Tormenta tropical Earl (2016-08) | 30192 | 101.1 mm el 2016-08-05 | 1.5 | muy alta | ⚠️ precisión de mes |
+| Alerta máxima por el huracán Katia (2017-09) | 30192 | 122.4 mm el 2017-09-23 | 2.5 | muy alta | ⚠️ precisión de mes |
+
+Con precisión de mes, el máximo del mes puede ser de otro día (p. ej., en septiembre de 2017 el máximo es del día 23, no de
+los días de Katia). Karl (2010) no se puede contrastar: 30192 no tiene datos de 2007 a 2013 y 30048 tiene 2010 incompleto.
+
+**Días muy lluviosos sin antecedente en el registro** (candidatos a investigar, no se afirma que hubo inundación): 2013-08-25 (30048, 229.0 mm), 2020-06-11 (30192, 222.6 mm), 1974-09-20 (30048, 200.0 mm), 1960-07-16 (30192, 189.9 mm), 1961-07-07 (30192, 189.6 mm), 1971-07-18 (30048, 178.5 mm), 1971-08-25 (30048, 175.5 mm), 1969-07-02 (30192, 171.4 mm).
+
+**Uso propuesto en el motor de riesgo (hipótesis).** En vez de umbrales fijos de saturación (p. ej., 80 mm/24 h), normalizar
+la lluvia observada o pronosticada con la climatología local: percentil del mes y periodo de retorno. Para Veracruz, la lluvia
+que se supera una vez cada 2 años en 24 h (~113 mm) es una referencia local más defendible que un valor genérico.
+
 
 ## 5. Antecedentes de inundación
 
@@ -163,6 +213,8 @@ Si los polígonos con antecedentes muestran índices más altos, es una señal d
 | `distancia_estacion_km` | km | CONAGUA SIH · CATALOGO_SIH.csv | Distancia de la estación al borde del polígono (0 si está dentro), UTM 14N | puntual | no aplica | alta para la distancia; no implica representatividad |
 | `nivel_rio` | desconocida (probablemente m) | CONAGUA SIH · NIVEL_RIOS_DIA.csv | Último registro de la estación hidrométrica más cercana | puntual | 2023-04-12 | baja: referencia y unidad no documentadas |
 | `eventos_registrados` | número de eventos | Prensa y avisos (data/antecedentes/eventos_inundacion.json) + SEPOMEX | Eventos observados distintos cuya colonia mencionada corresponde sin ambigüedad al CP del polígono | colonia → código postal | 2010–2026 según el evento | baja-media: inventario incompleto, sesgado a cobertura de prensa; no es frecuencia |
+| `lluvia_24h_retorno_mm` | mm en 24 h | CONAGUA-SMN, Base de Datos Climatológica Nacional (dia30192, dia30048) | Máximos anuales de lluvia diaria ajustados a Gumbel (IC90 por bootstrap); años sospechosos excluidos | puntual (estación) | 1951-2022 (30192), 1961-2017 (30048) | media: ~29-46 años válidos; niveles de 50-100 años extrapolan |
+| `lluvia_anual_media_mm` | mm/año | CONAGUA-SMN (dia30192, dia30048) | Suma de medias mensuales con meses >= 90 % completos; normal 1991-2020 si hay >= 15 años válidos | puntual (estación) | ver periodo por estación | media |
 | `poblacion` | personas | INEGI Censo 2020 (no disponible) | Pendiente: interpolación areal de AGEB/manzana a zona postal | AGEB/manzana | no aplica | no calculado |
 | `indice_marginacion` | índice | CONAPO 2020 por AGEB (no disponible) | Pendiente: promedio ponderado por población de las AGEB que intersectan | AGEB | no aplica | no calculado |
 | `indice_susceptibilidad_preliminar` | 0–100 (relativo) | derivado | Promedio simple de subindicadores normalizados por percentil entre los 101 polígonos. HIPÓTESIS DE DISEÑO sin calibrar ni validar | zona postal | no aplica | no validado: no es probabilidad de inundación |

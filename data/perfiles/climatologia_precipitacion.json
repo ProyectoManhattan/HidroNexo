@@ -1,0 +1,1916 @@
+{
+ "descripcion": "Modelo climatológico de precipitación por estación (SMN). Describe qué tan inusual es una lluvia respecto al historial; no es un pronóstico ni una probabilidad de inundación.",
+ "criterios": {
+  "min_dias_mes": 0.9,
+  "min_dias_anio": 0.8,
+  "min_dias_temporada_jun_oct": 0.8,
+  "min_anios_extremos": 20,
+  "periodo_normal": "1991-2020",
+  "categorias": "habitual < P90 del mes; alta P90-P99; muy alta >= P99; extraordinaria si T >= 10 años (criterio de diseño)"
+ },
+ "referencia_nacional": {
+  "fuente": "SEMARNAT-CONAGUA (2026), Información estadística para la Planeación Hídrica, pág. 6 (CGSMN)",
+  "lluvia_mensual_normal_1991_2020_mm": {
+   "1": 24.1,
+   "2": 18.7,
+   "3": 15.8,
+   "4": 17.0,
+   "5": 40.0,
+   "6": 99.8,
+   "7": 125.9,
+   "8": 132.3,
+   "9": 140.4,
+   "10": 75.5,
+   "11": 34.5,
+   "12": 23.5
+  },
+  "lluvia_anual_normal_mm": 747.6
+ },
+ "homogeneidad_30192_vs_30048": {
+  "metodo": "Razón anual de lluvia 30192/30048 en los días en que ambas tienen dato. Años con >= 150 días comunes y razón < 0.8 se marcan sospechosos en 30192 (y, por continuidad, todo el tramo); razón > 2.0, en 30048. Se excluyen de las estadísticas pero se conservan en los archivos originales.",
+  "por_anio": {
+   "1961": {
+    "dias_comunes": 228,
+    "suma_a_mm": 1722.5,
+    "suma_b_mm": 1130.6,
+    "razon_a_b": 1.5,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1962": {
+    "dias_comunes": 365,
+    "suma_a_mm": 1701.2,
+    "suma_b_mm": 1314.1,
+    "razon_a_b": 1.3,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1963": {
+    "dias_comunes": 365,
+    "suma_a_mm": 1651.1,
+    "suma_b_mm": 1192.6,
+    "razon_a_b": 1.4,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1964": {
+    "dias_comunes": 366,
+    "suma_a_mm": 1345.1,
+    "suma_b_mm": 1354.0,
+    "razon_a_b": 1.0,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1965": {
+    "dias_comunes": 365,
+    "suma_a_mm": 1688.7,
+    "suma_b_mm": 1469.3,
+    "razon_a_b": 1.1,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1966": {
+    "dias_comunes": 365,
+    "suma_a_mm": 1578.5,
+    "suma_b_mm": 1083.7,
+    "razon_a_b": 1.5,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1967": {
+    "dias_comunes": 304,
+    "suma_a_mm": 1512.4,
+    "suma_b_mm": 1031.3,
+    "razon_a_b": 1.5,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1968": {
+    "dias_comunes": 366,
+    "suma_a_mm": 1530.4,
+    "suma_b_mm": 1365.3,
+    "razon_a_b": 1.1,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1969": {
+    "dias_comunes": 365,
+    "suma_a_mm": 2313.0,
+    "suma_b_mm": 1924.3,
+    "razon_a_b": 1.2,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1970": {
+    "dias_comunes": 365,
+    "suma_a_mm": 1651.7,
+    "suma_b_mm": 1260.7,
+    "razon_a_b": 1.3,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1971": {
+    "dias_comunes": 365,
+    "suma_a_mm": 1797.7,
+    "suma_b_mm": 1294.5,
+    "razon_a_b": 1.4,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1972": {
+    "dias_comunes": 366,
+    "suma_a_mm": 2272.3,
+    "suma_b_mm": 1813.0,
+    "razon_a_b": 1.3,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1973": {
+    "dias_comunes": 304,
+    "suma_a_mm": 1005.0,
+    "suma_b_mm": 983.5,
+    "razon_a_b": 1.0,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1981": {
+    "dias_comunes": 333,
+    "suma_a_mm": 101.7,
+    "suma_b_mm": 1982.0,
+    "razon_a_b": 0.1,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1982": {
+    "dias_comunes": 307,
+    "suma_a_mm": 335.8,
+    "suma_b_mm": 1023.5,
+    "razon_a_b": 0.3,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1983": {
+    "dias_comunes": 351,
+    "suma_a_mm": 225.5,
+    "suma_b_mm": 1061.6,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1984": {
+    "dias_comunes": 334,
+    "suma_a_mm": 333.8,
+    "suma_b_mm": 1953.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1985": {
+    "dias_comunes": 351,
+    "suma_a_mm": 346.6,
+    "suma_b_mm": 1378.0,
+    "razon_a_b": 0.3,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1986": {
+    "dias_comunes": 266,
+    "suma_a_mm": 206.1,
+    "suma_b_mm": 716.5,
+    "razon_a_b": 0.3,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1987": {
+    "dias_comunes": 301,
+    "suma_a_mm": 293.3,
+    "suma_b_mm": 1208.7,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1988": {
+    "dias_comunes": 153,
+    "suma_a_mm": 130.3,
+    "suma_b_mm": 619.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1989": {
+    "dias_comunes": 153,
+    "suma_a_mm": 23.9,
+    "suma_b_mm": 440.0,
+    "razon_a_b": 0.1,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1990": {
+    "dias_comunes": 90,
+    "suma_a_mm": 6.4,
+    "suma_b_mm": 10.0,
+    "razon_a_b": 0.6,
+    "evaluable": false,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "1991": {
+    "dias_comunes": 365,
+    "suma_a_mm": 327.6,
+    "suma_b_mm": 1381.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1992": {
+    "dias_comunes": 364,
+    "suma_a_mm": 398.8,
+    "suma_b_mm": 1345.5,
+    "razon_a_b": 0.3,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1993": {
+    "dias_comunes": 359,
+    "suma_a_mm": 779.4,
+    "suma_b_mm": 1174.5,
+    "razon_a_b": 0.7,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1994": {
+    "dias_comunes": 296,
+    "suma_a_mm": 205.3,
+    "suma_b_mm": 948.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1995": {
+    "dias_comunes": 347,
+    "suma_a_mm": 235.3,
+    "suma_b_mm": 883.0,
+    "razon_a_b": 0.3,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1996": {
+    "dias_comunes": 302,
+    "suma_a_mm": 263.5,
+    "suma_b_mm": 415.0,
+    "razon_a_b": 0.6,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1997": {
+    "dias_comunes": 331,
+    "suma_a_mm": 274.6,
+    "suma_b_mm": 1021.0,
+    "razon_a_b": 0.3,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1998": {
+    "dias_comunes": 354,
+    "suma_a_mm": 228.3,
+    "suma_b_mm": 1531.8,
+    "razon_a_b": 0.1,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "1999": {
+    "dias_comunes": 358,
+    "suma_a_mm": 228.3,
+    "suma_b_mm": 1478.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2000": {
+    "dias_comunes": 237,
+    "suma_a_mm": 252.1,
+    "suma_b_mm": 1317.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2001": {
+    "dias_comunes": 240,
+    "suma_a_mm": 293.2,
+    "suma_b_mm": 1326.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2002": {
+    "dias_comunes": 363,
+    "suma_a_mm": 298.9,
+    "suma_b_mm": 1200.5,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2003": {
+    "dias_comunes": 365,
+    "suma_a_mm": 346.6,
+    "suma_b_mm": 1458.0,
+    "razon_a_b": 0.2,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2004": {
+    "dias_comunes": 366,
+    "suma_a_mm": 630.5,
+    "suma_b_mm": 830.0,
+    "razon_a_b": 0.8,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2005": {
+    "dias_comunes": 183,
+    "suma_a_mm": 5.8,
+    "suma_b_mm": 880.5,
+    "razon_a_b": 0.0,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2006": {
+    "dias_comunes": 242,
+    "suma_a_mm": 331.1,
+    "suma_b_mm": 995.5,
+    "razon_a_b": 0.3,
+    "evaluable": true,
+    "sospechoso_a": true,
+    "sospechoso_b": false
+   },
+   "2014": {
+    "dias_comunes": 329,
+    "suma_a_mm": 1749.6,
+    "suma_b_mm": 1415.5,
+    "razon_a_b": 1.2,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "2015": {
+    "dias_comunes": 362,
+    "suma_a_mm": 1277.7,
+    "suma_b_mm": 1127.5,
+    "razon_a_b": 1.1,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "2016": {
+    "dias_comunes": 335,
+    "suma_a_mm": 1203.8,
+    "suma_b_mm": 1250.5,
+    "razon_a_b": 1.0,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": false
+   },
+   "2017": {
+    "dias_comunes": 269,
+    "suma_a_mm": 1190.1,
+    "suma_b_mm": 577.0,
+    "razon_a_b": 2.1,
+    "evaluable": true,
+    "sospechoso_a": false,
+    "sospechoso_b": true
+   }
+  }
+ },
+ "estaciones": {
+  "30048": {
+   "estacion": "30048",
+   "nombre": "EL COPITAL",
+   "municipio": "MEDELLÍN DE BRAVO",
+   "situacion": "SUSPENDIDA",
+   "latitud": 18.96666667,
+   "longitud": -96.205,
+   "altitud_msnm": 14.0,
+   "emision_archivo": "06/11/2026",
+   "fuente": "CONAGUA-SMN, Base de Datos Climatológica Nacional (registro diario histórico)",
+   "unidad": "mm/día (precipitación diaria; según la convención del SMN corresponde al periodo de 24 h que termina a las 08:00, verificar)",
+   "calidad": {
+    "inicio": "1961-05-01",
+    "fin": "2017-12-31",
+    "dias_periodo": 20819,
+    "dias_con_dato": 19475,
+    "pct_dias_con_dato": 93.5,
+    "anios_completos": 49,
+    "anios_incompletos": {
+     "1961": 62,
+     "1988": 67,
+     "2000": 67,
+     "2001": 75,
+     "2005": 50,
+     "2007": 58,
+     "2010": 58,
+     "2017": 74
+    },
+    "anios_completos_normal_1991_2020": 21,
+    "valores_negativos": 0,
+    "valores_mayores_300mm": 0,
+    "maximo_diario_mm": 229.0,
+    "fecha_maximo": "2013-08-25",
+    "anios_sospechosos_excluidos": [
+     2017
+    ]
+   },
+   "climatologia": {
+    "periodo": "1991-2020",
+    "lluvia_anual_media_mm": 1337.6,
+    "meses_mas_lluviosos": [
+     "jul",
+     "sep",
+     "ago",
+     "jun"
+    ],
+    "mes_pico": "jul",
+    "meses": {
+     "ene": {
+      "mes": 1,
+      "lluvia_media_mm": 17.8,
+      "lluvia_mediana_mm": 8.5,
+      "anios_usados": 25,
+      "prob_diaria_ge_1mm": 0.0764,
+      "prob_diaria_ge_25mm": 0.0065,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 20.2,
+      "p99_dia_humedo_mm": 37.0,
+      "max_diario_mm": 40.0,
+      "nacional_normal_1991_2020_mm": 24.1,
+      "pct_lluvia_anual": 1.3
+     },
+     "feb": {
+      "mes": 2,
+      "lluvia_media_mm": 10.1,
+      "lluvia_mediana_mm": 1.0,
+      "anios_usados": 24,
+      "prob_diaria_ge_1mm": 0.0591,
+      "prob_diaria_ge_25mm": 0.0015,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 20.0,
+      "p99_dia_humedo_mm": 23.8,
+      "max_diario_mm": 25.0,
+      "nacional_normal_1991_2020_mm": 18.7,
+      "pct_lluvia_anual": 0.8
+     },
+     "mar": {
+      "mes": 3,
+      "lluvia_media_mm": 9.8,
+      "lluvia_mediana_mm": 1.0,
+      "anios_usados": 23,
+      "prob_diaria_ge_1mm": 0.0519,
+      "prob_diaria_ge_25mm": 0.0014,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 15.0,
+      "p99_dia_humedo_mm": 30.1,
+      "max_diario_mm": 35.0,
+      "nacional_normal_1991_2020_mm": 15.8,
+      "pct_lluvia_anual": 0.7
+     },
+     "abr": {
+      "mes": 4,
+      "lluvia_media_mm": 13.9,
+      "lluvia_mediana_mm": 3.5,
+      "anios_usados": 24,
+      "prob_diaria_ge_1mm": 0.0486,
+      "prob_diaria_ge_25mm": 0.0042,
+      "prob_diaria_ge_50mm": 0.0014,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.04,
+      "p90_dia_humedo_mm": 22.0,
+      "p99_dia_humedo_mm": 51.4,
+      "max_diario_mm": 54.0,
+      "nacional_normal_1991_2020_mm": 17.0,
+      "pct_lluvia_anual": 1.0
+     },
+     "may": {
+      "mes": 5,
+      "lluvia_media_mm": 47.7,
+      "lluvia_mediana_mm": 19.8,
+      "anios_usados": 24,
+      "prob_diaria_ge_1mm": 0.1238,
+      "prob_diaria_ge_25mm": 0.0175,
+      "prob_diaria_ge_50mm": 0.0067,
+      "prob_diaria_ge_100mm": 0.0013,
+      "dias_ge_50mm_por_mes": 0.21,
+      "p90_dia_humedo_mm": 30.9,
+      "p99_dia_humedo_mm": 77.3,
+      "max_diario_mm": 151.0,
+      "nacional_normal_1991_2020_mm": 40.0,
+      "pct_lluvia_anual": 3.6
+     },
+     "jun": {
+      "mes": 6,
+      "lluvia_media_mm": 197.8,
+      "lluvia_mediana_mm": 179.5,
+      "anios_usados": 24,
+      "prob_diaria_ge_1mm": 0.363,
+      "prob_diaria_ge_25mm": 0.0862,
+      "prob_diaria_ge_50mm": 0.025,
+      "prob_diaria_ge_100mm": 0.0042,
+      "dias_ge_50mm_por_mes": 0.75,
+      "p90_dia_humedo_mm": 41.0,
+      "p99_dia_humedo_mm": 97.0,
+      "max_diario_mm": 140.5,
+      "nacional_normal_1991_2020_mm": 99.8,
+      "pct_lluvia_anual": 14.8
+     },
+     "jul": {
+      "mes": 7,
+      "lluvia_media_mm": 290.0,
+      "lluvia_mediana_mm": 279.0,
+      "anios_usados": 21,
+      "prob_diaria_ge_1mm": 0.4347,
+      "prob_diaria_ge_25mm": 0.1336,
+      "prob_diaria_ge_50mm": 0.0445,
+      "prob_diaria_ge_100mm": 0.0046,
+      "dias_ge_50mm_por_mes": 1.38,
+      "p90_dia_humedo_mm": 49.8,
+      "p99_dia_humedo_mm": 92.4,
+      "max_diario_mm": 117.0,
+      "nacional_normal_1991_2020_mm": 125.9,
+      "pct_lluvia_anual": 21.7
+     },
+     "ago": {
+      "mes": 8,
+      "lluvia_media_mm": 252.7,
+      "lluvia_mediana_mm": 229.0,
+      "anios_usados": 22,
+      "prob_diaria_ge_1mm": 0.4267,
+      "prob_diaria_ge_25mm": 0.1012,
+      "prob_diaria_ge_50mm": 0.0264,
+      "prob_diaria_ge_100mm": 0.0073,
+      "dias_ge_50mm_por_mes": 0.82,
+      "p90_dia_humedo_mm": 40.0,
+      "p99_dia_humedo_mm": 100.2,
+      "max_diario_mm": 229.0,
+      "nacional_normal_1991_2020_mm": 132.3,
+      "pct_lluvia_anual": 18.9
+     },
+     "sep": {
+      "mes": 9,
+      "lluvia_media_mm": 273.8,
+      "lluvia_mediana_mm": 293.2,
+      "anios_usados": 24,
+      "prob_diaria_ge_1mm": 0.4569,
+      "prob_diaria_ge_25mm": 0.1264,
+      "prob_diaria_ge_50mm": 0.0389,
+      "prob_diaria_ge_100mm": 0.0056,
+      "dias_ge_50mm_por_mes": 1.17,
+      "p90_dia_humedo_mm": 45.1,
+      "p99_dia_humedo_mm": 97.6,
+      "max_diario_mm": 133.0,
+      "nacional_normal_1991_2020_mm": 140.4,
+      "pct_lluvia_anual": 20.5
+     },
+     "oct": {
+      "mes": 10,
+      "lluvia_media_mm": 145.5,
+      "lluvia_mediana_mm": 119.0,
+      "anios_usados": 22,
+      "prob_diaria_ge_1mm": 0.2947,
+      "prob_diaria_ge_25mm": 0.0557,
+      "prob_diaria_ge_50mm": 0.0249,
+      "prob_diaria_ge_100mm": 0.0015,
+      "dias_ge_50mm_por_mes": 0.77,
+      "p90_dia_humedo_mm": 41.0,
+      "p99_dia_humedo_mm": 82.0,
+      "max_diario_mm": 115.0,
+      "nacional_normal_1991_2020_mm": 75.5,
+      "pct_lluvia_anual": 10.9
+     },
+     "nov": {
+      "mes": 11,
+      "lluvia_media_mm": 59.3,
+      "lluvia_mediana_mm": 64.0,
+      "anios_usados": 24,
+      "prob_diaria_ge_1mm": 0.1864,
+      "prob_diaria_ge_25mm": 0.0223,
+      "prob_diaria_ge_50mm": 0.0042,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.13,
+      "p90_dia_humedo_mm": 27.1,
+      "p99_dia_humedo_mm": 68.3,
+      "max_diario_mm": 91.0,
+      "nacional_normal_1991_2020_mm": 34.5,
+      "pct_lluvia_anual": 4.4
+     },
+     "dic": {
+      "mes": 12,
+      "lluvia_media_mm": 19.2,
+      "lluvia_mediana_mm": 6.0,
+      "anios_usados": 25,
+      "prob_diaria_ge_1mm": 0.0852,
+      "prob_diaria_ge_25mm": 0.0039,
+      "prob_diaria_ge_50mm": 0.0013,
+      "prob_diaria_ge_100mm": 0.0013,
+      "dias_ge_50mm_por_mes": 0.04,
+      "p90_dia_humedo_mm": 11.0,
+      "p99_dia_humedo_mm": 82.0,
+      "max_diario_mm": 160.0,
+      "nacional_normal_1991_2020_mm": 23.5,
+      "pct_lluvia_anual": 1.4
+     }
+    }
+   },
+   "extremos": {
+    "anios_validos": 46,
+    "criterio": ">= 80 % de días en el año y en jun-oct",
+    "24h": {
+     "maximos_anuales": {
+      "1962": 75.0,
+      "1963": 58.0,
+      "1964": 121.0,
+      "1965": 90.0,
+      "1966": 75.0,
+      "1967": 113.5,
+      "1968": 94.0,
+      "1969": 153.0,
+      "1970": 95.0,
+      "1971": 178.5,
+      "1972": 112.0,
+      "1973": 107.5,
+      "1974": 200.0,
+      "1975": 93.0,
+      "1976": 115.0,
+      "1977": 118.0,
+      "1978": 125.0,
+      "1979": 65.0,
+      "1980": 170.0,
+      "1981": 148.0,
+      "1982": 90.0,
+      "1983": 86.0,
+      "1984": 135.0,
+      "1985": 106.0,
+      "1986": 117.0,
+      "1987": 90.0,
+      "1989": 83.0,
+      "1990": 80.0,
+      "1991": 160.0,
+      "1992": 82.0,
+      "1993": 80.0,
+      "1995": 90.0,
+      "1997": 50.0,
+      "1998": 115.0,
+      "1999": 98.0,
+      "2002": 105.0,
+      "2003": 130.0,
+      "2004": 54.0,
+      "2006": 117.0,
+      "2008": 103.5,
+      "2009": 85.0,
+      "2012": 151.0,
+      "2013": 229.0,
+      "2014": 68.0,
+      "2015": 80.5,
+      "2016": 100.0
+     },
+     "mediana_maximo_anual_mm": 101.8,
+     "parametros_gumbel": {
+      "loc": 91.971,
+      "escala": 28.211
+     },
+     "parametros_gev": {
+      "forma_c_scipy": -0.0276,
+      "loc": 91.552,
+      "escala": 27.957
+     },
+     "ks_gumbel_pvalor": 0.977,
+     "niveles_retorno": {
+      "2": {
+       "gumbel_mm": 102.3,
+       "gumbel_ic90_mm": [
+        95.1,
+        110.3
+       ],
+       "gev_mm": 101.9
+      },
+      "5": {
+       "gumbel_mm": 134.3,
+       "gumbel_ic90_mm": [
+        122.5,
+        146.3
+       ],
+       "gev_mm": 134.4
+      },
+      "10": {
+       "gumbel_mm": 155.5,
+       "gumbel_ic90_mm": [
+        140.5,
+        171.4
+       ],
+       "gev_mm": 156.5
+      },
+      "25": {
+       "gumbel_mm": 182.2,
+       "gumbel_ic90_mm": [
+        163.1,
+        203.1
+       ],
+       "gev_mm": 185.0
+      },
+      "50": {
+       "gumbel_mm": 202.0,
+       "gumbel_ic90_mm": [
+        179.3,
+        226.9
+       ],
+       "gev_mm": 206.7
+      },
+      "100": {
+       "gumbel_mm": 221.7,
+       "gumbel_ic90_mm": [
+        195.3,
+        250.0
+       ],
+       "gev_mm": 228.7
+      }
+     }
+    },
+    "72h": {
+     "maximos_anuales": {
+      "1962": 138.5,
+      "1963": 113.5,
+      "1964": 205.0,
+      "1965": 134.0,
+      "1966": 144.5,
+      "1967": 169.5,
+      "1968": 147.0,
+      "1969": 260.0,
+      "1970": 194.0,
+      "1971": 247.0,
+      "1972": 254.5,
+      "1973": 250.5,
+      "1974": 245.0,
+      "1975": 225.0,
+      "1976": 135.8,
+      "1977": 150.0,
+      "1978": 202.0,
+      "1979": 127.0,
+      "1980": 195.0,
+      "1981": 238.0,
+      "1982": 136.0,
+      "1983": 152.0,
+      "1984": 267.0,
+      "1985": 152.0,
+      "1986": 142.0,
+      "1987": 109.0,
+      "1989": 159.0,
+      "1990": 130.0,
+      "1991": 200.0,
+      "1992": 130.0,
+      "1993": 155.0,
+      "1995": 150.0,
+      "1997": 115.0,
+      "1998": 162.0,
+      "1999": 234.0,
+      "2002": 164.0,
+      "2003": 236.5,
+      "2004": 82.5,
+      "2006": 263.5,
+      "2008": 227.0,
+      "2009": 130.0,
+      "2012": 164.5,
+      "2013": 250.0,
+      "2014": 111.5,
+      "2015": 141.0,
+      "2016": 130.0
+     },
+     "mediana_maximo_anual_mm": 157.0,
+     "parametros_gumbel": {
+      "loc": 151.23,
+      "escala": 41.808
+     },
+     "parametros_gev": {
+      "forma_c_scipy": 0.263,
+      "loc": 158.197,
+      "escala": 47.668
+     },
+     "ks_gumbel_pvalor": 0.431,
+     "niveles_retorno": {
+      "2": {
+       "gumbel_mm": 166.6,
+       "gumbel_ic90_mm": [
+        154.7,
+        178.6
+       ],
+       "gev_mm": 174.9
+      },
+      "5": {
+       "gumbel_mm": 213.9,
+       "gumbel_ic90_mm": [
+        194.8,
+        232.3
+       ],
+       "gev_mm": 217.3
+      },
+      "10": {
+       "gumbel_mm": 245.3,
+       "gumbel_ic90_mm": [
+        220.8,
+        268.3
+       ],
+       "gev_mm": 239.2
+      },
+      "25": {
+       "gumbel_mm": 285.0,
+       "gumbel_ic90_mm": [
+        251.9,
+        314.0
+       ],
+       "gev_mm": 261.3
+      },
+      "50": {
+       "gumbel_mm": 314.4,
+       "gumbel_ic90_mm": [
+        276.0,
+        348.1
+       ],
+       "gev_mm": 274.5
+      },
+      "100": {
+       "gumbel_mm": 343.6,
+       "gumbel_ic90_mm": [
+        299.2,
+        381.2
+       ],
+       "gev_mm": 285.4
+      }
+     }
+    },
+    "nota": "Gumbel es el ajuste principal (2 parámetros, más estable con ~50 años); GEV se reporta como contraste. Los niveles de 50 y 100 años extrapolan más allá del registro: usar su intervalo de confianza."
+   },
+   "apta_para_extremos": true
+  },
+  "30192": {
+   "estacion": "30192",
+   "nombre": "VERACRUZ (OBS)",
+   "municipio": "VERACRUZ",
+   "situacion": "SUSPENDIDA",
+   "latitud": 19.16111111,
+   "longitud": -96.13694444,
+   "altitud_msnm": 19.5,
+   "emision_archivo": "06/11/2026",
+   "fuente": "CONAGUA-SMN, Base de Datos Climatológica Nacional (registro diario histórico)",
+   "unidad": "mm/día (precipitación diaria; según la convención del SMN corresponde al periodo de 24 h que termina a las 08:00, verificar)",
+   "calidad": {
+    "inicio": "1951-01-01",
+    "fin": "2022-03-24",
+    "dias_periodo": 26298,
+    "dias_con_dato": 19370,
+    "pct_dias_con_dato": 73.7,
+    "anios_completos": 51,
+    "anios_incompletos": {
+     "1974": 0,
+     "1975": 0,
+     "1976": 0,
+     "1977": 0,
+     "1978": 0,
+     "1979": 0,
+     "1980": 0,
+     "1986": 73,
+     "1988": 58,
+     "1989": 42,
+     "1990": 25,
+     "2006": 67,
+     "2007": 8,
+     "2008": 0,
+     "2009": 0,
+     "2010": 0,
+     "2011": 0,
+     "2012": 0,
+     "2013": 0,
+     "2018": 48,
+     "2022": 23
+    },
+    "anios_completos_normal_1991_2020": 21,
+    "valores_negativos": 0,
+    "valores_mayores_300mm": 0,
+    "maximo_diario_mm": 222.6,
+    "fecha_maximo": "2020-06-11",
+    "anios_sospechosos_excluidos": [
+     1981,
+     1982,
+     1983,
+     1984,
+     1985,
+     1986,
+     1987,
+     1988,
+     1989,
+     1990,
+     1991,
+     1992,
+     1993,
+     1994,
+     1995,
+     1996,
+     1997,
+     1998,
+     1999,
+     2000,
+     2001,
+     2002,
+     2003,
+     2004,
+     2005,
+     2006
+    ]
+   },
+   "climatologia": {
+    "periodo": "1951-2022 (años válidos del registro; la normal 1991-2020 tiene < 15 años válidos)",
+    "lluvia_anual_media_mm": 1617.9,
+    "meses_mas_lluviosos": [
+     "jul",
+     "sep",
+     "ago",
+     "jun"
+    ],
+    "mes_pico": "jul",
+    "meses": {
+     "ene": {
+      "mes": 1,
+      "lluvia_media_mm": 23.4,
+      "lluvia_mediana_mm": 17.8,
+      "anios_usados": 32,
+      "prob_diaria_ge_1mm": 0.1018,
+      "prob_diaria_ge_25mm": 0.006,
+      "prob_diaria_ge_50mm": 0.001,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.03,
+      "p90_dia_humedo_mm": 14.6,
+      "p99_dia_humedo_mm": 44.7,
+      "max_diario_mm": 58.5,
+      "nacional_normal_1991_2020_mm": 24.1,
+      "pct_lluvia_anual": 1.4
+     },
+     "feb": {
+      "mes": 2,
+      "lluvia_media_mm": 16.0,
+      "lluvia_mediana_mm": 9.2,
+      "anios_usados": 32,
+      "prob_diaria_ge_1mm": 0.0785,
+      "prob_diaria_ge_25mm": 0.0033,
+      "prob_diaria_ge_50mm": 0.0011,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.03,
+      "p90_dia_humedo_mm": 15.2,
+      "p99_dia_humedo_mm": 43.3,
+      "max_diario_mm": 75.7,
+      "nacional_normal_1991_2020_mm": 18.7,
+      "pct_lluvia_anual": 1.0
+     },
+     "mar": {
+      "mes": 3,
+      "lluvia_media_mm": 18.7,
+      "lluvia_mediana_mm": 11.1,
+      "anios_usados": 30,
+      "prob_diaria_ge_1mm": 0.0702,
+      "prob_diaria_ge_25mm": 0.0052,
+      "prob_diaria_ge_50mm": 0.0021,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.06,
+      "p90_dia_humedo_mm": 21.2,
+      "p99_dia_humedo_mm": 52.8,
+      "max_diario_mm": 56.0,
+      "nacional_normal_1991_2020_mm": 15.8,
+      "pct_lluvia_anual": 1.2
+     },
+     "abr": {
+      "mes": 4,
+      "lluvia_media_mm": 16.8,
+      "lluvia_mediana_mm": 5.3,
+      "anios_usados": 29,
+      "prob_diaria_ge_1mm": 0.0529,
+      "prob_diaria_ge_25mm": 0.0057,
+      "prob_diaria_ge_50mm": 0.0023,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.07,
+      "p90_dia_humedo_mm": 25.9,
+      "p99_dia_humedo_mm": 58.0,
+      "max_diario_mm": 60.4,
+      "nacional_normal_1991_2020_mm": 17.0,
+      "pct_lluvia_anual": 1.0
+     },
+     "may": {
+      "mes": 5,
+      "lluvia_media_mm": 57.4,
+      "lluvia_mediana_mm": 56.5,
+      "anios_usados": 31,
+      "prob_diaria_ge_1mm": 0.1249,
+      "prob_diaria_ge_25mm": 0.0239,
+      "prob_diaria_ge_50mm": 0.0073,
+      "prob_diaria_ge_100mm": 0.001,
+      "dias_ge_50mm_por_mes": 0.23,
+      "p90_dia_humedo_mm": 38.5,
+      "p99_dia_humedo_mm": 83.1,
+      "max_diario_mm": 106.2,
+      "nacional_normal_1991_2020_mm": 40.0,
+      "pct_lluvia_anual": 3.5
+     },
+     "jun": {
+      "mes": 6,
+      "lluvia_media_mm": 239.9,
+      "lluvia_mediana_mm": 226.0,
+      "anios_usados": 29,
+      "prob_diaria_ge_1mm": 0.4015,
+      "prob_diaria_ge_25mm": 0.1088,
+      "prob_diaria_ge_50mm": 0.0479,
+      "prob_diaria_ge_100mm": 0.0109,
+      "dias_ge_50mm_por_mes": 1.44,
+      "p90_dia_humedo_mm": 53.7,
+      "p99_dia_humedo_mm": 119.7,
+      "max_diario_mm": 222.6,
+      "nacional_normal_1991_2020_mm": 99.8,
+      "pct_lluvia_anual": 14.8
+     },
+     "jul": {
+      "mes": 7,
+      "lluvia_media_mm": 362.7,
+      "lluvia_mediana_mm": 326.8,
+      "anios_usados": 31,
+      "prob_diaria_ge_1mm": 0.5234,
+      "prob_diaria_ge_25mm": 0.1592,
+      "prob_diaria_ge_50mm": 0.0708,
+      "prob_diaria_ge_100mm": 0.0094,
+      "dias_ge_50mm_por_mes": 2.19,
+      "p90_dia_humedo_mm": 56.6,
+      "p99_dia_humedo_mm": 121.3,
+      "max_diario_mm": 189.9,
+      "nacional_normal_1991_2020_mm": 125.9,
+      "pct_lluvia_anual": 22.4
+     },
+     "ago": {
+      "mes": 8,
+      "lluvia_media_mm": 297.8,
+      "lluvia_mediana_mm": 279.9,
+      "anios_usados": 29,
+      "prob_diaria_ge_1mm": 0.4783,
+      "prob_diaria_ge_25mm": 0.1313,
+      "prob_diaria_ge_50mm": 0.0456,
+      "prob_diaria_ge_100mm": 0.0067,
+      "dias_ge_50mm_por_mes": 1.41,
+      "p90_dia_humedo_mm": 48.6,
+      "p99_dia_humedo_mm": 105.5,
+      "max_diario_mm": 130.0,
+      "nacional_normal_1991_2020_mm": 132.3,
+      "pct_lluvia_anual": 18.4
+     },
+     "sep": {
+      "mes": 9,
+      "lluvia_media_mm": 319.9,
+      "lluvia_mediana_mm": 283.6,
+      "anios_usados": 29,
+      "prob_diaria_ge_1mm": 0.5034,
+      "prob_diaria_ge_25mm": 0.1437,
+      "prob_diaria_ge_50mm": 0.0529,
+      "prob_diaria_ge_100mm": 0.0069,
+      "dias_ge_50mm_por_mes": 1.59,
+      "p90_dia_humedo_mm": 50.8,
+      "p99_dia_humedo_mm": 106.3,
+      "max_diario_mm": 129.0,
+      "nacional_normal_1991_2020_mm": 140.4,
+      "pct_lluvia_anual": 19.8
+     },
+     "oct": {
+      "mes": 10,
+      "lluvia_media_mm": 170.1,
+      "lluvia_mediana_mm": 155.0,
+      "anios_usados": 30,
+      "prob_diaria_ge_1mm": 0.2989,
+      "prob_diaria_ge_25mm": 0.0656,
+      "prob_diaria_ge_50mm": 0.0258,
+      "prob_diaria_ge_100mm": 0.0054,
+      "dias_ge_50mm_por_mes": 0.8,
+      "p90_dia_humedo_mm": 44.0,
+      "p99_dia_humedo_mm": 132.0,
+      "max_diario_mm": 155.3,
+      "nacional_normal_1991_2020_mm": 75.5,
+      "pct_lluvia_anual": 10.5
+     },
+     "nov": {
+      "mes": 11,
+      "lluvia_media_mm": 70.1,
+      "lluvia_mediana_mm": 58.8,
+      "anios_usados": 30,
+      "prob_diaria_ge_1mm": 0.1689,
+      "prob_diaria_ge_25mm": 0.0267,
+      "prob_diaria_ge_50mm": 0.0111,
+      "prob_diaria_ge_100mm": 0.0011,
+      "dias_ge_50mm_por_mes": 0.33,
+      "p90_dia_humedo_mm": 31.6,
+      "p99_dia_humedo_mm": 85.7,
+      "max_diario_mm": 108.5,
+      "nacional_normal_1991_2020_mm": 34.5,
+      "pct_lluvia_anual": 4.3
+     },
+     "dic": {
+      "mes": 12,
+      "lluvia_media_mm": 25.1,
+      "lluvia_mediana_mm": 16.7,
+      "anios_usados": 29,
+      "prob_diaria_ge_1mm": 0.1023,
+      "prob_diaria_ge_25mm": 0.0078,
+      "prob_diaria_ge_50mm": 0.0011,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.03,
+      "p90_dia_humedo_mm": 16.8,
+      "p99_dia_humedo_mm": 52.3,
+      "max_diario_mm": 96.5,
+      "nacional_normal_1991_2020_mm": 23.5,
+      "pct_lluvia_anual": 1.6
+     }
+    }
+   },
+   "extremos": {
+    "anios_validos": 29,
+    "criterio": ">= 80 % de días en el año y en jun-oct",
+    "24h": {
+     "maximos_anuales": {
+      "1951": 85.1,
+      "1952": 89.3,
+      "1953": 108.4,
+      "1954": 139.6,
+      "1955": 91.3,
+      "1956": 96.5,
+      "1957": 99.2,
+      "1958": 129.7,
+      "1959": 80.8,
+      "1960": 189.9,
+      "1961": 189.6,
+      "1962": 155.3,
+      "1963": 88.1,
+      "1964": 102.2,
+      "1965": 81.4,
+      "1966": 88.7,
+      "1967": 75.2,
+      "1968": 95.7,
+      "1969": 171.4,
+      "1970": 129.0,
+      "1971": 116.1,
+      "1972": 150.9,
+      "2014": 205.2,
+      "2015": 108.5,
+      "2016": 101.6,
+      "2017": 147.9,
+      "2019": 83.5,
+      "2020": 222.6,
+      "2021": 90.2
+     },
+     "mediana_maximo_anual_mm": 102.2,
+     "parametros_gumbel": {
+      "loc": 103.071,
+      "escala": 28.019
+     },
+     "parametros_gev": {
+      "forma_c_scipy": -0.4883,
+      "loc": 96.845,
+      "escala": 20.822
+     },
+     "ks_gumbel_pvalor": 0.399,
+     "niveles_retorno": {
+      "2": {
+       "gumbel_mm": 113.3,
+       "gumbel_ic90_mm": [
+        103.7,
+        125.5
+       ],
+       "gev_mm": 105.2
+      },
+      "5": {
+       "gumbel_mm": 145.1,
+       "gumbel_ic90_mm": [
+        127.7,
+        165.1
+       ],
+       "gev_mm": 142.9
+      },
+      "10": {
+       "gumbel_mm": 166.1,
+       "gumbel_ic90_mm": [
+        143.0,
+        192.1
+       ],
+       "gev_mm": 182.2
+      },
+      "25": {
+       "gumbel_mm": 192.7,
+       "gumbel_ic90_mm": [
+        163.0,
+        225.0
+       ],
+       "gev_mm": 257.5
+      },
+      "50": {
+       "gumbel_mm": 212.4,
+       "gumbel_ic90_mm": [
+        177.7,
+        249.4
+       ],
+       "gev_mm": 340.8
+      },
+      "100": {
+       "gumbel_mm": 232.0,
+       "gumbel_ic90_mm": [
+        192.4,
+        273.9
+       ],
+       "gev_mm": 457.2
+      }
+     }
+    },
+    "72h": {
+     "maximos_anuales": {
+      "1951": 102.9,
+      "1952": 204.9,
+      "1953": 148.6,
+      "1954": 316.8,
+      "1955": 208.8,
+      "1956": 96.5,
+      "1957": 162.9,
+      "1958": 280.0,
+      "1959": 135.8,
+      "1960": 255.3,
+      "1961": 212.4,
+      "1962": 206.9,
+      "1963": 180.5,
+      "1964": 198.5,
+      "1965": 176.3,
+      "1966": 139.1,
+      "1967": 165.2,
+      "1968": 152.6,
+      "1969": 276.8,
+      "1970": 153.7,
+      "1971": 228.4,
+      "1972": 319.2,
+      "2014": 236.4,
+      "2015": 125.9,
+      "2016": 174.0,
+      "2017": 231.3,
+      "2019": 118.5,
+      "2020": 228.1,
+      "2021": 155.4
+     },
+     "mediana_maximo_anual_mm": 180.5,
+     "parametros_gumbel": {
+      "loc": 164.955,
+      "escala": 49.349
+     },
+     "parametros_gev": {
+      "forma_c_scipy": 0.1118,
+      "loc": 167.957,
+      "escala": 51.166
+     },
+     "ks_gumbel_pvalor": 0.96,
+     "niveles_retorno": {
+      "2": {
+       "gumbel_mm": 183.0,
+       "gumbel_ic90_mm": [
+        168.5,
+        202.2
+       ],
+       "gev_mm": 186.3
+      },
+      "5": {
+       "gumbel_mm": 239.0,
+       "gumbel_ic90_mm": [
+        213.8,
+        267.5
+       ],
+       "gev_mm": 238.6
+      },
+      "10": {
+       "gumbel_mm": 276.0,
+       "gumbel_ic90_mm": [
+        243.9,
+        310.1
+       ],
+       "gev_mm": 269.8
+      },
+      "25": {
+       "gumbel_mm": 322.8,
+       "gumbel_ic90_mm": [
+        280.9,
+        367.7
+       ],
+       "gev_mm": 305.5
+      },
+      "50": {
+       "gumbel_mm": 357.5,
+       "gumbel_ic90_mm": [
+        308.0,
+        407.7
+       ],
+       "gev_mm": 329.7
+      },
+      "100": {
+       "gumbel_mm": 392.0,
+       "gumbel_ic90_mm": [
+        336.1,
+        449.0
+       ],
+       "gev_mm": 352.0
+      }
+     }
+    },
+    "nota": "Gumbel es el ajuste principal (2 parámetros, más estable con ~50 años); GEV se reporta como contraste. Los niveles de 50 y 100 años extrapolan más allá del registro: usar su intervalo de confianza."
+   },
+   "apta_para_extremos": true
+  },
+  "30389": {
+   "estacion": "30389",
+   "nombre": "SAN JOSÉ NOVILLERO",
+   "municipio": "BOCA DEL RÍO",
+   "situacion": "SUSPENDIDA",
+   "latitud": 19.08583333,
+   "longitud": -96.14722222,
+   "altitud_msnm": 3.0,
+   "emision_archivo": "06/11/2026",
+   "fuente": "CONAGUA-SMN, Base de Datos Climatológica Nacional (registro diario histórico)",
+   "unidad": "mm/día (precipitación diaria; según la convención del SMN corresponde al periodo de 24 h que termina a las 08:00, verificar)",
+   "calidad": {
+    "inicio": "2019-03-27",
+    "fin": "2023-07-06",
+    "dias_periodo": 1826,
+    "dias_con_dato": 1335,
+    "pct_dias_con_dato": 73.1,
+    "anios_completos": 2,
+    "anios_incompletos": {
+     "2019": 76,
+     "2021": 55,
+     "2023": 40
+    },
+    "anios_completos_normal_1991_2020": 1,
+    "valores_negativos": 0,
+    "valores_mayores_300mm": 0,
+    "maximo_diario_mm": 67.1,
+    "fecha_maximo": "2022-09-19",
+    "anios_sospechosos_excluidos": []
+   },
+   "climatologia": {
+    "periodo": "2019-2023 (años válidos del registro; la normal 1991-2020 tiene < 15 años válidos)",
+    "lluvia_anual_media_mm": 543.0,
+    "meses_mas_lluviosos": [
+     "jun",
+     "jul",
+     "oct",
+     "sep"
+    ],
+    "mes_pico": "jun",
+    "meses": {
+     "ene": {
+      "mes": 1,
+      "lluvia_media_mm": 22.1,
+      "lluvia_mediana_mm": 18.1,
+      "anios_usados": 4,
+      "prob_diaria_ge_1mm": 0.121,
+      "prob_diaria_ge_25mm": 0.0081,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 9.5,
+      "p99_dia_humedo_mm": 31.7,
+      "max_diario_mm": 35.0,
+      "nacional_normal_1991_2020_mm": 24.1,
+      "pct_lluvia_anual": 4.1
+     },
+     "feb": {
+      "mes": 2,
+      "lluvia_media_mm": 3.1,
+      "lluvia_mediana_mm": 2.9,
+      "anios_usados": 3,
+      "prob_diaria_ge_1mm": 0.055,
+      "prob_diaria_ge_25mm": 0.0,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 6.8,
+      "p99_dia_humedo_mm": 10.3,
+      "max_diario_mm": 10.7,
+      "nacional_normal_1991_2020_mm": 18.7,
+      "pct_lluvia_anual": 0.6
+     },
+     "mar": {
+      "mes": 3,
+      "lluvia_media_mm": 4.1,
+      "lluvia_mediana_mm": 3.8,
+      "anios_usados": 4,
+      "prob_diaria_ge_1mm": 0.048,
+      "prob_diaria_ge_25mm": 0.0,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 3.9,
+      "p99_dia_humedo_mm": 4.1,
+      "max_diario_mm": 4.1,
+      "nacional_normal_1991_2020_mm": 15.8,
+      "pct_lluvia_anual": 0.8
+     },
+     "abr": {
+      "mes": 4,
+      "lluvia_media_mm": 1.0,
+      "lluvia_mediana_mm": 1.1,
+      "anios_usados": 3,
+      "prob_diaria_ge_1mm": 0.0217,
+      "prob_diaria_ge_25mm": 0.0,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 1.4,
+      "p99_dia_humedo_mm": 1.5,
+      "max_diario_mm": 1.5,
+      "nacional_normal_1991_2020_mm": 17.0,
+      "pct_lluvia_anual": 0.2
+     },
+     "may": {
+      "mes": 5,
+      "lluvia_media_mm": 36.1,
+      "lluvia_mediana_mm": 22.2,
+      "anios_usados": 3,
+      "prob_diaria_ge_1mm": 0.1391,
+      "prob_diaria_ge_25mm": 0.0087,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 13.3,
+      "p99_dia_humedo_mm": 34.0,
+      "max_diario_mm": 37.0,
+      "nacional_normal_1991_2020_mm": 40.0,
+      "pct_lluvia_anual": 6.6
+     },
+     "jun": {
+      "mes": 6,
+      "lluvia_media_mm": 129.5,
+      "lluvia_mediana_mm": 86.0,
+      "anios_usados": 4,
+      "prob_diaria_ge_1mm": 0.375,
+      "prob_diaria_ge_25mm": 0.05,
+      "prob_diaria_ge_50mm": 0.0083,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.25,
+      "p90_dia_humedo_mm": 27.2,
+      "p99_dia_humedo_mm": 47.9,
+      "max_diario_mm": 51.2,
+      "nacional_normal_1991_2020_mm": 99.8,
+      "pct_lluvia_anual": 23.8
+     },
+     "jul": {
+      "mes": 7,
+      "lluvia_media_mm": 112.6,
+      "lluvia_mediana_mm": 81.8,
+      "anios_usados": 3,
+      "prob_diaria_ge_1mm": 0.2959,
+      "prob_diaria_ge_25mm": 0.0612,
+      "prob_diaria_ge_50mm": 0.0102,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.32,
+      "p90_dia_humedo_mm": 33.8,
+      "p99_dia_humedo_mm": 49.3,
+      "max_diario_mm": 51.8,
+      "nacional_normal_1991_2020_mm": 125.9,
+      "pct_lluvia_anual": 20.7
+     },
+     "ago": {
+      "mes": 8,
+      "lluvia_media_mm": 57.8,
+      "lluvia_mediana_mm": 57.8,
+      "anios_usados": 2,
+      "prob_diaria_ge_1mm": 0.3523,
+      "prob_diaria_ge_25mm": 0.0227,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 17.1,
+      "p99_dia_humedo_mm": 35.9,
+      "max_diario_mm": 39.7,
+      "nacional_normal_1991_2020_mm": 132.3,
+      "pct_lluvia_anual": 10.6
+     },
+     "sep": {
+      "mes": 9,
+      "lluvia_media_mm": 66.8,
+      "lluvia_mediana_mm": 66.8,
+      "anios_usados": 2,
+      "prob_diaria_ge_1mm": 0.3962,
+      "prob_diaria_ge_25mm": 0.0472,
+      "prob_diaria_ge_50mm": 0.0377,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 1.13,
+      "p90_dia_humedo_mm": 41.5,
+      "p99_dia_humedo_mm": 65.5,
+      "max_diario_mm": 67.1,
+      "nacional_normal_1991_2020_mm": 140.4,
+      "pct_lluvia_anual": 12.3
+     },
+     "oct": {
+      "mes": 10,
+      "lluvia_media_mm": 70.6,
+      "lluvia_mediana_mm": 70.3,
+      "anios_usados": 4,
+      "prob_diaria_ge_1mm": 0.2114,
+      "prob_diaria_ge_25mm": 0.0325,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 27.6,
+      "p99_dia_humedo_mm": 31.6,
+      "max_diario_mm": 32.0,
+      "nacional_normal_1991_2020_mm": 75.5,
+      "pct_lluvia_anual": 13.0
+     },
+     "nov": {
+      "mes": 11,
+      "lluvia_media_mm": 35.7,
+      "lluvia_mediana_mm": 13.2,
+      "anios_usados": 3,
+      "prob_diaria_ge_1mm": 0.2072,
+      "prob_diaria_ge_25mm": 0.027,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 23.4,
+      "p99_dia_humedo_mm": 38.8,
+      "max_diario_mm": 41.3,
+      "nacional_normal_1991_2020_mm": 34.5,
+      "pct_lluvia_anual": 6.6
+     },
+     "dic": {
+      "mes": 12,
+      "lluvia_media_mm": 3.6,
+      "lluvia_mediana_mm": 1.4,
+      "anios_usados": 4,
+      "prob_diaria_ge_1mm": 0.0323,
+      "prob_diaria_ge_25mm": 0.0,
+      "prob_diaria_ge_50mm": 0.0,
+      "prob_diaria_ge_100mm": 0.0,
+      "dias_ge_50mm_por_mes": 0.0,
+      "p90_dia_humedo_mm": 7.5,
+      "p99_dia_humedo_mm": 10.0,
+      "max_diario_mm": 10.3,
+      "nacional_normal_1991_2020_mm": 23.5,
+      "pct_lluvia_anual": 0.7
+     }
+    }
+   },
+   "extremos": {
+    "anios_validos": 2,
+    "criterio": ">= 80 % de días en el año y en jun-oct",
+    "motivo_null": "Solo 2 años válidos (mínimo 20)"
+   },
+   "apta_para_extremos": false
+  }
+ },
+ "contraste_antecedentes": [
+  {
+   "evento": "karl_2010",
+   "nombre": "Huracán Karl",
+   "tipo": "evento_observado",
+   "fecha": "2010-09",
+   "estacion": "30048",
+   "ventana": "2010-09-01 a 2010-09-30",
+   "dias_con_dato": 0,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "karl_2010",
+   "nombre": "Huracán Karl",
+   "tipo": "evento_observado",
+   "fecha": "2010-09",
+   "estacion": "30192",
+   "ventana": "2010-09-01 a 2010-09-30",
+   "dias_con_dato": 0,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "dt_90l_2014",
+   "nombre": "Depresión tropical (disturbio 90L)",
+   "tipo": "evento_observado",
+   "fecha": "2014-06",
+   "estacion": "30048",
+   "ventana": "2014-06-01 a 2014-06-30",
+   "dias_con_dato": 30,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "max_24h_mm": 31.0,
+   "fecha_max_24h": "2014-06-20",
+   "max_72h_mm": 63.5,
+   "24h_percentil_en_el_mes": 92.37,
+   "24h_periodo_retorno_anual_anios": 1.0,
+   "24h_categoria": "alta",
+   "72h_periodo_retorno_anual_anios": 1.0,
+   "72h_categoria": "habitual"
+  },
+  {
+   "evento": "dt_90l_2014",
+   "nombre": "Depresión tropical (disturbio 90L)",
+   "tipo": "evento_observado",
+   "fecha": "2014-06",
+   "estacion": "30192",
+   "ventana": "2014-06-01 a 2014-06-30",
+   "dias_con_dato": 26,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "max_24h_mm": 205.2,
+   "fecha_max_24h": "2014-06-06",
+   "max_72h_mm": 236.4,
+   "24h_percentil_en_el_mes": 99.78,
+   "24h_periodo_retorno_anual_anios": 38.8,
+   "24h_categoria": "extraordinaria",
+   "72h_periodo_retorno_anual_anios": 4.8,
+   "72h_categoria": "muy alta"
+  },
+  {
+   "evento": "earl_2016",
+   "nombre": "Tormenta tropical Earl",
+   "tipo": "evento_observado",
+   "fecha": "2016-08",
+   "estacion": "30048",
+   "ventana": "2016-08-01 a 2016-08-31",
+   "dias_con_dato": 31,
+   "dias_ventana": 31,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "max_24h_mm": 100.0,
+   "fecha_max_24h": "2016-08-22",
+   "max_72h_mm": 130.0,
+   "24h_percentil_en_el_mes": 99.19,
+   "24h_periodo_retorno_anual_anios": 1.9,
+   "24h_categoria": "muy alta",
+   "72h_periodo_retorno_anual_anios": 1.2,
+   "72h_categoria": "alta"
+  },
+  {
+   "evento": "earl_2016",
+   "nombre": "Tormenta tropical Earl",
+   "tipo": "evento_observado",
+   "fecha": "2016-08",
+   "estacion": "30192",
+   "ventana": "2016-08-01 a 2016-08-31",
+   "dias_con_dato": 31,
+   "dias_ventana": 31,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "max_24h_mm": 101.1,
+   "fecha_max_24h": "2016-08-05",
+   "max_72h_mm": 146.8,
+   "24h_percentil_en_el_mes": 99.33,
+   "24h_periodo_retorno_anual_anios": 1.5,
+   "24h_categoria": "muy alta",
+   "72h_periodo_retorno_anual_anios": 1.3,
+   "72h_categoria": "alta"
+  },
+  {
+   "evento": "katia_2017_alerta",
+   "nombre": "Alerta máxima por el huracán Katia",
+   "tipo": "alerta_preventiva",
+   "fecha": "2017-09",
+   "estacion": "30048",
+   "ventana": "2017-09-01 a 2017-09-30",
+   "dias_con_dato": 0,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "katia_2017_alerta",
+   "nombre": "Alerta máxima por el huracán Katia",
+   "tipo": "alerta_preventiva",
+   "fecha": "2017-09",
+   "estacion": "30192",
+   "ventana": "2017-09-01 a 2017-09-30",
+   "dias_con_dato": 30,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "max_24h_mm": 122.4,
+   "fecha_max_24h": "2017-09-23",
+   "max_72h_mm": 148.10000000000002,
+   "24h_percentil_en_el_mes": 99.66,
+   "24h_periodo_retorno_anual_anios": 2.5,
+   "24h_categoria": "muy alta",
+   "72h_periodo_retorno_anual_anios": 1.3,
+   "72h_categoria": "alta"
+  },
+  {
+   "evento": "atlas_municipal_veracruz_2025",
+   "nombre": "Atlas de Riesgo municipal de Veracruz: 36 colonias en riesgo de inundación",
+   "tipo": "riesgo_identificado",
+   "fecha": "2025-06",
+   "estacion": "30048",
+   "ventana": "2025-06-01 a 2025-06-30",
+   "dias_con_dato": 0,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "atlas_municipal_veracruz_2025",
+   "nombre": "Atlas de Riesgo municipal de Veracruz: 36 colonias en riesgo de inundación",
+   "tipo": "riesgo_identificado",
+   "fecha": "2025-06",
+   "estacion": "30192",
+   "ventana": "2025-06-01 a 2025-06-30",
+   "dias_con_dato": 0,
+   "dias_ventana": 30,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "onda_tropical_20_2025",
+   "nombre": "Onda tropical 20",
+   "tipo": "evento_observado",
+   "fecha": "2025-08",
+   "estacion": "30048",
+   "ventana": "2025-08-01 a 2025-08-31",
+   "dias_con_dato": 0,
+   "dias_ventana": 31,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "onda_tropical_20_2025",
+   "nombre": "Onda tropical 20",
+   "tipo": "evento_observado",
+   "fecha": "2025-08",
+   "estacion": "30192",
+   "ventana": "2025-08-01 a 2025-08-31",
+   "dias_con_dato": 0,
+   "dias_ventana": 31,
+   "advertencia": "Fecha del evento con precisión de mes: el máximo del mes puede corresponder a otro día y no al evento",
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "frente_frio_16_2025",
+   "nombre": "Frente frío 16",
+   "tipo": "evento_observado",
+   "fecha": "2025-11-28",
+   "estacion": "30048",
+   "ventana": "2025-11-26 a 2025-11-30",
+   "dias_con_dato": 0,
+   "dias_ventana": 5,
+   "advertencia": null,
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "frente_frio_16_2025",
+   "nombre": "Frente frío 16",
+   "tipo": "evento_observado",
+   "fecha": "2025-11-28",
+   "estacion": "30192",
+   "ventana": "2025-11-26 a 2025-11-30",
+   "dias_con_dato": 0,
+   "dias_ventana": 5,
+   "advertencia": null,
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "lluvias_2026_06_01",
+   "nombre": "Lluvias del 1 de junio de 2026",
+   "tipo": "evento_observado",
+   "fecha": "2026-06-01",
+   "estacion": "30048",
+   "ventana": "2026-05-30 a 2026-06-03",
+   "dias_con_dato": 0,
+   "dias_ventana": 5,
+   "advertencia": null,
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "lluvias_2026_06_01",
+   "nombre": "Lluvias del 1 de junio de 2026",
+   "tipo": "evento_observado",
+   "fecha": "2026-06-01",
+   "estacion": "30192",
+   "ventana": "2026-05-30 a 2026-06-03",
+   "dias_con_dato": 0,
+   "dias_ventana": 5,
+   "advertencia": null,
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "tormenta_2026_10_02",
+   "nombre": "Tormenta eléctrica del 2 de octubre de 2026",
+   "tipo": "evento_observado",
+   "fecha": "2026-10-02",
+   "estacion": "30048",
+   "ventana": "2026-09-30 a 2026-10-04",
+   "dias_con_dato": 0,
+   "dias_ventana": 5,
+   "advertencia": null,
+   "resultado": "sin datos suficientes en la estación"
+  },
+  {
+   "evento": "tormenta_2026_10_02",
+   "nombre": "Tormenta eléctrica del 2 de octubre de 2026",
+   "tipo": "evento_observado",
+   "fecha": "2026-10-02",
+   "estacion": "30192",
+   "ventana": "2026-09-30 a 2026-10-04",
+   "dias_con_dato": 0,
+   "dias_ventana": 5,
+   "advertencia": null,
+   "resultado": "sin datos suficientes en la estación"
+  }
+ ],
+ "dias_extremos_sin_antecedente": [
+  {
+   "estacion": "30048",
+   "fecha": "2013-08-25",
+   "mm_24h": 229.0
+  },
+  {
+   "estacion": "30192",
+   "fecha": "2020-06-11",
+   "mm_24h": 222.6
+  },
+  {
+   "estacion": "30048",
+   "fecha": "1974-09-20",
+   "mm_24h": 200.0
+  },
+  {
+   "estacion": "30192",
+   "fecha": "1960-07-16",
+   "mm_24h": 189.9
+  },
+  {
+   "estacion": "30192",
+   "fecha": "1961-07-07",
+   "mm_24h": 189.6
+  },
+  {
+   "estacion": "30048",
+   "fecha": "1971-07-18",
+   "mm_24h": 178.5
+  },
+  {
+   "estacion": "30048",
+   "fecha": "1971-08-25",
+   "mm_24h": 175.5
+  },
+  {
+   "estacion": "30192",
+   "fecha": "1969-07-02",
+   "mm_24h": 171.4
+  },
+  {
+   "estacion": "30048",
+   "fecha": "1980-05-26",
+   "mm_24h": 170.0
+  },
+  {
+   "estacion": "30048",
+   "fecha": "1991-12-15",
+   "mm_24h": 160.0
+  }
+ ]
+}

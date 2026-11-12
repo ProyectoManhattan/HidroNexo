@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import pandas as pd
 
-from . import antecedentes, carga, config, geoespacial, hidromet, indicadores, perfiles
+from . import antecedentes, carga, climatologia, config, geoespacial, hidromet, indicadores, perfiles
 from .calidad import Bitacora
 
 
@@ -27,6 +27,15 @@ def ejecutar() -> dict:
     hm = hidromet.Hidromet(cat, prec, niv, bit)
     hid = {r.id_poligono: hm.para_poligono(r.id_poligono, metrico.iloc[i]) for i, r in g.iterrows()}
     ant = antecedentes.asignar(set(g["id_poligono"]), bit)
+    clim = climatologia.modelo()
+    if clim is None:
+        bit.registrar("fuente_faltante", "Sin series diarias del SMN en data/fuentes/smn/: no hay climatología")
+    else:
+        for est, e in clim["estaciones"].items():
+            if e["calidad"]["anios_sospechosos_excluidos"]:
+                bit.registrar("inhomogeneidad", f"Estación SMN {est} ({e['nombre']}): años {e['calidad']['anios_sospechosos_excluidos']} con posible subregistro frente a la estación vecina; excluidos de las estadísticas")
+            if not e["apta_para_extremos"]:
+                bit.registrar("serie_corta", f"Estación SMN {est} ({e['nombre']}): {e['extremos']['anios_validos']} años válidos; no apta para periodos de retorno")
 
     # Controles de consistencia física (se marcan, no se eliminan)
     for pid, d in geo.items():
@@ -52,12 +61,13 @@ def ejecutar() -> dict:
     ind = {dim: indicadores.indice_preliminar(norm, dim) for dim in ("susceptibilidad",)}
 
     lista = []
-    for _, r in g.iterrows():
+    for i, r in g.iterrows():
         pid = r.id_poligono
         indices = {dim: {k: (None if pd.isna(v) else (int(v) if k == "n_variables" else v)) for k, v in t.loc[pid].items()}
                    for dim, t in ind.items()}
         ant_pid = antecedentes.resumen_poligono(ant["por_cp"].get(pid, []))
-        lista.append(perfiles.construir(r, ident[pid], geo[pid], costa.get(pid), hid[pid], norm.loc[pid].to_dict(), indices, bit, ant_pid))
+        clim_pid = climatologia.resumen_para_poligono(clim, metrico.iloc[i]) if clim else {"estacion_referencia": None}
+        lista.append(perfiles.construir(r, ident[pid], geo[pid], costa.get(pid), hid[pid], norm.loc[pid].to_dict(), indices, bit, ant_pid, clim_pid))
 
     fuentes = {k: dict(v) for k, v in config.FUENTES_DOC.items()}
     fuentes["dem"]["teselas"] = terreno.tiles
@@ -72,4 +82,4 @@ def ejecutar() -> dict:
     fuentes["conagua_nivel"]["periodo"] = [niv["fecha"].min().isoformat(), niv["fecha"].max().isoformat()]
 
     return {"g": g, "perfiles": lista, "bitacora": bit, "fuentes": fuentes, "tabla": tabla, "normalizado": norm,
-            "hidromet": hm, "antecedentes": ant, "terreno": terreno, "precip": prec, "niveles": niv, "catalogo": cat}
+            "hidromet": hm, "antecedentes": ant, "climatologia": clim, "terreno": terreno, "precip": prec, "niveles": niv, "catalogo": cat}
