@@ -10,7 +10,7 @@ function Fuente({ f }: { f?: string }) {
   const ejemplo = f === 'ejemplo'
   return (
     <Badge className={ejemplo ? 'border border-dashed border-orange-400 bg-orange-50 text-orange-700' : 'bg-gray-100 text-gray-600'}>
-      {ejemplo ? 'datos de ejemplo' : f}
+      {ejemplo ? 'datos de ejemplo' : f === 'modelada' ? 'modelada (relieve y cauces)' : f}
     </Badge>
   )
 }

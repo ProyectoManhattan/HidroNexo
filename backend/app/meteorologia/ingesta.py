@@ -132,27 +132,66 @@ def centroides() -> dict[int, tuple[float, float]]:
     return {cid: (float(lat), float(lon)) for cid, lat, lon in filas if lat is not None and lon is not None}
 
 
-def consultar_por_colonia(
+def consultar_por_celda(
     centros: dict[int, tuple[float, float]], momento: datetime
-) -> dict[int, dict[str, float]] | None:
-    """Lluvia por colonia; las colonias que caen en la misma celda de ~0.05 grados comparten consulta."""
+) -> tuple[dict[int, tuple[float, float]], dict[tuple[float, float], dict[str, float]]] | None:
+    """(celda de cada colonia, lluvia de cada celda). Las colonias de una misma celda comparten consulta."""
     celdas = {cid: _celda(*c) for cid, c in centros.items()}
     unicas = sorted(set(celdas.values()))
     resumenes = consultar_puntos(unicas, momento)
     if resumenes is None:
         return None
-    por_celda = dict(zip(unicas, resumenes))
+    return celdas, dict(zip(unicas, resumenes))
+
+
+def consultar_por_colonia(
+    centros: dict[int, tuple[float, float]], momento: datetime
+) -> dict[int, dict[str, float]] | None:
+    """Lluvia por colonia; las colonias que caen en la misma celda de ~0.05 grados comparten consulta."""
+    resultado = consultar_por_celda(centros, momento)
+    if resultado is None:
+        return None
+    celdas, por_celda = resultado
     return {cid: dict(por_celda[c]) for cid, c in celdas.items()}
+
+
+def guardar_historial(por_celda: dict[tuple[float, float], dict[str, float]], momento: datetime) -> None:
+    """Guarda una fila por celda. Un fallo aquí no debe interrumpir el cálculo de riesgo."""
+    from app.db import SessionLocal
+    from app.historial.modelos import LecturaLluvia
+
+    try:
+        with SessionLocal() as db:
+            db.add_all(
+                LecturaLluvia(
+                    momento=momento,
+                    celda_lat=lat,
+                    celda_lon=lon,
+                    mm_1h=r.get("mm_1h"),
+                    mm_3h=r.get("mm_3h"),
+                    mm_24h=r.get("mm_24h"),
+                    pronostico_3h=r.get("pronostico_3h"),
+                    prob_3h=r.get("prob_3h"),
+                    prob_6h=r.get("prob_6h"),
+                )
+                for (lat, lon), r in por_celda.items()
+            )
+            db.commit()
+    except Exception:
+        log.warning("No se pudo guardar el historial de lluvia", exc_info=True)
 
 
 def ejecutar() -> None:
     """Tarea programada: actualizar lluvia y avisar para recalcular riesgo."""
     centros = centroides()
     if centros:
-        lecturas = consultar_por_colonia(centros, datetime.now(timezone.utc))
-        if lecturas is None:
+        momento = datetime.now(timezone.utc)
+        resultado = consultar_por_celda(centros, momento)
+        if resultado is None:
             return  # error de red: se conserva la última lectura
-        estado.guardar_por_colonia(lecturas, ahora())
+        celdas, por_celda = resultado
+        estado.guardar_por_colonia({cid: dict(por_celda[c]) for cid, c in celdas.items()}, ahora())
+        guardar_historial(por_celda, momento)
     else:
         lluvia = consultar()
         if lluvia is None:

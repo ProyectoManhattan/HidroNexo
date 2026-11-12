@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app import eventos
 from app.colonias.modelos import Colonia
 from app.config import settings
+from app.historial.modelos import CambioNivel
 from app.meteorologia import estado as meteo
 from app.reportes.modelos import Reporte
 from app.reportes.servicio import filtro_activos
@@ -47,6 +48,28 @@ def recalcular(db: Session, colonia_id: int) -> RiesgoColonia | None:
     actual.motivo = resultado.motivo
     actual.componentes = resultado.componentes
     actual.actualizado_en = ahora()
+
+    if nivel_anterior != resultado.nivel:
+        # El regreso a la normalidad tras una simulación también es simulado: el nivel que se deja era ficticio
+        venia_simulado = db.scalar(
+            select(CambioNivel.simulacion)
+            .where(CambioNivel.zona == colonia.nombre)
+            .order_by(CambioNivel.id.desc())
+            .limit(1)
+        )
+        db.add(
+            CambioNivel(
+                momento=actual.actualizado_en,
+                zona=colonia.nombre,
+                municipio=colonia.municipio,
+                nivel_anterior=nivel_anterior,
+                nivel=resultado.nivel,
+                valor=resultado.valor,
+                motivo=resultado.motivo,
+                componentes=resultado.componentes,
+                simulacion=meteo.en_simulacion() or bool(venia_simulado),
+            )
+        )
 
     cruza = calculo.sube_a_alerta(nivel_anterior, resultado.nivel)
     enfriada = actual.ultima_alerta_en is None or ahora() - actual.ultima_alerta_en > timedelta(
