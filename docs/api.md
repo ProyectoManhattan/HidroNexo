@@ -57,7 +57,7 @@ Crear un reporte desde la app.
 | `severidad` | Sí | 1, 2 o 3 |
 | `lat`, `lon` | Sí | Coordenadas del pin |
 | `descripcion` | No | Máximo 500 caracteres |
-| `foto_url` | No | Texto con la URL de la foto |
+| `foto_url` | No | URL devuelta por `POST /reports/photo`. Cualquier otra URL se rechaza con `422` |
 | `dispositivo_id` | No | Texto |
 
 Respuesta `201`. Es el mismo objeto que devuelven todos los endpoints de reportes:
@@ -82,6 +82,34 @@ Respuesta `201`. Es el mismo objeto que devuelven todos los endpoints de reporte
 - `colonia_id` lo asigna el sistema; es `null` si el punto cae fuera de todas las colonias.
 - `origen`: `app`, `panel` o `seed`.
 - `estado`: `activo` o `resuelto`. El reporte expira a las 6 horas.
+
+### `POST /reports/photo`
+
+Sube la foto de un reporte. Público (sin `X-Clave`). `multipart/form-data` con un único campo
+de archivo llamado `foto`.
+
+```bash
+curl -F "foto=@inundacion.jpg" https://API/reports/photo
+```
+
+Respuesta `201`:
+
+```json
+{ "foto_url": "https://PROYECTO.supabase.co/storage/v1/object/public/reportes-fotos/3f2a...c1.jpg" }
+```
+
+El cliente envía esa URL en el campo `foto_url` de `POST /reports`.
+
+| Código | Causa |
+|---|---|
+| `415` | Tipo no permitido. Solo JPEG, PNG o WebP, verificado por los primeros bytes del archivo (no por el `Content-Type` declarado ni por el nombre) |
+| `413` | La foto pasa de 5 MB |
+| `422` | Falta el campo `foto` |
+| `503` | Falló el almacenamiento (`{"detail": ...}`); se puede reintentar |
+
+El servidor ignora el nombre original y guarda la foto con un nombre aleatorio. En producción
+se almacena en Supabase Storage; sin credenciales (solo desarrollo) se guarda en disco y la
+URL es `<host>/media/<archivo>`. No se elimina el EXIF.
 
 ### `POST /reports/manual` 🔒
 
