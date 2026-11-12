@@ -25,6 +25,10 @@ class HomeController extends ChangeNotifier {
 
   bool get loading => _loading;
 
+  /// Si el mapa se muestra con datos guardados, desde cuándo; null si son recientes.
+  DateTime? get staleSince => _staleSince;
+  DateTime? _staleSince;
+
   /// Mensaje de error de la última carga, o null si salió bien.
   String? get error => _error;
   ReportType? get filter => _filter;
@@ -47,6 +51,7 @@ class HomeController extends ChangeNotifier {
       ]);
       _reports = results[0] as List<IncidentReport>;
       _riskZones = results[1] as Map<String, dynamic>?;
+      _staleSince = _repository.mapStaleSince;
     } on RepositoryException catch (e) {
       _error = e.message;
     }

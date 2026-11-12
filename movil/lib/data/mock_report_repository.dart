@@ -189,6 +189,15 @@ class MockReportRepository implements ReportRepository {
   }
 
   @override
+  Future<void> checkHealth() async {}
+
+  @override
+  DateTime? get mapStaleSince => null;
+
+  @override
+  DateTime? get alertsStaleSince => null;
+
+  @override
   Future<void> registerDevice({
     required String token,
     required double lat,

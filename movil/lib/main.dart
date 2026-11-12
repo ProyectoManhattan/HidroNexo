@@ -11,4 +11,6 @@ void main() {
   // Un push con la app abierta (dataRefresh) también dispara una consulta.
   AppDependencies.dataRefresh.addListener(AppDependencies.alertWatcher.refresh);
   AppDependencies.alertWatcher.start();
+  AppDependencies.connectivity.start();
+  AppDependencies.pendingSender.start();
 }

@@ -62,6 +62,34 @@ class AppStrings {
   static const String folioNotFound =
       'No encontramos ese folio. Revisa el número.';
 
+  // Sin conexión y reporte pendiente
+  static const String offline = 'Sin conexión';
+  static const String offlineBanner = 'Sin conexión · mostrando lo último guardado';
+  static const String reportQueued =
+      'Sin señal: guardamos tu reporte y lo enviaremos automáticamente';
+  static const String reportQueuedTitle = 'Reporte guardado';
+  static const String reportQueuedStatus = 'Pendiente de envío';
+  static const String pendingExistsTitle = 'Ya tienes un reporte pendiente de enviar';
+  static const String pendingExistsBody =
+      'Solo guardamos un reporte a la vez sin señal. ¿Quieres reemplazarlo por este?';
+  static const String replace = 'Reemplazarlo';
+  static const String pendingCardTitle = 'Reporte pendiente de envío';
+  static const String pendingWaiting = 'Esperando señal';
+  static const String pendingRetrying = 'Reintentando…';
+  static const String pendingSentState = 'Enviado';
+  static const String pendingFailedState = 'No se pudo enviar';
+  static const String discard = 'Descartar';
+  static const String retryNow = 'Reintentar ahora';
+  static const String pendingDiscarded = 'Reporte descartado';
+  static const String pendingSent = 'Tu reporte fue enviado';
+  static const String pendingFailed =
+      'No se pudo enviar tu reporte: revisa los datos o descártalo.';
+  static const String pendingSentWithoutPhoto =
+      'No se pudo subir la foto: enviamos tu reporte sin ella.';
+  static String pendingSentFolio(String folio) => 'Enviado · folio $folio';
+  static String staleAlerts(String ago) => 'Sin conexión · datos de hace $ago';
+  static String staleMap(String ago) => 'Datos de hace $ago';
+
   // Alertas
   static const String alertsTitle = 'Alertas de tu zona';
   static const String alertsSubtitle = 'Cada aviso trae lo que debes hacer.';

@@ -11,6 +11,7 @@ class NewReport {
     required this.description,
     required this.severity,
     this.photoUrl,
+    this.clienteId,
   });
 
   final ReportType type;
@@ -24,4 +25,8 @@ class NewReport {
 
   /// URL de la foto ya subida (`POST /reports/photo`), si hay.
   final String? photoUrl;
+
+  /// UUID v4 generado en la app: llave de idempotencia. Si el servidor ya tiene
+  /// un reporte con este id, devuelve el mismo en vez de crear otro.
+  final String? clienteId;
 }

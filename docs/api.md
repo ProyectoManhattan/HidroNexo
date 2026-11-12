@@ -59,6 +59,7 @@ Crear un reporte desde la app.
 | `descripcion` | No | Máximo 500 caracteres |
 | `foto_url` | No | URL devuelta por `POST /reports/photo`. Cualquier otra URL se rechaza con `422` |
 | `dispositivo_id` | No | Texto |
+| `cliente_id` | No | Texto de 8 a 64 caracteres (`A-Z a-z 0-9 -`), p. ej. un UUID generado en la app. **Llave de idempotencia:** si ya existe un reporte con ese `cliente_id`, responde `200` con el mismo reporte y no crea otro (la app lo usa para reintentar sin duplicar tras perder la respuesta). Sin él, cada envío crea un reporte (`201`) |
 
 Respuesta `201`. Es el mismo objeto que devuelven todos los endpoints de reportes:
 

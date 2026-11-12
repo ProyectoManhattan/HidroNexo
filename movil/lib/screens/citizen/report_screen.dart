@@ -11,11 +11,13 @@ import '../../data/report_repository.dart';
 import '../../models/incident_report.dart';
 import '../../models/report_status.dart';
 import '../../services/location_service.dart';
+import '../../services/pending_report_queue.dart';
 import '../../services/photo_service.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_toast.dart';
 import '../../widgets/hero_header.dart';
 import '../../widgets/page_layout.dart';
+import '../../widgets/pending_report_card.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/report_detail_sheet.dart';
 import '../../widgets/report_type_selector.dart';
@@ -33,6 +35,7 @@ class _ReportScreenState extends State<ReportScreen> {
     repository: AppDependencies.reportRepository,
     locationService: AppDependencies.locationService,
     photoService: AppDependencies.photoService,
+    queue: AppDependencies.pendingQueue,
     onSubmitted: AppDependencies.dataRefresh.notifyChanged,
   );
   final TextEditingController _folioController = TextEditingController();
@@ -61,12 +64,17 @@ class _ReportScreenState extends State<ReportScreen> {
       return;
     }
     final place = _controller.locationLabel ?? '';
-    String folio;
+    SubmitResult result;
     var withoutPhoto = false;
+    var replace = false;
     while (true) {
       try {
-        folio = await _controller.submit(withoutPhoto: withoutPhoto);
+        result = await _controller.submit(withoutPhoto: withoutPhoto, replacePending: replace);
         break;
+      } on PendingReportExistsException {
+        if (!mounted) return;
+        if (await _askReplacePending() != true || !mounted) return;
+        replace = true;
       } on PhotoUploadException catch (e) {
         if (!mounted) return;
         final choice = await _askPhotoFailure(e.message);
@@ -79,6 +87,18 @@ class _ReportScreenState extends State<ReportScreen> {
       }
     }
     if (!mounted) return;
+    if (result.queued) {
+      await ReportDetailSheet.show(
+        context,
+        title: AppStrings.reportQueuedTitle,
+        description: AppStrings.reportQueued,
+        place: place,
+        date: AppStrings.now,
+        status: AppStrings.reportQueuedStatus,
+      );
+      return;
+    }
+    final folio = result.folio;
     await ReportDetailSheet.show(
       context,
       title: AppStrings.reportSent,
@@ -86,6 +106,27 @@ class _ReportScreenState extends State<ReportScreen> {
       place: place,
       date: AppStrings.now,
       status: '$folio · ${ReportStatus.pending.label}',
+    );
+  }
+
+  /// true = reemplazar el pendiente, false/null = cancelar.
+  Future<bool?> _askReplacePending() {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(AppStrings.pendingExistsTitle),
+        content: const Text(AppStrings.pendingExistsBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(AppStrings.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(AppStrings.replace),
+          ),
+        ],
+      ),
     );
   }
 
@@ -170,6 +211,7 @@ class _ReportScreenState extends State<ReportScreen> {
         subtitle: AppStrings.reportSubtitle,
       ),
       children: [
+        const PendingReportCard(),
         ListenableBuilder(
           listenable: _controller,
           builder: (context, _) => _buildForm(context),
