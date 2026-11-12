@@ -9,7 +9,6 @@ export default function ReportsList() {
   const filtro = useStore((s) => s.filtro)
   const zonas = useStore((s) => s.zonas)
   const seleccionada = useStore((s) => s.coloniaSeleccionada)
-  const clave = useStore((s) => s.operadorClave)
   const accion = useAccion()
 
   const visibles = useMemo(() => {
@@ -53,7 +52,7 @@ export default function ReportsList() {
               </div>
               {colonia && <div className="mt-0.5 text-xs text-gray-500">{colonia}</div>}
               {r.descripcion && <p className="mt-1 truncate text-gray-700" title={r.descripcion}>{r.descripcion}</p>}
-              {clave && (
+              {(
                 <div className="mt-1.5 text-right">
                   <button
                     disabled={accion.cargando !== null}

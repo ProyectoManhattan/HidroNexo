@@ -11,7 +11,7 @@ Plataforma de reportes ciudadanos, riesgo por zona y alertas ante lluvias e inun
 3. Cuando una zona sube a riesgo alto o crítico, el sistema redacta una **alerta con su guía de acción** (plantillas, o LLM si se configura una clave).
 4. Un operador de Protección Civil la revisa en el **panel web** y la aprueba; solo entonces se envía a los dispositivos de la zona. **La IA propone, el humano decide.**
 
-Sin cuentas ni roles: las acciones del operador (aprobar alertas, reporte manual, simulación) se protegen con una **clave única** en el header `X-Clave`.
+Sin cuentas ni roles: las acciones del operador (aprobar alertas, alerta manual, simulación) llevan una **clave única** en el header `X-Clave`. Es una barrera ligera, no seguridad real.
 
 ## Componentes
 
@@ -65,9 +65,12 @@ Abrir <http://localhost:5173>.
 
 ### 3. Usarlo
 
-1. **Modo operador** → clave `cambiar-esta-clave` (el valor de `CLAVE_UNICA` en `.env`).
-2. **⚙ → Cargar datos (seed)**.
-3. **Simular tormenta** → aparecen alertas propuestas → **Aprobar y enviar**.
+El panel es exclusivo de Protección Civil y no pide clave: la lleva configurada (`VITE_CLAVE`, por defecto igual a `CLAVE_UNICA` de `.env`).
+
+1. Al abrirlo por primera vez ya hay un reporte de ejemplo por zona (el backend los carga solo con la base vacía).
+2. **Simular tormenta** → aparecen alertas propuestas → **Aprobar y enviar**.
+3. **Enviar alerta manual** → Protección Civil redacta una alerta propia para una o varias zonas.
+4. **⚙ → Cargar datos (seed)** vuelve a dejar todo como al inicio.
 
 ### 4. App móvil (opcional)
 
@@ -96,7 +99,7 @@ Las pruebas de flujo usan una base aparte (`<base>_test`) y nunca la principal.
 
 - [data/colonias_veracruz.geojson](data/colonias_veracruz.geojson): límites reales por **código postal** (fuente SEPOMEX vía [open-mexico/mexico-geojson](https://github.com/open-mexico/mexico-geojson), licencia MIT), no por colonia. Se regeneran con `python3 data/scripts/generar_colonias.py`.
 - La **vulnerabilidad base es de ejemplo** (0.5 en todas las zonas) hasta contar con datos reales de Protección Civil o del atlas de riesgos. Mientras tanto, una tormenta simulada pone en riesgo a todas las zonas por igual.
-- Los datos de `backend/tests/datos/` son ficticios y solo sirven para las pruebas.
+- Los reportes de ejemplo son de demostración (origen `seed`). Los datos de `backend/tests/datos/` son ficticios y solo sirven para las pruebas.
 
 ## Estado actual
 

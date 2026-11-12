@@ -219,6 +219,23 @@ Editar el texto. Solo si la alerta está `propuesta`; si no, responde `409`.
 
 El texto debe tener entre 10 y 1000 caracteres.
 
+### `POST /alerts` 🔒
+
+Alerta **manual** de Protección Civil para una o varias colonias. No pasa por la bandeja: se aprueba y se envía de inmediato (una alerta por colonia). Responde `201` con la lista creada, con `"redactada_por": "manual"` y `"motivo": "manual"`.
+
+```json
+{
+  "colonia_ids": [4, 7],
+  "tipo": "inundacion",
+  "nivel": "alto",
+  "texto": "Evita la avenida principal; hay encharcamiento severo."
+}
+```
+
+- `tipo`: una categoría de `GET /reports/categories` (define la guía que se adjunta).
+- `nivel`: `medio`, `alto` o `critico`.
+- `texto`: entre 10 y 1000 caracteres. `colonia_ids` no puede ir vacío; si alguna colonia no existe, responde `404`.
+
 ### `POST /alerts/{id}/approve` 🔒
 
 Sin cuerpo. Aprueba la alerta, envía el push a los dispositivos de la colonia y la devuelve con `"estado": "aprobada"`.

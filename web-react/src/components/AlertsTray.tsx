@@ -20,7 +20,7 @@ function Tarjeta({ alerta, nombre, accion }: { alerta: Alerta; nombre: string; a
         <NivelPill nivel={alerta.nivel} />
         <span className="text-xs text-gray-500">por {MOTIVOS[alerta.motivo] ?? alerta.motivo}</span>
         {alerta.simulada && <Badge className="bg-orange-100 text-orange-700">simulada</Badge>}
-        <Badge className="bg-gray-100 text-gray-600">{alerta.redactada_por === 'llm' ? 'IA' : 'plantilla'}</Badge>
+        <Badge className="bg-gray-100 text-gray-600">{alerta.redactada_por === 'llm' ? 'IA' : alerta.redactada_por === 'manual' ? 'manual' : 'plantilla'}</Badge>
         <span className="ml-auto text-xs text-gray-400">{hace(alerta.creada_en)}</span>
       </div>
       <textarea
@@ -98,6 +98,7 @@ export default function AlertsTray() {
                   <span className="font-medium">{nombreDe(a.colonia_id)}</span>
                   <NivelPill nivel={a.nivel} />
                   {a.simulada && <Badge className="bg-orange-100 text-orange-700">simulada</Badge>}
+                  {a.redactada_por === 'manual' && <Badge className="bg-purple-50 text-purple-700">manual</Badge>}
                   <span className="ml-auto text-xs text-gray-400">{hace(a.aprobada_en ?? a.creada_en)}</span>
                 </div>
                 <p className="mt-1 text-gray-700">{a.texto}</p>

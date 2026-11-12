@@ -6,15 +6,17 @@ data/colonias_veracruz.geojson
     FeatureCollection de Polygon o MultiPolygon (EPSG:4326) con propiedades:
     nombre (obligatorio), municipio, vulnerabilidad (0–1), vulnerabilidad_fuente ("real"/"ejemplo")
 
-data/reportes_prueba.json
+data/reportes_prueba.json (opcional)
     Lista de objetos: {"categoria", "severidad", "lat", "lon", "descripcion"}
+    Si no existe, se crea un reporte de ejemplo por colonia (ver cargar_reportes_demo).
 """
 import json
 
-from sqlalchemy import delete, func
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.alertas.modelos import Alerta
+from app.catalogos import CATEGORIAS
 from app.colonias.modelos import Colonia
 from app.config import settings
 from app.dispositivos.modelos import Dispositivo
@@ -47,10 +49,41 @@ def cargar_colonias(db: Session) -> int:
     return len(features)
 
 
+# Los reportes de ejemplo duran más que los reales para que la demo no se vacíe sola
+HORAS_VIGENCIA_DEMO = 24 * 7
+
+
+def cargar_reportes_demo(db: Session) -> int:
+    """Un reporte de ejemplo por colonia, en un punto dentro de ella. Datos de demostración."""
+    categorias = list(CATEGORIAS)
+    filas = db.execute(
+        select(
+            Colonia.id,
+            Colonia.nombre,
+            func.ST_Y(func.ST_PointOnSurface(Colonia.geom)),
+            func.ST_X(func.ST_PointOnSurface(Colonia.geom)),
+        ).order_by(Colonia.id)
+    ).all()
+    for i, (_id, nombre, lat, lon) in enumerate(filas):
+        reportes.crear(
+            db,
+            ReporteEntrada(
+                categoria=categorias[i % len(categorias)],
+                severidad=1 + i % 3,
+                lat=lat,
+                lon=lon,
+                descripcion=f"Reporte de ejemplo en {nombre} (datos de demostración)",
+            ),
+            origen="seed",
+            horas_vigencia=HORAS_VIGENCIA_DEMO,
+        )
+    return len(filas)
+
+
 def cargar_reportes(db: Session) -> int:
     archivo = settings.data_dir / "reportes_prueba.json"
     if not archivo.exists():
-        return 0
+        return cargar_reportes_demo(db)
     lista = json.loads(archivo.read_text(encoding="utf-8"))
     for r in lista:
         reportes.crear(db, ReporteEntrada(**r), origen="seed")

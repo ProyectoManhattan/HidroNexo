@@ -38,16 +38,18 @@ Dejar esta terminal abierta. Comprobar: http://localhost:8000/health debe respon
 
 ## 3. Datos
 
-Las zonas reales ya están en `data/colonias_veracruz.geojson` (por código postal; ver el README principal). Si todavía no hay reportes de prueba ni guías en `data/`, copiar los **ficticios** de las pruebas. **No subirlos con commit.** Ojo: no copiar el `.geojson` de pruebas, porque pisaría las zonas reales.
+Las zonas reales ya están en `data/colonias_veracruz.geojson` (por código postal; ver el README principal). **No hay que cargar nada a mano**: con la base vacía, la API las carga sola al arrancar y crea un reporte de ejemplo por zona.
+
+Las guías de acción (`data/guias/`) todavía no existen. Mientras tanto se pueden copiar las **ficticias** de las pruebas (**no subirlas con commit**):
 
 ```bash
 # Mac / Linux
-cp backend/tests/datos/reportes_prueba.json data/ && cp backend/tests/datos/guias/*.json data/guias/
+cp backend/tests/datos/guias/*.json data/guias/
 ```
 
 ```bash
 # Windows
-copy backend\tests\datos\reportes_prueba.json data\ && copy backend\tests\datos\guias\*.json data\guias\
+copy backend\tests\datos\guias\*.json data\guias\
 ```
 
 ## 4. Panel web (terminal 2)
@@ -61,9 +63,10 @@ npm run dev
 ## 5. Usarlo
 
 1. Abrir http://localhost:5173
-2. **Modo operador** → clave `cambiar-esta-clave` (la de `CLAVE_UNICA` en `.env`).
-3. **⚙ → Cargar datos (seed)**.
-4. **Simular tormenta** → aparecen alertas propuestas; **Aprobar y enviar**.
+2. Ya se ven los reportes de ejemplo, uno por zona. El panel no pide clave.
+3. **Simular tormenta** → aparecen alertas propuestas; **Aprobar y enviar**.
+4. **Enviar alerta manual** → elegir zonas, tipo, nivel y texto.
+5. **⚙ → Cargar datos (seed)** reinicia todo; **Reiniciar (reset)** conserva las zonas y borra reportes y alertas.
 
 ## Problemas comunes
 
@@ -71,8 +74,8 @@ npm run dev
 |---|---|
 | El panel dice "Sin conexión" | El backend no está corriendo; revisar la terminal 1 |
 | `port is already allocated` (5432 u 8000) | Otro programa usa el puerto: cerrar otro PostgreSQL local o cambiar el puerto en `docker-compose.yml` |
-| "Clave incorrecta" | Usar el valor de `CLAVE_UNICA` del archivo `.env` |
-| El mapa no muestra zonas | Falta el seed (⚙ → Cargar datos) o `data/colonias_veracruz.geojson` |
+| Las acciones fallan con "Clave inválida" | `VITE_CLAVE` (en `web-react/.env`) debe coincidir con `CLAVE_UNICA` de `.env`; reiniciar `npm run dev` |
+| El mapa no muestra zonas | Falta `data/colonias_veracruz.geojson`, o la base se creó sin él: `docker compose down -v` y levantar de nuevo |
 | Cambié `.env` y no se aplica | `docker compose down` y luego `docker compose up --build` |
 
 Pruebas del backend:

@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     llm_api_key: str = ""
     data_dir: Path = RAIZ_REPO / "data"
 
+    # Al arrancar con la base vacía, carga colonias y un reporte de ejemplo por colonia
+    auto_seed: bool = True
+
     # Reportes
     reporte_horas_expiracion: int = 6
 

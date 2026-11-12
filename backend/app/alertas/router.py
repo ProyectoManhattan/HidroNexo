@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.alertas import servicio
-from app.alertas.esquemas import AlertaConGuia, AlertaEdicion, AlertaSalida
+from app.alertas.esquemas import AlertaConGuia, AlertaEdicion, AlertaManual, AlertaSalida
 from app.alertas.modelos import Alerta
 from app.db import get_db
 from app.guias.servicio import obtener_guia
@@ -30,6 +30,20 @@ def listar(estado: str | None = "propuesta", db: Session = Depends(get_db)):
     if estado:
         consulta = consulta.where(Alerta.estado == estado)
     return db.scalars(consulta).all()
+
+
+@router.post(
+    "",
+    response_model=list[AlertaSalida],
+    status_code=201,
+    dependencies=[Depends(requiere_clave)],
+    summary="Enviar una alerta manual a una o varias colonias (requiere clave)",
+)
+def crear_manual(datos: AlertaManual, db: Session = Depends(get_db)):
+    try:
+        return servicio.crear_manual(db, datos)
+    except LookupError as error:
+        raise HTTPException(404, str(error)) from error
 
 
 @router.get(

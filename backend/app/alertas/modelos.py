@@ -18,7 +18,7 @@ class Alerta(Base):
     texto: Mapped[str] = mapped_column(Text)
     # "propuesta" → "aprobada" | "descartada"
     estado: Mapped[str] = mapped_column(String(20), default="propuesta", index=True)
-    # "plantilla" o "llm": honestidad sobre qué redactó la IA
+    # "plantilla", "llm" o "manual": honestidad sobre quién redactó el texto
     redactada_por: Mapped[str] = mapped_column(String(20), default="plantilla")
     simulada: Mapped[bool] = mapped_column(Boolean, default=False)
     creada_en: Mapped[datetime] = mapped_column(DateTime(timezone=True))

@@ -1,12 +1,11 @@
 import { NARANJA_SIM } from '../constants'
-import { abrirDialogoClave, setOperadorClave, useStore } from '../store'
+import { useStore } from '../store'
 import Chip from './bars/Chip'
 
 export default function TopBar() {
   const lluvia3h = useStore((s) => s.lluvia3h)
   const apiOk = useStore((s) => s.apiOk)
   const wsOk = useStore((s) => s.wsOk)
-  const clave = useStore((s) => s.operadorClave)
   const sim = useStore((s) => s.clima?.simulacion ?? false)
   const vivo = apiOk && wsOk
 
@@ -36,26 +35,7 @@ export default function TopBar() {
       </Chip>
       <Chip className="bg-white text-red-700">No sustituye al 911</Chip>
 
-      {clave ? (
-        <div className="flex items-center gap-2 rounded-full bg-white/15 py-1 pl-3 pr-1 text-xs font-semibold">
-          <span className="h-2 w-2 rounded-full bg-green-400" />
-          Operador: Protección Civil
-          <button
-            onClick={() => setOperadorClave(null)}
-            className="rounded-full bg-white/20 px-2 py-0.5 hover:bg-white/30"
-            title="Cerrar sesión de operador"
-          >
-            Salir
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => abrirDialogoClave()}
-          className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#1E5AA8] hover:bg-blue-50"
-        >
-          Modo operador
-        </button>
-      )}
+      <Chip className="bg-white/15">Protección Civil</Chip>
     </header>
   )
 }

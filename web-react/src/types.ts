@@ -81,10 +81,17 @@ export interface Alerta {
   motivo: Motivo
   texto: string
   estado: 'propuesta' | 'aprobada' | 'descartada'
-  redactada_por: 'plantilla' | 'llm'
+  redactada_por: 'plantilla' | 'llm' | 'manual'
   simulada: boolean
   creada_en: string
   aprobada_en: string | null
+}
+
+export interface AlertaManualNueva {
+  colonia_ids: number[]
+  tipo: string
+  nivel: 'medio' | 'alto' | 'critico'
+  texto: string
 }
 
 export interface Guia {

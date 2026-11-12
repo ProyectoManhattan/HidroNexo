@@ -1,7 +1,6 @@
-import { API_URL } from '../config'
-import { getClave, setClave } from '../session'
+import { API_URL, CLAVE } from '../config'
 import type {
-  Alerta, AlertaActiva, Categoria, Categorias, Clima, Colonia, Dispositivo, Guia, Guias, Reporte,
+  Alerta, AlertaActiva, AlertaManualNueva, Categoria, Categorias, Clima, Colonia, Dispositivo, Guia, Guias, Reporte,
   ReporteNuevo, ZonasGeoJSON,
 } from '../types'
 
@@ -23,10 +22,7 @@ function detalleDe(body: unknown): string {
 async function request<T>(method: string, path: string, opts: { body?: unknown; operador?: boolean } = {}): Promise<T> {
   const headers: Record<string, string> = {}
   if (opts.body !== undefined) headers['Content-Type'] = 'application/json'
-  if (opts.operador) {
-    const clave = getClave()
-    if (clave) headers['X-Clave'] = clave
-  }
+  if (opts.operador) headers['X-Clave'] = CLAVE
   let res: Response
   try {
     res = await fetch(API_URL + path, {
@@ -40,7 +36,6 @@ async function request<T>(method: string, path: string, opts: { body?: unknown; 
   let data: unknown = null
   try { data = await res.json() } catch { /* sin cuerpo */ }
   if (!res.ok) {
-    if (res.status === 401 && opts.operador) setClave(null)
     throw new ApiError(res.status, detalleDe(data))
   }
   return data as T
@@ -57,7 +52,6 @@ function qs(p: Record<string, string | number | boolean | undefined>): string {
 // Reportes
 export const getCategorias = () => request<Categorias>('GET', '/reports/categories')
 export const crearReporte = (r: ReporteNuevo) => request<Reporte>('POST', '/reports', { body: r })
-export const crearReporteManual = (r: ReporteNuevo) => request<Reporte>('POST', '/reports/manual', { body: r, ...op })
 export const getReportes = (f: { categoria?: Categoria; colonia_id?: number; activos?: boolean; bbox?: string } = {}) =>
   request<Reporte[]>('GET', '/reports' + qs(f))
 export const resolverReporte = (id: number) => request<Reporte>('POST', `/reports/${id}/resolve`, op)
@@ -70,6 +64,7 @@ export const getZonasRiesgo = () => request<ZonasGeoJSON>('GET', '/zones/risk')
 export const getAlertas = (estado: 'propuesta' | 'aprobada' | 'descartada' | '' = 'propuesta') =>
   request<Alerta[]>('GET', '/alerts' + qs({ estado }))
 export const getAlertasActivas = (colonia_id?: number) => request<AlertaActiva[]>('GET', '/alerts/active' + qs({ colonia_id }))
+export const crearAlertaManual = (b: AlertaManualNueva) => request<Alerta[]>('POST', '/alerts', { body: b, ...op })
 export const editarAlerta = (id: number, texto: string) => request<Alerta>('PATCH', `/alerts/${id}`, { body: { texto }, ...op })
 export const aprobarAlerta = (id: number) => request<Alerta>('POST', `/alerts/${id}/approve`, op)
 export const descartarAlerta = (id: number) => request<Alerta>('POST', `/alerts/${id}/discard`, op)

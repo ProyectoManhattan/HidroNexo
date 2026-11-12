@@ -2,7 +2,7 @@ import * as maplibregl from 'maplibre-gl'
 import type { GeoJSONSource, Map as MLMap } from 'maplibre-gl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CATEGORIAS, NIVELES } from '../constants'
-import { getState, seleccionarColonia, setPuntoManual, useStore } from '../store'
+import { seleccionarColonia, useStore } from '../store'
 import type { Reporte, ZonasGeoJSON } from '../types'
 import Legend from './map/Legend'
 import { popupColonia, popupReporte } from './map/popups'
@@ -52,7 +52,6 @@ function limites(z: ZonasGeoJSON): maplibregl.LngLatBounds | null {
 export default function MapView() {
   const cont = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MLMap | null>(null)
-  const marcadorRef = useRef<maplibregl.Marker | null>(null)
   const encuadrado = useRef(false)
   const [listo, setListo] = useState(false)
 
@@ -60,8 +59,6 @@ export default function MapView() {
   const reportes = useStore((s) => s.reportes)
   const filtro = useStore((s) => s.filtro)
   const seleccionada = useStore((s) => s.coloniaSeleccionada)
-  const eligiendo = useStore((s) => s.eligiendoPunto)
-  const punto = useStore((s) => s.puntoManual)
 
   const visibles = useMemo(() => reportes.filter((r) => {
     if (filtro === 'todo') return true
@@ -103,11 +100,15 @@ export default function MapView() {
       })
       map.addLayer({
         id: 'zonas-line', type: 'line', source: 'zonas',
-        paint: { 'line-color': colorNivel, 'line-width': 1.5, 'line-color-transition': { duration: 600 } },
+        paint: { 'line-color': '#8A94A6', 'line-width': 1, 'line-dasharray': [2, 2] },
       })
       map.addLayer({
         id: 'zonas-sel', type: 'line', source: 'zonas', filter: ['==', ['get', 'id'], -1],
         paint: { 'line-color': '#1B2430', 'line-width': 3.5 },
+      })
+      map.addLayer({
+        id: 'zonas-sel-nivel', type: 'line', source: 'zonas', filter: ['==', ['get', 'id'], -1],
+        paint: { 'line-color': colorNivel, 'line-width': 1.6 },
       })
       map.addLayer({
         id: 'reportes-circulos', type: 'circle', source: 'reportes',
@@ -122,7 +123,6 @@ export default function MapView() {
 
     map.on('mousemove', (e) => {
       if (!map.getLayer('zonas-fill')) return
-      if (getState().eligiendoPunto) { map.getCanvas().style.cursor = 'crosshair'; hover.remove(); return }
       const rep = map.queryRenderedFeatures(e.point, { layers: ['reportes-circulos'] })
       const zon = rep.length ? [] : map.queryRenderedFeatures(e.point, { layers: ['zonas-fill'] })
       map.getCanvas().style.cursor = rep.length || zon.length ? 'pointer' : ''
@@ -132,10 +132,6 @@ export default function MapView() {
     map.on('mouseout', () => hover.remove())
 
     map.on('click', (e) => {
-      if (getState().eligiendoPunto) {
-        setPuntoManual({ lat: e.lngLat.lat, lon: e.lngLat.lng })
-        return
-      }
       if (!map.getLayer('zonas-fill')) return
       const rep = map.queryRenderedFeatures(e.point, { layers: ['reportes-circulos'] })
       if (rep.length) {
@@ -157,8 +153,6 @@ export default function MapView() {
       ro.disconnect()
       hover.remove()
       popupReport?.remove()
-      marcadorRef.current?.remove()
-      marcadorRef.current = null
       map.remove()
       mapRef.current = null
       encuadrado.current = false
@@ -188,36 +182,14 @@ export default function MapView() {
   useEffect(() => {
     const map = mapRef.current
     if (!listo || !map) return
-    map.setFilter('zonas-sel', ['==', ['get', 'id'], seleccionada ?? -1])
+    const f: maplibregl.FilterSpecification = ['==', ['get', 'id'], seleccionada ?? -1]
+    map.setFilter('zonas-sel-nivel', f)
+    map.setFilter('zonas-sel', f)
   }, [seleccionada, listo])
-
-  // Modo elegir punto: cursor
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map) return
-    map.getCanvas().style.cursor = eligiendo ? 'crosshair' : ''
-  }, [eligiendo, listo])
-
-  // Marcador del punto manual
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map) return
-    marcadorRef.current?.remove()
-    marcadorRef.current = null
-    if (!punto) return
-    const el = document.createElement('div')
-    el.style.cssText = 'width:22px;height:22px;border-radius:50%;background:#F28C28;border:3px solid #fff;box-shadow:0 0 0 2px #F28C28,0 2px 6px rgba(0,0,0,.4)'
-    marcadorRef.current = new maplibregl.Marker({ element: el }).setLngLat([punto.lon, punto.lat]).addTo(map)
-  }, [punto, listo])
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      <div ref={cont} style={{ position: "absolute", inset: 0 }} />
-      {eligiendo && (
-        <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-full bg-slate-900/90 px-4 py-2 text-sm font-medium text-white shadow-lg">
-          Haz clic en el mapa para ubicar el reporte
-        </div>
-      )}
+      <div ref={cont} style={{ position: 'absolute', inset: 0 }} />
       <Legend />
     </div>
   )

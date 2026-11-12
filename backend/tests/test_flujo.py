@@ -102,3 +102,43 @@ def test_reset_borra_reportes_y_termina_simulacion(cliente):
 def test_guias(cliente):
     assert "inundacion" in cliente.get("/guides").json()
     assert cliente.get("/guides/no-existe").status_code == 404
+
+
+def test_alerta_manual_se_envia_de_inmediato(cliente):
+    ids = _colonias(cliente)
+    cuerpo = {"colonia_ids": list(ids.values()), "tipo": "fuga", "nivel": "medio", "texto": "Aviso manual de prueba"}
+    assert cliente.post("/alerts", json=cuerpo).status_code == 401
+
+    r = cliente.post("/alerts", json=cuerpo, headers=CLAVE)
+    assert r.status_code == 201
+    alertas = r.json()
+    assert len(alertas) == len(ids)
+    assert all(a["estado"] == "aprobada" and a["redactada_por"] == "manual" for a in alertas)
+    assert all(a["motivo"] == "manual" and a["tipo"] == "fuga" for a in alertas)
+
+    # No pasa por la bandeja de propuestas y la app la ve como activa
+    assert cliente.get("/alerts").json() == []
+    assert len(cliente.get("/alerts/active").json()) == len(ids)
+
+
+def test_alerta_manual_valida_datos(cliente):
+    ok = {"colonia_ids": [1], "tipo": "inundacion", "nivel": "alto", "texto": "Texto suficientemente largo"}
+    inexistente = cliente.post("/alerts", json={**ok, "colonia_ids": [999999]}, headers=CLAVE)
+    assert inexistente.status_code == 404
+    assert cliente.post("/alerts", json={**ok, "colonia_ids": []}, headers=CLAVE).status_code == 422
+    assert cliente.post("/alerts", json={**ok, "nivel": "bajo"}, headers=CLAVE).status_code == 422
+    assert cliente.post("/alerts", json={**ok, "tipo": "otra"}, headers=CLAVE).status_code == 422
+    assert cliente.post("/alerts", json={**ok, "texto": "corto"}, headers=CLAVE).status_code == 422
+
+
+def test_reportes_de_ejemplo_uno_por_colonia(cliente):
+    from app.admin import servicio
+    from app.db import SessionLocal
+
+    cliente.post("/admin/reset", headers=CLAVE)
+    with SessionLocal() as db:
+        assert servicio.cargar_reportes_demo(db) == len(_colonias(cliente))
+    reportes = cliente.get("/reports").json()
+    assert len(reportes) == len(_colonias(cliente))
+    assert sorted(r["colonia_id"] for r in reportes) == sorted(_colonias(cliente).values())
+    assert all(r["origen"] == "seed" for r in reportes)

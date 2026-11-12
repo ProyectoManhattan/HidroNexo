@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app import eventos
-from app.alertas.esquemas import AlertaSalida
+from app.alertas.esquemas import AlertaManual, AlertaSalida
 from app.alertas.modelos import Alerta
 from app.colonias.modelos import Colonia
 from app.ia.redactor_alertas import redactar_alerta
@@ -52,3 +52,29 @@ def descartar(db: Session, alerta: Alerta) -> Alerta:
     alerta.estado = "descartada"
     db.commit()
     return alerta
+
+
+def crear_manual(db: Session, datos: AlertaManual) -> list[Alerta]:
+    """Una alerta aprobada y enviada por cada colonia. Lanza LookupError si alguna no existe."""
+    ids = list(dict.fromkeys(datos.colonia_ids))
+    existentes = set(db.scalars(select(Colonia.id).where(Colonia.id.in_(ids))))
+    faltan = [i for i in ids if i not in existentes]
+    if faltan:
+        raise LookupError(f"Colonias inexistentes: {faltan}")
+    enviadas = []
+    for colonia_id in ids:
+        alerta = Alerta(
+            colonia_id=colonia_id,
+            tipo=datos.tipo,
+            nivel=datos.nivel,
+            motivo="manual",
+            texto=datos.texto,
+            redactada_por="manual",
+            simulada=meteo.en_simulacion(),
+            creada_en=ahora(),
+        )
+        db.add(alerta)
+        db.commit()
+        db.refresh(alerta)
+        enviadas.append(aprobar(db, alerta))
+    return enviadas

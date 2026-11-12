@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import AlertsTray from './components/AlertsTray'
 import BottomBar from './components/BottomBar'
 import ColoniasRanking from './components/ColoniasRanking'
-import KeyDialog from './components/KeyDialog'
-import ManualReportDialog from './components/ManualReportDialog'
+import AlertaManualDialog from './components/AlertaManualDialog'
 import MapView from './components/MapView'
 import ReportsList from './components/ReportsList'
 import TopBar from './components/TopBar'
@@ -55,8 +54,7 @@ export default function App() {
         </aside>
       </div>
       <BottomBar />
-      <KeyDialog />
-      <ManualReportDialog />
+      <AlertaManualDialog />
     </div>
   )
 }

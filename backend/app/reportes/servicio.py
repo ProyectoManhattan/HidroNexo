@@ -15,7 +15,7 @@ def filtro_activos():
     return (Reporte.estado == "activo") & (Reporte.expira_en > ahora())
 
 
-def crear(db: Session, datos: ReporteEntrada, origen: str = "app") -> Reporte:
+def crear(db: Session, datos: ReporteEntrada, origen: str = "app", horas_vigencia: int | None = None) -> Reporte:
     momento = ahora()
     reporte = Reporte(
         **datos.model_dump(),
@@ -23,7 +23,7 @@ def crear(db: Session, datos: ReporteEntrada, origen: str = "app") -> Reporte:
         colonia_id=colonia_de_punto(db, datos.lat, datos.lon),
         origen=origen,
         creado_en=momento,
-        expira_en=momento + timedelta(hours=settings.reporte_horas_expiracion),
+        expira_en=momento + timedelta(hours=horas_vigencia or settings.reporte_horas_expiracion),
     )
     db.add(reporte)
     db.commit()

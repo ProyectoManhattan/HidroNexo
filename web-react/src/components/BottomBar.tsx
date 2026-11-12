@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminReset, adminSeed, simularTormenta, terminarTormenta } from '../api/client'
 import { FILTROS, NARANJA_SIM } from '../constants'
 import {
-  abrirDialogoClave, abrirDialogoManual, comoOperador, getState, reportesVisibles, setFiltro, useStore,
+  abrirDialogoAlertaManual, comoOperador, getState, reportesVisibles, setFiltro, useStore,
 } from '../store'
 import type { Filtro } from '../types'
 
@@ -13,7 +13,6 @@ export default function BottomBar() {
   const reportes = useStore((s) => s.reportes)
   const zonas = useStore((s) => s.zonas)
   const sim = useStore((s) => s.clima?.simulacion ?? false)
-  const clave = useStore((s) => s.operadorClave)
   const [ocupado, setOcupado] = useState<string | null>(null)
   const [aviso, setAviso] = useState<{ ok: boolean; texto: string } | null>(null)
   const [menu, setMenu] = useState(false)
@@ -43,7 +42,7 @@ export default function BottomBar() {
     setAviso(null)
     try {
       const r = await comoOperador(accion)
-      if (r !== undefined) setAviso({ ok: true, texto: ok(r) })
+      setAviso({ ok: true, texto: ok(r) })
     } catch (e) {
       setAviso({ ok: false, texto: msgError(e) })
     } finally {
@@ -65,7 +64,6 @@ export default function BottomBar() {
     if (!window.confirm('¿Reiniciar todos los datos? Se borrarán reportes y alertas.')) return
     void ejecutar('reset', () => adminReset(), () => 'Datos reiniciados')
   }
-  const manual = () => (clave ? abrirDialogoManual() : abrirDialogoClave())
 
   const btn = 'rounded-md px-3 py-1.5 text-sm font-semibold disabled:opacity-60'
 
@@ -99,8 +97,8 @@ export default function BottomBar() {
       )}
 
       <div className="ml-auto flex items-center gap-2">
-        <button onClick={manual} className={`${btn} border border-[#1E5AA8] text-[#1E5AA8] hover:bg-blue-50`}>
-          Reporte manual
+        <button onClick={() => abrirDialogoAlertaManual()} className={`${btn} border border-[#1E5AA8] text-[#1E5AA8] hover:bg-blue-50`}>
+          Enviar alerta manual
         </button>
         <button
           onClick={() => void alternarSim()}

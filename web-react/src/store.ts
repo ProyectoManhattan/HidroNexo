@@ -2,7 +2,6 @@ import { useSyncExternalStore } from 'react'
 import * as api from './api/client'
 import { alCambiarConexion, conectar, desconectar, suscribir } from './api/realtime'
 import { POLL_MS } from './config'
-import { getClave, onClaveChange, setClave } from './session'
 import type { Alerta, AlertaActiva, Clima, Filtro, Reporte, ZonasGeoJSON } from './types'
 
 export interface State {
@@ -14,22 +13,16 @@ export interface State {
   lluvia3h: number | null
   apiOk: boolean
   wsOk: boolean
-  operadorClave: string | null
   filtro: Filtro
   coloniaSeleccionada: number | null
-  /** true mientras se espera un clic en el mapa para un reporte manual */
-  eligiendoPunto: boolean
-  /** Punto elegido para el reporte manual (lo fija el mapa, lo lee ManualReportDialog) */
-  puntoManual: { lat: number; lon: number } | null
-  /** Dialogos abiertos */
-  dialogoClave: boolean
-  dialogoManual: boolean
+  /** Dialogo de alerta manual abierto */
+  dialogoAlertaManual: boolean
 }
 
 let state: State = {
   reportes: [], zonas: null, alertasPropuestas: [], alertasActivas: [], clima: null, lluvia3h: null,
-  apiOk: false, wsOk: false, operadorClave: getClave(), filtro: 'todo', coloniaSeleccionada: null,
-  eligiendoPunto: false, puntoManual: null, dialogoClave: false, dialogoManual: false,
+  apiOk: false, wsOk: false, filtro: 'todo', coloniaSeleccionada: null,
+  dialogoAlertaManual: false,
 }
 const subs = new Set<() => void>()
 
@@ -71,8 +64,6 @@ export async function refrescarAlertas() {
   if (a) set({ alertasActivas: a })
 }
 export async function refrescarClima() {
-  // /admin/weather requiere clave; sin ella se espera el evento WS weather.updated
-  if (!getClave()) return
   const c = await intentar(api.getClima())
   if (c) aplicarClima(c)
 }
@@ -83,17 +74,12 @@ export async function refrescarTodo() {
 }
 
 // ---------------------------------------------------------------- acciones de UI
-export function setOperadorClave(c: string | null) { setClave(c) }
 export const setFiltro = (filtro: Filtro) => set({ filtro })
 export const seleccionarColonia = (id: number | null) => set({ coloniaSeleccionada: id })
-export const abrirDialogoClave = (v = true) => set({ dialogoClave: v })
-export const abrirDialogoManual = (v = true) => set({ dialogoManual: v, ...(v ? {} : { eligiendoPunto: false, puntoManual: null }) })
-export const setEligiendoPunto = (v: boolean) => set({ eligiendoPunto: v })
-export const setPuntoManual = (p: { lat: number; lon: number } | null) => set({ puntoManual: p, eligiendoPunto: false })
+export const abrirDialogoAlertaManual = (v = true) => set({ dialogoAlertaManual: v })
 
-/** Ejecuta una accion de operador: pide clave si falta, refresca despues. Devuelve true si salio bien; lanza ApiError si la API falla. */
-export async function comoOperador<T>(accion: () => Promise<T>): Promise<T | undefined> {
-  if (!getClave()) { set({ dialogoClave: true }); return undefined }
+/** Ejecuta una accion de operador y refresca todo despues. Lanza ApiError si la API falla. */
+export async function comoOperador<T>(accion: () => Promise<T>): Promise<T> {
   const r = await accion()
   await refrescarTodo()
   return r
@@ -113,7 +99,6 @@ export function iniciar(): () => void {
   if (iniciado) return () => {}
   iniciado = true
   const quitar = [
-    onClaveChange(() => { set({ operadorClave: getClave() }); void refrescarClima() }),
     alCambiarConexion((wsOk) => { set({ wsOk }); if (wsOk) void refrescarTodo() }),
     suscribir('report.created', (m) => m.tipo === 'report.created' && upsertReporte(m.datos)),
     suscribir('report.updated', (m) => m.tipo === 'report.updated' && upsertReporte(m.datos)),
