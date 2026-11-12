@@ -14,16 +14,36 @@ import '../models/new_report.dart';
 import '../models/report_status.dart';
 import '../models/report_type.dart';
 import '../services/photo_service.dart';
+import 'local/offline_cache.dart';
 import 'report_repository.dart';
 
 /// Implementación contra el backend FastAPI (ver docs/api.md).
 class ApiReportRepository implements ReportRepository {
-  ApiReportRepository({http.Client? client, String? baseUrl})
+  ApiReportRepository({http.Client? client, String? baseUrl, OfflineCache? cache})
       : _client = client ?? http.Client(),
+        _cache = cache,
         _baseUrl = (baseUrl ?? AppConfig.apiUrl).replaceAll(RegExp(r'/+$'), '');
 
   final http.Client _client;
   final String _baseUrl;
+
+  /// Caché local; null = sin caché (pruebas o si la BD no está disponible).
+  final OfflineCache? _cache;
+
+  DateTime? _reportsStale;
+  DateTime? _zonesStale;
+  DateTime? _alertsStale;
+
+  @override
+  DateTime? get mapStaleSince {
+    final a = _reportsStale, b = _zonesStale;
+    if (a == null) return b;
+    if (b == null) return a;
+    return a.isBefore(b) ? a : b;
+  }
+
+  @override
+  DateTime? get alertsStaleSince => _alertsStale;
 
   /// id de zona → nombre. Se pide una vez y se conserva.
   Map<int, String>? _zones;
@@ -35,25 +55,67 @@ class ApiReportRepository implements ReportRepository {
 
   @override
   Future<List<IncidentReport>> getMapReports() async {
+    final List<Map<String, dynamic>> rows;
+    try {
+      rows = await _getList('/reports');
+    } on RepositoryException {
+      final cached = await _cache?.loadReports();
+      if (cached == null) rethrow;
+      _reportsStale = cached.savedAt;
+      final zones = await _zoneNames();
+      return cached.value.map((r) => _toReport(r, zones)).toList();
+    }
+    _reportsStale = null;
+    unawaited(_cache?.saveReports(rows));
     final zones = await _zoneNames();
-    final rows = await _getList('/reports');
     return rows.map((r) => _toReport(r, zones)).toList();
   }
 
   @override
   Future<Map<String, dynamic>> getRiskZones() async {
-    final data = await _send(() => _client.get(_uri('/zones/risk')));
-    if (data is! Map<String, dynamic> || data['features'] is! List) {
-      throw const RepositoryException('Respuesta inesperada del servidor.');
+    try {
+      final data = await _send(() => _client.get(_uri('/zones/risk')));
+      if (data is! Map<String, dynamic> || data['features'] is! List) {
+        throw const RepositoryException('Respuesta inesperada del servidor.');
+      }
+      _zonesStale = null;
+      unawaited(_cache?.saveRiskZones(data));
+      return data;
+    } on RepositoryException {
+      final cached = await _cache?.loadRiskZones();
+      if (cached == null) rethrow;
+      _zonesStale = cached.savedAt;
+      return cached.value;
     }
-    return data;
   }
 
   @override
   Future<List<AlertItem>> getCurrentAlerts() async {
-    final rows = await _getList('/alerts/active');
+    final List<Map<String, dynamic>> rows;
+    try {
+      rows = await _getList('/alerts/active');
+    } on RepositoryException {
+      // Sin red: las últimas alertas vistas, con su guía de acción completa.
+      final cached = await _cache?.loadAlerts();
+      if (cached == null) rethrow;
+      _alertsStale = cached.savedAt;
+      return cached.value.map(_cachedToAlertItem).toList();
+    }
+    _alertsStale = null;
     return rows.map(_toAlert).toList();
   }
+
+  AlertItem _cachedToAlertItem(ActiveAlert a) => AlertItem(
+        title: '${a.type.alertTitle} · riesgo ${a.level.apiKey}',
+        detail: a.text,
+        meta: [
+          if (a.zoneName != null) a.zoneName!,
+          _dateLabel(a.approvedAt?.toIso8601String()),
+        ].where((s) => s.isNotEmpty).join(' · '),
+        type: a.type,
+        status: ReportStatus.accepted,
+        recommendations: a.steps.isEmpty ? a.type.tips : a.steps,
+      );
 
   @override
   Future<List<ActiveAlert>> getActiveAlertsAt({required double lat, required double lon}) async {
@@ -62,10 +124,14 @@ class ApiReportRepository implements ReportRepository {
       query: {'lat': '$lat', 'lon': '$lon'},
     );
     final zones = await _zoneNames();
-    return rows
+    final alerts = rows
         .map((row) => ActiveAlert.fromJson(row, zoneName: zones[row['colonia_id']]))
         .whereType<ActiveAlert>()
         .toList();
+    // Solo con red llegamos aquí: se guarda para consultarlas sin conexión.
+    // Esta consulta NO cae a la caché: una alerta nueva solo se detecta con red.
+    unawaited(_cache?.saveAlerts(alerts));
+    return alerts;
   }
 
   @override
@@ -110,6 +176,7 @@ class ApiReportRepository implements ReportRepository {
       'lon': report.position.longitude,
       'descripcion': report.description,
       if (report.photoUrl != null) 'foto_url': report.photoUrl,
+      if (report.clienteId != null) 'cliente_id': report.clienteId,
     });
     final data = await _send(
       () => _client.post(
@@ -142,12 +209,18 @@ class ApiReportRepository implements ReportRepository {
         return http.Response.fromStream(await _client.send(request));
       },
       errorMessage: _photoErrorMessage,
+      timeout: AppConfig.uploadTimeout,
     );
     final url = (data is Map ? data['foto_url'] : null) as String?;
     if (url == null || url.isEmpty) {
       throw const RepositoryException('Respuesta inesperada del servidor.');
     }
     return url;
+  }
+
+  @override
+  Future<void> checkHealth() async {
+    await _send(() => _client.get(_uri('/health')));
   }
 
   @override
@@ -239,8 +312,12 @@ class ApiReportRepository implements ReportRepository {
     if (cached != null) return cached;
     try {
       final rows = await _getList('/zones');
+      unawaited(_cache?.saveZones(rows));
       return _zones = {for (final z in rows) z['id'] as int: '${z['nombre']}'};
     } on RepositoryException {
+      // Sin red: nombres guardados (sin fijarlos, para pedirlos de nuevo luego).
+      final cached = await _cache?.loadZones();
+      if (cached != null) return {for (final z in cached.value) z['id'] as int: '${z['nombre']}'};
       return const {}; // sin nombres de zona la app sigue funcionando
     }
   }
@@ -254,21 +331,28 @@ class ApiReportRepository implements ReportRepository {
   Future<dynamic> _send(
     Future<http.Response> Function() request, {
     String Function(http.Response)? errorMessage,
+    Duration timeout = AppConfig.apiTimeout,
   }) async {
     try {
-      final response = await request().timeout(AppConfig.apiTimeout);
+      final response = await request().timeout(timeout);
       if (response.statusCode >= 400) {
-        throw RepositoryException((errorMessage ?? _errorMessage)(response));
+        final code = response.statusCode;
+        throw RepositoryException(
+          (errorMessage ?? _errorMessage)(response),
+          // 5xx, 408 y 429: reintentar luego puede funcionar. El resto de 4xx, no.
+          retryable: code >= 500 || code == 408 || code == 429,
+        );
       }
       return jsonDecode(utf8.decode(response.bodyBytes));
     } on TimeoutException {
-      throw const RepositoryException('El servidor tardó demasiado en responder.');
+      throw const RepositoryException('El servidor tardó demasiado en responder.', retryable: true);
     } on SocketException {
-      throw const RepositoryException('Sin conexión con el servidor. Revisa tu internet.');
+      throw const RepositoryException('Sin conexión con el servidor. Revisa tu internet.', retryable: true);
     } on http.ClientException {
-      throw const RepositoryException('Sin conexión con el servidor. Revisa tu internet.');
+      throw const RepositoryException('Sin conexión con el servidor. Revisa tu internet.', retryable: true);
     } on FormatException {
-      throw const RepositoryException('Respuesta inesperada del servidor.');
+      // Típico de un portal cautivo o un proxy que devuelve HTML.
+      throw const RepositoryException('Respuesta inesperada del servidor.', retryable: true);
     }
   }
 

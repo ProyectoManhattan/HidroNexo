@@ -14,6 +14,7 @@ class ReporteEntrada(BaseModel):
     descripcion: str | None = Field(default=None, max_length=500)
     foto_url: str | None = None
     dispositivo_id: str | None = None
+    cliente_id: str | None = Field(default=None, min_length=8, max_length=64, pattern=r"^[A-Za-z0-9-]+$")
 
     @field_validator("foto_url")
     @classmethod

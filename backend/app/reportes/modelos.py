@@ -20,6 +20,8 @@ class Reporte(Base):
     colonia_id: Mapped[int | None] = mapped_column(ForeignKey("colonias.id"), index=True)
     foto_url: Mapped[str | None] = mapped_column(String(500))
     dispositivo_id: Mapped[str | None] = mapped_column(String(200))
+    # Llave de idempotencia generada por la app: reintentar con la misma no duplica el reporte
+    cliente_id: Mapped[str | None] = mapped_column(String(64), unique=True)
     # "app" o "panel" (reporte manual desde la web)
     origen: Mapped[str] = mapped_column(String(20), default="app")
     # "activo" o "resuelto"

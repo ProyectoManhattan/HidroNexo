@@ -7,9 +7,13 @@ import '../services/photo_service.dart';
 /// Falla al hablar con el backend (red, tiempo de espera o respuesta inválida).
 /// [message] se puede mostrar al ciudadano.
 class RepositoryException implements Exception {
-  const RepositoryException(this.message);
+  const RepositoryException(this.message, {this.retryable = false});
 
   final String message;
+
+  /// true si es un fallo de red, de tiempo de espera o un 5xx: reintentar más
+  /// tarde puede funcionar. false para 4xx de validación y respuestas inválidas.
+  final bool retryable;
 
   @override
   String toString() => message;
@@ -42,6 +46,17 @@ abstract class ReportRepository {
 
   /// Envía un reporte y devuelve su folio.
   Future<String> submit(NewReport report);
+
+  /// Petición ligera (`GET /health`) para saber si la API responde antes de
+  /// subir una foto. Lanza [RepositoryException] si no responde.
+  Future<void> checkHealth();
+
+  /// Si los datos del mapa (reportes/zonas) salieron de la caché local, desde
+  /// cuándo se guardaron; null si son recientes.
+  DateTime? get mapStaleSince;
+
+  /// Ídem para las alertas de [getCurrentAlerts].
+  DateTime? get alertsStaleSince;
 
   /// Registra (o actualiza) el token de notificaciones push de este
   /// dispositivo junto con su ubicación aproximada.

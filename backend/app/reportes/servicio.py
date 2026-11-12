@@ -17,6 +17,10 @@ def filtro_activos():
     return (Reporte.estado == "activo") & (Reporte.expira_en > ahora())
 
 
+def buscar_por_cliente_id(db: Session, cliente_id: str) -> Reporte | None:
+    return db.scalar(select(Reporte).where(Reporte.cliente_id == cliente_id))
+
+
 def crear(db: Session, datos: ReporteEntrada, origen: str = "app", horas_vigencia: int | None = None) -> Reporte:
     momento = ahora()
     reporte = Reporte(

@@ -1,8 +1,14 @@
 import '../../data/api_report_repository.dart';
+import '../../data/local/local_database.dart';
+import '../../data/local/offline_cache.dart';
+import '../../data/local/pending_report_store.dart';
 import '../../data/mock_report_repository.dart';
 import '../../data/report_repository.dart';
 import '../../services/active_alert_watcher.dart';
+import '../../services/connectivity_service.dart';
 import '../../services/location_service.dart';
+import '../../services/pending_report_queue.dart';
+import '../../services/pending_report_sender.dart';
 import '../../services/phone_service.dart';
 import '../../services/push_service.dart';
 import '../../services/photo_service.dart';
@@ -23,8 +29,30 @@ class AppDependencies {
   /// Se dispara al enviar un reporte; Inicio y Alertas escuchan y recargan.
   static final DataRefresh dataRefresh = DataRefresh();
 
-  static final ReportRepository reportRepository =
-      AppConfig.useMock ? MockReportRepository() : ApiReportRepository();
+  /// SQLite local: cola de un reporte pendiente y caché de alertas/mapa.
+  /// Si falla, la app sigue funcionando sin ella.
+  static final LocalDatabase localDatabase = LocalDatabase();
+  static final OfflineCache offlineCache = OfflineCache(localDatabase);
+
+  static final ReportRepository reportRepository = AppConfig.useMock
+      ? MockReportRepository()
+      : ApiReportRepository(cache: offlineCache);
+
+  /// Conectividad del dispositivo (banda «Sin conexión» y reenvío).
+  static final ConnectivityService connectivity =
+      AppConfig.useMock ? AlwaysOnlineConnectivity() : DeviceConnectivityService();
+
+  /// Único reporte pendiente de envío (sin señal).
+  static final PendingReportQueue pendingQueue =
+      PendingReportQueue(store: PendingReportStore(localDatabase));
+
+  /// Reenvía el pendiente con backoff, sin saturar la red.
+  static final PendingReportSender pendingSender = PendingReportSender(
+    queue: pendingQueue,
+    repository: reportRepository,
+    connectivity: connectivity,
+    onSent: dataRefresh.notifyChanged,
+  );
   static final LocationService locationService =
       AppConfig.useMock ? SimulatedLocationService() : DeviceLocationService();
   static final PhoneService phoneService =

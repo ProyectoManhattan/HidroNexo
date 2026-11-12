@@ -36,7 +36,10 @@ const _zonesSource = 'zonas';
 const _reportsSource = 'reportes';
 const _reportsLayer = 'reportes-puntos';
 
-/// Estilo mínimo: solo teselas raster de OSM, sin claves de API.
+/// Estilo mínimo: teselas raster de OSM, sin claves de API. Bajo ellas va una
+/// capa `background` lisa: sin mosaicos (sin red y fuera de la caché ambiental
+/// de MapLibre) las zonas de riesgo se siguen dibujando sobre un fondo liso.
+/// No se descargan mosaicos de forma masiva (lo prohíbe la política de OSM).
 final String _baseStyle = jsonEncode({
   'version': 8,
   'sources': {
@@ -49,6 +52,11 @@ final String _baseStyle = jsonEncode({
     },
   },
   'layers': [
+    {
+      'id': 'fondo',
+      'type': 'background',
+      'paint': {'background-color': '#e4ebf3'},
+    },
     {'id': 'osm', 'type': 'raster', 'source': 'osm'},
   ],
 });

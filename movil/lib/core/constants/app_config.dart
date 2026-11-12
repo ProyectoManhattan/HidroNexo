@@ -24,6 +24,9 @@ class AppConfig {
   /// Tiempo máximo de espera de cada petición a la API.
   static const Duration apiTimeout = Duration(seconds: 10);
 
+  /// La subida de una foto (~1 MB) puede tardar más que una petición normal.
+  static const Duration uploadTimeout = Duration(seconds: 25);
+
   // Mapa de demostración (el mapa real lo integra el backend)
   static const Coordinates mapCenter = Coordinates(19.1903, -96.1342);
   static const double mapSpanLat = 0.012;

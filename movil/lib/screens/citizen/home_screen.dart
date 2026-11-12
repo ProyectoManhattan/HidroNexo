@@ -4,6 +4,7 @@ import '../../controllers/home_controller.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/time_ago.dart';
 import '../../core/utils/responsive.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_toast.dart';
@@ -13,6 +14,8 @@ import '../../widgets/incident_map_view.dart';
 import '../../widgets/load_status.dart';
 import '../../widgets/map_legend.dart';
 import '../../widgets/page_layout.dart';
+import '../../widgets/pending_report_card.dart';
+import '../../widgets/stale_notice.dart';
 import '../../widgets/report_detail_sheet.dart';
 import '../../widgets/zone_search_field.dart';
 
@@ -70,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
               error: _controller.error,
               onRetry: _controller.load,
             ),
+            const PendingReportCard(),
+            if (_controller.staleSince != null)
+              StaleNotice(text: AppStrings.staleMap(timeAgo(_controller.staleSince!))),
             AppCard(
               padding: const EdgeInsets.all(12),
               child: Column(

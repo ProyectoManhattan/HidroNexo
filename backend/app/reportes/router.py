@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, Response, UploadFile
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app import almacenamiento
@@ -17,9 +18,24 @@ def categorias():
     return {"categorias": CATEGORIAS, "severidades": SEVERIDADES}
 
 
-@router.post("", response_model=ReporteSalida, status_code=201, summary="Crear reporte desde la app")
-def crear(datos: ReporteEntrada, db: Session = Depends(get_db)):
-    return servicio.crear(db, datos, origen="app")
+@router.post("", response_model=ReporteSalida, status_code=201, summary="Crear reporte desde la app (idempotente con cliente_id)")
+def crear(datos: ReporteEntrada, response: Response, db: Session = Depends(get_db)):
+    """Con `cliente_id`, un reintento devuelve el mismo reporte con 200 en vez de crear otro."""
+    if datos.cliente_id:
+        existente = servicio.buscar_por_cliente_id(db, datos.cliente_id)
+        if existente:
+            response.status_code = 200
+            return existente
+    try:
+        return servicio.crear(db, datos, origen="app")
+    except IntegrityError:
+        # Dos reintentos simultáneos con el mismo cliente_id: gana uno, el otro recibe el existente
+        db.rollback()
+        existente = datos.cliente_id and servicio.buscar_por_cliente_id(db, datos.cliente_id)
+        if not existente:
+            raise
+        response.status_code = 200
+        return existente
 
 
 @router.post("/photo", status_code=201, summary="Subir foto de un reporte (público)")

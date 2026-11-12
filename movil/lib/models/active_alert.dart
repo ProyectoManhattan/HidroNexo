@@ -72,6 +72,38 @@ class ActiveAlert {
     );
   }
 
+  /// Para la caché local (no es el formato de la API).
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'tipo': type.apiKey,
+        'nivel': level.apiKey,
+        'texto': text,
+        'zona': zoneName,
+        'motivo': motivo,
+        'simulada': simulated,
+        'aprobada_en': approvedAt?.toIso8601String(),
+        'guia_titulo': guideTitle,
+        'pasos': steps,
+      };
+
+  /// Inversa de [toJson]. Null si el registro está dañado.
+  static ActiveAlert? fromCacheJson(Map<String, dynamic> json) {
+    final id = json['id'];
+    if (id is! int) return null;
+    return ActiveAlert(
+      id: id,
+      type: ReportTypeApi.fromApi(json['tipo'] as String?),
+      level: AlertLevel.fromApi(json['nivel'] as String?),
+      text: '${json['texto'] ?? ''}',
+      zoneName: json['zona'] as String?,
+      motivo: '${json['motivo'] ?? ''}',
+      simulated: json['simulada'] == true,
+      approvedAt: DateTime.tryParse('${json['aprobada_en'] ?? ''}'),
+      guideTitle: json['guia_titulo'] as String?,
+      steps: json['pasos'] is List ? (json['pasos'] as List).map((p) => '$p').toList() : const [],
+    );
+  }
+
   /// Más grave primero; a igual gravedad, la más reciente primero.
   static int compareBySeverity(ActiveAlert a, ActiveAlert b) {
     final bySeverity = b.level.severity.compareTo(a.level.severity);
