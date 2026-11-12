@@ -23,3 +23,18 @@ class Alerta(Base):
     simulada: Mapped[bool] = mapped_column(Boolean, default=False)
     creada_en: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     aprobada_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class EntregaAlerta(Base):
+    """Auditoría: un intento de entrega push de una alerta a un dispositivo."""
+
+    __tablename__ = "entregas_alerta"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    alerta_id: Mapped[int] = mapped_column(ForeignKey("alertas.id", ondelete="CASCADE"), index=True)
+    # Nulo si el dispositivo se eliminó (p. ej. token inválido)
+    dispositivo_id: Mapped[int | None] = mapped_column(ForeignKey("dispositivos.id", ondelete="SET NULL"))
+    # "enviado" | "fallido" | "token_invalido"
+    estado: Mapped[str] = mapped_column(String(20))
+    error: Mapped[str | None] = mapped_column(Text)
+    enviada_en: Mapped[datetime] = mapped_column(DateTime(timezone=True))

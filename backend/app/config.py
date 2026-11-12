@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://agua:agua@localhost:5432/agua_lluvia"
     clave_unica: str = "cambiar-esta-clave"
     llm_api_key: str = ""
+    # JSON completo de la cuenta de servicio de Firebase (push FCM). Vacío = push simulado (solo log).
+    fcm_credenciales_json: str = ""
     data_dir: Path = RAIZ_REPO / "data"
 
     # Producción: las colonias son datos geográficos de referencia; los reportes
