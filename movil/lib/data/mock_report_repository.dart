@@ -93,12 +93,16 @@ class MockReportRepository implements ReportRepository {
   ];
 
   @override
-  List<IncidentReport> getMapReports() => List.unmodifiable(
+  Future<List<IncidentReport>> getMapReports() async => List.unmodifiable(
         _reports.where((r) => r.status != ReportStatus.declined),
       );
 
   @override
-  List<AlertItem> getCurrentAlerts() {
+  Future<Map<String, dynamic>> getRiskZones() async =>
+      {'type': 'FeatureCollection', 'features': <dynamic>[]};
+
+  @override
+  Future<List<AlertItem>> getCurrentAlerts() async {
     return _reports
         .where((r) =>
             r.status == ReportStatus.pending || r.status == ReportStatus.accepted)
@@ -116,7 +120,7 @@ class MockReportRepository implements ReportRepository {
   }
 
   @override
-  List<AlertItem> getAlertHistory() {
+  Future<List<AlertItem>> getAlertHistory() async {
     return _reports
         .where((r) => r.status == ReportStatus.attended)
         .map(
@@ -132,7 +136,7 @@ class MockReportRepository implements ReportRepository {
   }
 
   @override
-  IncidentReport? findByFolio(String folio) {
+  Future<IncidentReport?> findByFolio(String folio) async {
     final normalized = folio.trim().toUpperCase();
     for (final report in _reports) {
       if (report.folio == normalized) return report;

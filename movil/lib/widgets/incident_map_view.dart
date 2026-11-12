@@ -10,12 +10,14 @@ class IncidentMapView extends StatelessWidget {
     required this.reports,
     required this.onReportTap,
     required this.height,
+    this.riskZones,
     this.overlay,
   });
 
   final List<IncidentReport> reports;
   final ValueChanged<IncidentReport> onReportTap;
   final double height;
+  final Map<String, dynamic>? riskZones;
 
   /// Widget opcional sobre el mapa (por ejemplo, el botón Reportar).
   final Widget? overlay;
@@ -33,9 +35,10 @@ class IncidentMapView extends StatelessWidget {
                 context,
                 reports: reports,
                 onReportTap: onReportTap,
+                riskZones: riskZones,
               ),
             ),
-            if (overlay != null) overlay!,
+            ?overlay,
           ],
         ),
       ),

@@ -14,6 +14,7 @@ class PlaceholderMapProvider extends MapProvider {
     BuildContext context, {
     required List<IncidentReport> reports,
     required ValueChanged<IncidentReport> onReportTap,
+    Map<String, dynamic>? riskZones,
   }) {
     return _PlaceholderMap(reports: reports, onReportTap: onReportTap);
   }

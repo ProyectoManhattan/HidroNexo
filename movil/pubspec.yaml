@@ -1,5 +1,5 @@
 name: agua_lluvia
-description: "A new Flutter project."
+description: "AguaVer: reportes ciudadanos y alertas de agua y lluvia en Veracruz."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -34,9 +34,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  google_maps_flutter: ^2.18.1
+  maplibre_gl: ^0.22.0
   url_launcher: ^6.3.3
   image_picker: ^1.2.4
+  http: ^1.2.2
+  geolocator: ^13.0.2
 
 dev_dependencies:
   flutter_test:

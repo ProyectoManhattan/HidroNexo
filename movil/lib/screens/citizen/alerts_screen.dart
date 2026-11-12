@@ -9,6 +9,7 @@ import '../../widgets/alert_tile.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_toast.dart';
 import '../../widgets/hero_header.dart';
+import '../../widgets/load_status.dart';
 import '../../widgets/page_layout.dart';
 import '../../widgets/segmented_tabs.dart';
 import '../../widgets/water_service_card.dart';
@@ -26,7 +27,15 @@ class _AlertsScreenState extends State<AlertsScreen> {
       AlertsController(AppDependencies.reportRepository);
 
   @override
+  void initState() {
+    super.initState();
+    _controller.load();
+    AppDependencies.dataRefresh.addListener(_controller.load);
+  }
+
+  @override
   void dispose() {
+    AppDependencies.dataRefresh.removeListener(_controller.load);
     _controller.dispose();
     super.dispose();
   }
@@ -51,6 +60,11 @@ class _AlertsScreenState extends State<AlertsScreen> {
             subtitle: AppStrings.alertsSubtitle,
           ),
           children: [
+            LoadStatus(
+              loading: _controller.loading,
+              error: _controller.error,
+              onRetry: _controller.load,
+            ),
             const WaterServiceCard(),
             SegmentedTabs(
               labels: [

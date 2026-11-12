@@ -74,14 +74,17 @@ El panel es exclusivo de Protección Civil y no pide clave: la lleva configurada
 
 ### 4. App móvil (opcional)
 
-Requiere Flutter y un dispositivo o emulador Android:
+**AguaVer** requiere Flutter y un emulador o dispositivo Android, con el backend levantado (paso 1):
 
 ```bash
 cd movil
-flutter run
+flutter run                                              # emulador: usa http://10.0.2.2:8000
+flutter run --dart-define=API_URL=http://192.168.1.10:8000   # celular físico: IP de tu computadora
+flutter run --dart-define=USE_MOCK=true                  # sin backend, con datos de ejemplo
+flutter test
 ```
 
-Hoy es la plantilla inicial de Flutter; todavía no tiene las pantallas de la app.
+Ya envía reportes y lee reportes, zonas y alertas aprobadas del backend. Mapa real (MapLibre) con riesgo por zona de `/zones/risk`. Pendiente: subir fotos (la API aún no recibe archivos), clima de la zona y notificaciones push (`POST /devices`).
 
 **Apagar:** `docker compose down` (añade `-v` para borrar también la base de datos).
 
@@ -107,7 +110,7 @@ Las pruebas de flujo usan una base aparte (`<base>_test`) y nunca la principal.
 | --- | --- |
 | Backend | Completo con 27 pruebas pasando. Pendientes: envío push real (FCM), redacción con LLM y calibración de pesos del riesgo |
 | Panel web | Mapa por zona, reportes en vivo, alertas, simulación y reporte manual funcionando contra la API |
-| App móvil | Solo la plantilla inicial |
+| App móvil | Reportes y alertas conectados al backend; faltan fotos, clima y push |
 | Datos | Faltan guías de acción y reportes de prueba reales, y vulnerabilidad real por zona |
 
 ## Documentación

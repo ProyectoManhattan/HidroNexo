@@ -10,6 +10,7 @@ import '../../widgets/app_toast.dart';
 import '../../widgets/filter_chips_bar.dart';
 import '../../widgets/hero_header.dart';
 import '../../widgets/incident_map_view.dart';
+import '../../widgets/load_status.dart';
 import '../../widgets/map_legend.dart';
 import '../../widgets/page_layout.dart';
 import '../../widgets/report_detail_sheet.dart';
@@ -31,7 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
       HomeController(AppDependencies.reportRepository);
 
   @override
+  void initState() {
+    super.initState();
+    _controller.load();
+    AppDependencies.dataRefresh.addListener(_controller.load);
+  }
+
+  @override
   void dispose() {
+    AppDependencies.dataRefresh.removeListener(_controller.load);
     _controller.dispose();
     super.dispose();
   }
@@ -56,6 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           children: [
+            LoadStatus(
+              loading: _controller.loading,
+              error: _controller.error,
+              onRetry: _controller.load,
+            ),
             AppCard(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -68,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   IncidentMapView(
                     reports: _controller.visibleReports,
+                    riskZones: _controller.riskZones,
                     height: Responsive.mapHeight(context),
                     onReportTap: (report) =>
                         ReportDetailSheet.showReport(context, report),

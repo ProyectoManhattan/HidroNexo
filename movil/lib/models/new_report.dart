@@ -9,6 +9,7 @@ class NewReport {
     required this.address,
     required this.position,
     required this.description,
+    required this.severity,
     this.photoName,
   });
 
@@ -17,5 +18,8 @@ class NewReport {
   final String address;
   final Coordinates position;
   final String description;
+
+  /// 1 = baja, 2 = media, 3 = alta (lo que espera la API).
+  final int severity;
   final String? photoName;
 }

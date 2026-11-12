@@ -13,7 +13,7 @@ class AppStrings {
   static const String temperature = '28°C';
   static const String weatherQuote = '“baja probabilidad de encharcamiento hoy”';
   static const String searchHint = 'Buscar colonia o ubicación';
-  static const String zoneUpdated = 'Zona actualizada (demo)';
+  static const String zoneUpdated = 'Zona actualizada';
   static const String rainRisk = 'Riesgo de lluvia';
   static const String rainRiskValue = 'Bajo';
   static const String waterInZone = 'Agua en tu colonia';
@@ -24,6 +24,11 @@ class AppStrings {
   static const String reportTitle = 'Reportar un problema';
   static const String reportSubtitle = 'Tu reporte ayuda a avisar a toda la comunidad.';
   static const String whatIsHappening = '¿Qué está pasando?';
+  static const String severityLabel = '¿Qué tan grave es?';
+  static const String severityLow = 'Baja';
+  static const String severityMedium = 'Media';
+  static const String severityHigh = 'Alta';
+  static const String sending = 'Enviando…';
   static const String location = 'Ubicación';
   static const String noLocation = 'Sin seleccionar';
   static const String useMyLocation = 'Usar mi ubicación';
@@ -39,7 +44,7 @@ class AppStrings {
   static const String reportSentBody =
       'Gracias por avisar. Guarda tu folio para dar seguimiento.';
   static const String trackTitle = 'Seguimiento de mi reporte';
-  static const String folioHint = 'Escribe tu folio, ej. AV-001';
+  static const String folioHint = 'Escribe tu folio, ej. AV-15';
   static const String folioNotFound = 'No encontramos ese folio. Revisa el número.';
 
   // Alertas
@@ -53,7 +58,7 @@ class AppStrings {
   static const String callFailed = 'No se pudo abrir el marcador.';
 
   // Mapa
-  static const String mapPlaceholderNote = 'Mapa de demostración · lo integra el backend';
+  static const String mapPlaceholderNote = 'Mapa de demostración · mapa real pendiente';
 
   // Genéricos
   static const String understood = 'Entendido';
@@ -61,5 +66,5 @@ class AppStrings {
   static const String status = 'Estado';
   static const String now = 'Ahora';
   static const String today = 'Hoy';
-  static const String callDemo = 'Llamando al 911 (simulado)';
+  static const String callDemo = 'Abriendo el marcador…';
 }

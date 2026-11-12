@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../models/incident_report.dart';
 
-/// PUNTO DE INTEGRACIÓN DEL MAPA (BACKEND).
-///
-/// La app no depende de ningún paquete de mapas. Para poner el mapa real:
-///   1. Crea una clase que extienda [MapProvider] y devuelva tu widget de mapa
-///      (por ejemplo GoogleMap) en [build], pintando un marcador por reporte
-///      y llamando a [onReportTap] al tocarlo.
-///   2. Asígnala en AppDependencies.mapProvider.
-/// Ninguna pantalla necesita cambios.
+/// Contrato del mapa. Implementaciones: [MaplibreMapProvider] (real, con el
+/// riesgo por zona del backend) y [PlaceholderMapProvider] (demo sin red).
+/// [riskZones] es el GeoJSON de `GET /zones/risk`, o null si aún no carga.
 abstract class MapProvider {
   const MapProvider();
 
@@ -17,5 +12,6 @@ abstract class MapProvider {
     BuildContext context, {
     required List<IncidentReport> reports,
     required ValueChanged<IncidentReport> onReportTap,
+    Map<String, dynamic>? riskZones,
   });
 }

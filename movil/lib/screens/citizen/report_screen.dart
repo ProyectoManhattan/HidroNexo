@@ -5,7 +5,10 @@ import '../../core/constants/app_config.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
+import '../../data/report_repository.dart';
+import '../../models/incident_report.dart';
 import '../../models/report_status.dart';
+import '../../services/location_service.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_toast.dart';
 import '../../widgets/hero_header.dart';
@@ -27,6 +30,7 @@ class _ReportScreenState extends State<ReportScreen> {
     repository: AppDependencies.reportRepository,
     locationService: AppDependencies.locationService,
     photoService: AppDependencies.photoService,
+    onSubmitted: AppDependencies.dataRefresh.notifyChanged,
   );
   final TextEditingController _folioController = TextEditingController();
 
@@ -38,9 +42,14 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Future<void> _useLocation() async {
-    await _controller.useMyLocation();
-    if (!mounted) return;
-    AppToast.show(context, AppStrings.locationAdded);
+    try {
+      await _controller.useMyLocation();
+      if (!mounted) return;
+      AppToast.show(context, AppStrings.locationAdded);
+    } on LocationException catch (e) {
+      if (!mounted) return;
+      AppToast.show(context, e.message);
+    }
   }
 
   Future<void> _submit() async {
@@ -49,7 +58,14 @@ class _ReportScreenState extends State<ReportScreen> {
       return;
     }
     final place = _controller.locationLabel ?? '';
-    final folio = await _controller.submit();
+    final String folio;
+    try {
+      folio = await _controller.submit();
+    } on RepositoryException catch (e) {
+      if (!mounted) return;
+      AppToast.show(context, e.message);
+      return;
+    }
     if (!mounted) return;
     await ReportDetailSheet.show(
       context,
@@ -61,8 +77,16 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  void _track() {
-    final report = _controller.findReport(_folioController.text);
+  Future<void> _track() async {
+    final IncidentReport? report;
+    try {
+      report = await _controller.findReport(_folioController.text);
+    } on RepositoryException catch (e) {
+      if (!mounted) return;
+      AppToast.show(context, e.message);
+      return;
+    }
+    if (!mounted) return;
     if (report == null) {
       AppToast.show(context, AppStrings.folioNotFound);
       return;
@@ -98,6 +122,11 @@ class _ReportScreenState extends State<ReportScreen> {
           ReportTypeSelector(
             selected: _controller.type,
             onSelected: _controller.selectType,
+          ),
+          const _FieldLabel(AppStrings.severityLabel),
+          _SeveritySelector(
+            selected: _controller.severity,
+            onSelected: _controller.selectSeverity,
           ),
           const _FieldLabel(AppStrings.location),
           Container(
@@ -209,7 +238,10 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          PrimaryButton(label: AppStrings.sendReport, onPressed: _submit),
+          PrimaryButton(
+            label: _controller.sending ? AppStrings.sending : AppStrings.sendReport,
+            onPressed: _controller.sending ? null : _submit,
+          ),
         ],
       ),
     );
@@ -278,6 +310,55 @@ class _FieldLabel extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: first ? 0 : 16, bottom: 7),
       child: Text(text, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+    );
+  }
+}
+
+/// Gravedad del problema (1 baja, 2 media, 3 alta): pesa en el cálculo de riesgo.
+class _SeveritySelector extends StatelessWidget {
+  const _SeveritySelector({required this.selected, required this.onSelected});
+
+  final int selected;
+  final ValueChanged<int> onSelected;
+
+  static const _labels = [
+    AppStrings.severityLow,
+    AppStrings.severityMedium,
+    AppStrings.severityHigh,
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = AppPalette.of(context);
+    return Row(
+      children: [
+        for (var level = 1; level <= 3; level++) ...[
+          if (level > 1) const SizedBox(width: 8),
+          Expanded(
+            child: Material(
+              color: selected == level ? AppColors.blue : palette.pale,
+              borderRadius: BorderRadius.circular(12),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => onSelected(level),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 11),
+                  child: Center(
+                    child: Text(
+                      _labels[level - 1],
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: selected == level ? Colors.white : palette.muted,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

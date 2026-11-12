@@ -14,20 +14,27 @@ class ReportTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
     final types = ReportType.values;
-    return Row(
-      children: [
-        for (var i = 0; i < types.length; i++) ...[
-          if (i > 0) const SizedBox(width: 10),
-          Expanded(
-            child: _TypeTile(
-              type: types[i],
-              selected: types[i] == selected,
-              palette: palette,
-              onTap: () => onSelected(types[i]),
-            ),
-          ),
-        ],
-      ],
+    return LayoutBuilder(
+      builder: (context, box) {
+        const gap = 10.0;
+        final width = (box.maxWidth - gap * 2) / 3;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            for (final type in types)
+              SizedBox(
+                width: width,
+                child: _TypeTile(
+                  type: type,
+                  selected: type == selected,
+                  palette: palette,
+                  onTap: () => onSelected(type),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

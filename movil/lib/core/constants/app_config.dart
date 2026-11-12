@@ -8,6 +8,18 @@ class AppConfig {
   static const String zoneShort = 'Centro';
   static const String emergencyNumber = '911';
 
+  /// Dirección del backend. Se cambia al compilar:
+  ///   flutter run --dart-define=API_URL=http://192.168.1.10:8000
+  /// 10.0.2.2 es el localhost de la computadora visto desde el emulador de Android.
+  static const String apiUrl =
+      String.fromEnvironment('API_URL', defaultValue: 'http://10.0.2.2:8000');
+
+  /// `--dart-define=USE_MOCK=true` usa datos de ejemplo sin backend.
+  static const bool useMock = bool.fromEnvironment('USE_MOCK');
+
+  /// Tiempo máximo de espera de cada petición a la API.
+  static const Duration apiTimeout = Duration(seconds: 10);
+
   // Mapa de demostración (el mapa real lo integra el backend)
   static const Coordinates mapCenter = Coordinates(19.1903, -96.1342);
   static const double mapSpanLat = 0.012;
