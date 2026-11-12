@@ -216,9 +216,12 @@ Objeto de alerta que devuelven todos los endpoints de esta sección:
 
 Bandeja del panel. Por defecto trae solo las propuestas (`?estado=propuesta`). Con `?estado=aprobada` o `?estado=descartada` filtra por esos estados; con `?estado=` vacío trae todas.
 
-### `GET /alerts/active?colonia_id=4`
+### `GET /alerts/active?colonia_id=4` · `GET /alerts/active?lat=19.17&lon=-96.13`
 
-Alertas aprobadas en las últimas 12 horas, con su guía. Es el respaldo de la app si falla el push.
+Alertas aprobadas en las últimas 12 horas, con su guía. La app las consulta periódicamente y las muestra en **pantalla completa** mientras está abierta; también es el respaldo si falla el push.
+
+- Con `lat` y `lon` (siempre juntas; si falta una, `422`) devuelve las de la colonia que contiene ese punto: la misma regla que usa el envío push. Si el punto no cae en ninguna colonia, `[]`. Si además viene `colonia_id`, manda la ubicación.
+- Solo con `colonia_id`, o sin parámetros, filtra por esa colonia o devuelve todas.
 
 ```json
 [

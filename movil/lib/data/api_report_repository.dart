@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart' show MediaType;
 
 import '../core/constants/app_config.dart';
+import '../models/active_alert.dart';
 import '../models/alert_item.dart';
 import '../models/coordinates.dart';
 import '../models/incident_report.dart';
@@ -52,6 +53,19 @@ class ApiReportRepository implements ReportRepository {
   Future<List<AlertItem>> getCurrentAlerts() async {
     final rows = await _getList('/alerts/active');
     return rows.map(_toAlert).toList();
+  }
+
+  @override
+  Future<List<ActiveAlert>> getActiveAlertsAt({required double lat, required double lon}) async {
+    final rows = await _getList(
+      '/alerts/active',
+      query: {'lat': '$lat', 'lon': '$lon'},
+    );
+    final zones = await _zoneNames();
+    return rows
+        .map((row) => ActiveAlert.fromJson(row, zoneName: zones[row['colonia_id']]))
+        .whereType<ActiveAlert>()
+        .toList();
   }
 
   @override

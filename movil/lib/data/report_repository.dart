@@ -1,3 +1,4 @@
+import '../models/active_alert.dart';
 import '../models/alert_item.dart';
 import '../models/incident_report.dart';
 import '../models/new_report.dart';
@@ -22,6 +23,10 @@ abstract class ReportRepository {
 
   /// Alertas oficiales vigentes (aprobadas por Protección Civil).
   Future<List<AlertItem>> getCurrentAlerts();
+
+  /// Alertas vigentes de la colonia que contiene el punto (`lat`, `lon`),
+  /// con su guía de acción. Lista vacía si el punto no cae en ninguna colonia.
+  Future<List<ActiveAlert>> getActiveAlertsAt({required double lat, required double lon});
 
   /// Reportes ya atendidos.
   Future<List<AlertItem>> getAlertHistory();

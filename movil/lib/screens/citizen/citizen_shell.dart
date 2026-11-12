@@ -44,11 +44,14 @@ class _CitizenShellState extends State<CitizenShell> {
   void initState() {
     super.initState();
     final push = AppDependencies.pushService;
-    // Tocar una alerta abre la pestaña Alertas (ya recargada); un push con la
-    // app abierta solo refresca las listas.
-    _tapSub = push.taps.listen((_) {
+    // Un push con la app abierta solo refresca las listas.
+    // Si la alerta tocada está activa se abre a pantalla completa; si no, se
+    // va a la pestaña Alertas como respaldo.
+    _tapSub = push.taps.listen((tap) async {
       AppDependencies.dataRefresh.notifyChanged();
-      _goTo?.call(_alertsTab);
+      final id = tap.alertId;
+      final shown = id != null && await AppDependencies.alertWatcher.requestShow(id);
+      if (!shown) _goTo?.call(_alertsTab);
     });
     _incomingSub = push.incoming.listen((_) => AppDependencies.dataRefresh.notifyChanged());
   }

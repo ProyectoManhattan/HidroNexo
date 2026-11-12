@@ -8,4 +8,7 @@ void main() {
   runApp(const HidroNexoApp());
   // Sin await: la app abre aunque push falle o tarde (no bloquea el arranque).
   AppDependencies.pushService.start();
+  // Un push con la app abierta (dataRefresh) también dispara una consulta.
+  AppDependencies.dataRefresh.addListener(AppDependencies.alertWatcher.refresh);
+  AppDependencies.alertWatcher.start();
 }
