@@ -33,4 +33,12 @@ abstract class ReportRepository {
 
   /// Envía un reporte y devuelve su folio.
   Future<String> submit(NewReport report);
+
+  /// Registra (o actualiza) el token de notificaciones push de este
+  /// dispositivo junto con su ubicación aproximada.
+  Future<void> registerDevice({
+    required String token,
+    required double lat,
+    required double lon,
+  });
 }

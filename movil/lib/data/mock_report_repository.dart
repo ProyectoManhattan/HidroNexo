@@ -162,4 +162,11 @@ class MockReportRepository implements ReportRepository {
     ];
     return folio;
   }
+
+  @override
+  Future<void> registerDevice({
+    required String token,
+    required double lat,
+    required double lon,
+  }) async {}
 }
