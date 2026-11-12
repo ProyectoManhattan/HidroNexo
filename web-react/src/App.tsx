@@ -4,6 +4,7 @@ import BottomBar from './components/BottomBar'
 import ColoniasRanking from './components/ColoniasRanking'
 import AlertaManualDialog from './components/AlertaManualDialog'
 import MapView from './components/MapView'
+import OfficialAlertsBanner from './components/OfficialAlertsBanner'
 import ReportsList from './components/ReportsList'
 import TopBar from './components/TopBar'
 import { iniciar, useStore } from './store'
@@ -30,6 +31,7 @@ export default function App() {
           Sin conexión con el servidor. Reintentando…
         </div>
       )}
+      <OfficialAlertsBanner />
       <div className="flex min-h-0 flex-1">
         <main className="relative min-w-0 flex-1">
           <MapView />

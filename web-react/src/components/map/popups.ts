@@ -14,6 +14,25 @@ function lineaPronostico(p: Record<string, unknown>): string {
   )
 }
 
+function lineaTerritorio(p: Record<string, unknown>): string {
+  const indice = Number(p.susceptibilidad)
+  if (!Number.isFinite(indice) || indice < 0) return ''
+  const elevacion = Number(p.elevacion_mediana_m)
+  const hand = Number(p.hand_mediana_m)
+  const distancia = Number(p.distancia_agua_m)
+  const datos = [
+    Number.isFinite(elevacion) ? `elevación ${elevacion.toFixed(1)} m` : '',
+    Number.isFinite(hand) ? `HAND ${hand.toFixed(1)} m` : '',
+    Number.isFinite(distancia) ? `agua a ${Math.round(distancia)} m` : '',
+  ].filter(Boolean).join(' · ')
+  return (
+    `<div style="color:#334155;font-size:12px;margin-top:5px">` +
+    `Susceptibilidad territorial: <b>${esc(Math.round(indice))}/100</b>` +
+    (datos ? `<br><span style="color:#64748b">${esc(datos)}</span>` : '') +
+    `</div>`
+  )
+}
+
 export function popupColonia(p: Record<string, unknown>): string {
   const n = nivelInfo(p.nivel as string)
   const motivo = MOTIVOS[p.motivo as keyof typeof MOTIVOS] ?? '—'
@@ -24,6 +43,7 @@ export function popupColonia(p: Record<string, unknown>): string {
     `<span style="background:${n.suave};color:${n.color};font-weight:700;font-size:10px;padding:2px 8px;border-radius:9px">${esc(n.texto.toUpperCase())}</span></div>` +
     `<div style="color:#5B6675;font-size:12px;margin-top:4px">Motivo principal: ${esc(motivo)}</div>` +
     lineaPronostico(p) +
+    lineaTerritorio(p) +
     `</div>`
   )
 }

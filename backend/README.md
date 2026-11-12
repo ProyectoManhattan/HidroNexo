@@ -17,9 +17,12 @@ docker compose up --build
 
 Las migraciones (`alembic upgrade head`) corren solas al arrancar el contenedor.
 
-**Primera carga:** si la base no tiene colonias, la API carga sola `data/colonias_veracruz.geojson` y crea un reporte de ejemplo por colonia (origen `seed`, vigencia de 7 días). Se desactiva con `AUTO_SEED=false`.
+**Primera carga:** si la base no tiene colonias, la API carga únicamente el catálogo
+geográfico de `data/colonias_veracruz.geojson`. Los reportes empiezan vacíos y llegan
+por `POST /reports` desde Flutter o por el panel. `AUTO_SEED=true` queda reservado para
+una demo desechable; en producción debe permanecer en `false`.
 
-Volver a cargar los datos de `data/` (borra todo antes):
+Crear una demo sintética explícita (borra todo antes; no usar en producción):
 
 ```bash
 curl -X POST localhost:8000/admin/seed -H "X-Clave: cambiar-esta-clave"

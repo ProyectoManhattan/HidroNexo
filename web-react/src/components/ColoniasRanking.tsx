@@ -18,6 +18,7 @@ function Fuente({ f }: { f?: string }) {
 function Detalle({ z, reportes, fuente }: { z: ZonaProps; reportes: number; fuente?: string }) {
   const n = nivelInfo(z.nivel)
   const comp = z.componentes ?? { lluvia: 0, reportes: 0, vulnerabilidad: 0 }
+  const p = z.perfil_territorial
   return (
     <div className="mb-3 rounded-lg border-2 bg-white p-3" style={{ borderColor: n.color }}>
       <div className="flex items-center gap-2">
@@ -39,6 +40,22 @@ function Detalle({ z, reportes, fuente }: { z: ZonaProps; reportes: number; fuen
           </div>
         ))}
       </div>
+      {p && (
+        <div className="mt-3 rounded-md bg-slate-50 p-2 text-xs text-slate-600">
+          <div className="mb-1 flex items-center justify-between">
+            <span className="font-semibold text-slate-800">Perfil territorial</span>
+            <span className="font-semibold text-blue-700">{Math.round(p.indice_susceptibilidad_preliminar ?? 0)}/100</span>
+          </div>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+            <span>Elevación mediana</span><b className="text-right">{p.elevacion_mediana_m?.toFixed(1) ?? '—'} m</b>
+            <span>Altura sobre cauce</span><b className="text-right">{p.hand_mediana_m?.toFixed(1) ?? '—'} m</b>
+            <span>Distancia al agua</span><b className="text-right">{p.distancia_cuerpo_agua_m != null ? Math.round(p.distancia_cuerpo_agua_m) : '—'} m</b>
+            <span>Retorno lluvia 2 años</span><b className="text-right">{p.lluvia_24h_retorno_2a_mm?.toFixed(1) ?? '—'} mm</b>
+            <span>Eventos documentados</span><b className="text-right">{p.eventos_inundacion_registrados ?? '—'}</b>
+          </div>
+          <div className="mt-2 border-t border-slate-200 pt-1 text-[11px] text-amber-700">{p.advertencia}</div>
+        </div>
+      )}
       <div className="mt-2"><Fuente f={fuente} /></div>
     </div>
   )

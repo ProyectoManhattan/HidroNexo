@@ -18,6 +18,7 @@ AL_PANEL = [
     "zone.risk_updated",
     "alert.drafted",
     "alert.approved",
+    "official_alerts.updated",
 ]
 
 

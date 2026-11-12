@@ -58,12 +58,19 @@ def pronostico_efectivo(lluvia: dict[str, float]) -> float:
     return mm * limitar(prob / 100)
 
 
-def componente_lluvia(lluvia: dict[str, float]) -> float:
-    """Toma la ventana más grave (1 h, 3 h, 24 h o pronóstico ponderado por probabilidad)."""
+def componente_lluvia(lluvia: dict[str, float], retorno_2a_24h_mm: float | None = None) -> float:
+    """Toma la ventana más grave y, si existe, usa la climatología local para 24 h.
+
+    El retorno de dos años sustituye el umbral genérico de 80 mm/24 h. No se
+    interpreta como probabilidad: únicamente normaliza la amenaza en el clima local.
+    """
     if not lluvia:
         return 0.0
     ventanas = {**lluvia, "pronostico_3h": pronostico_efectivo(lluvia)}
-    return limitar(max(ventanas.get(k, 0.0) / tope for k, tope in SATURACION_LLUVIA.items()))
+    topes = dict(SATURACION_LLUVIA)
+    if retorno_2a_24h_mm is not None and retorno_2a_24h_mm > 0:
+        topes["mm_24h"] = retorno_2a_24h_mm
+    return limitar(max(ventanas.get(k, 0.0) / tope for k, tope in topes.items()))
 
 
 def resumen_pronostico(lluvia: dict[str, float]) -> dict:

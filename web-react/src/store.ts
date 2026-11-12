@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react'
 import * as api from './api/client'
 import { alCambiarConexion, conectar, desconectar, suscribir } from './api/realtime'
 import { POLL_MS } from './config'
-import type { Alerta, AlertaActiva, Clima, Filtro, Reporte, ZonasGeoJSON } from './types'
+import type { Alerta, AlertaActiva, AvisosOficiales, Clima, Filtro, Reporte, ZonasGeoJSON } from './types'
 
 export interface State {
   reportes: Reporte[]
@@ -10,6 +10,7 @@ export interface State {
   alertasPropuestas: Alerta[]
   alertasActivas: AlertaActiva[]
   clima: Clima | null
+  avisosOficiales: AvisosOficiales | null
   lluvia3h: number | null
   prob3h: number | null
   apiOk: boolean
@@ -21,7 +22,7 @@ export interface State {
 }
 
 let state: State = {
-  reportes: [], zonas: null, alertasPropuestas: [], alertasActivas: [], clima: null, lluvia3h: null, prob3h: null,
+  reportes: [], zonas: null, alertasPropuestas: [], alertasActivas: [], clima: null, avisosOficiales: null, lluvia3h: null, prob3h: null,
   apiOk: false, wsOk: false, filtro: 'todo', coloniaSeleccionada: null,
   dialogoAlertaManual: false,
 }
@@ -68,10 +69,14 @@ export async function refrescarClima() {
   const c = await intentar(api.getClima())
   if (c) aplicarClima(c)
 }
+export async function refrescarAvisosOficiales() {
+  const avisos = await intentar(api.getAvisosOficiales())
+  if (avisos) set({ avisosOficiales: avisos })
+}
 function aplicarClima(c: Clima) { set({ clima: c, lluvia3h: c.lluvia.mm_3h, prob3h: c.lluvia.prob_3h ?? null }) }
 
 export async function refrescarTodo() {
-  await Promise.all([refrescarReportes(), refrescarZonas(), refrescarAlertas(), refrescarClima()])
+  await Promise.all([refrescarReportes(), refrescarZonas(), refrescarAlertas(), refrescarClima(), refrescarAvisosOficiales()])
 }
 
 // ---------------------------------------------------------------- acciones de UI
@@ -107,6 +112,7 @@ export function iniciar(): () => void {
     suscribir('alert.drafted', () => void refrescarAlertas()),
     suscribir('alert.approved', () => void refrescarAlertas()),
     suscribir('weather.updated', (m) => m.tipo === 'weather.updated' && aplicarClima(m.datos)),
+    suscribir('official_alerts.updated', (m) => m.tipo === 'official_alerts.updated' && set({ avisosOficiales: m.datos })),
   ]
   conectar()
   void refrescarTodo()

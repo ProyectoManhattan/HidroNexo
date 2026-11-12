@@ -2,7 +2,7 @@
 
 Solo funciona con UN proceso/worker (plan, sección 3). Eventos:
     report.created, report.updated, weather.updated, zone.risk_updated,
-    zone.threshold_crossed, alert.drafted, alert.approved
+    zone.threshold_crossed, alert.drafted, alert.approved, official_alerts.updated
 
 Los suscriptores se registran en app/suscripciones.py.
 Publicar siempre DESPUÉS de hacer commit en la base de datos.

@@ -26,6 +26,7 @@ from app.reportes.esquemas import ReporteEntrada
 from app.reportes.modelos import Reporte
 from app.riesgo.modelos import RiesgoColonia
 from app.riesgo.servicio import recalcular_todas
+from app.territorio.perfiles import perfil_para, susceptibilidad
 
 
 def cargar_colonias(db: Session) -> int:
@@ -35,13 +36,15 @@ def cargar_colonias(db: Session) -> int:
     features = json.loads(archivo.read_text(encoding="utf-8"))["features"]
     for f in features:
         p = f["properties"]
+        perfil = perfil_para(p.get("codigo_postal", p["nombre"]))
+        vulnerabilidad = susceptibilidad(perfil, float(p.get("vulnerabilidad", 0.0)))
         geom = func.ST_Multi(func.ST_SetSRID(func.ST_GeomFromGeoJSON(json.dumps(f["geometry"])), 4326))
         db.add(
             Colonia(
                 nombre=p["nombre"],
                 municipio=p.get("municipio", "Veracruz"),
-                vulnerabilidad=float(p.get("vulnerabilidad", 0.0)),
-                vulnerabilidad_fuente=p.get("vulnerabilidad_fuente", "ejemplo"),
+                vulnerabilidad=vulnerabilidad,
+                vulnerabilidad_fuente="perfil_territorial" if perfil else p.get("vulnerabilidad_fuente", "ejemplo"),
                 geom=geom,
             )
         )

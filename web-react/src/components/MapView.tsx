@@ -22,6 +22,22 @@ const alturaNivel: maplibregl.ExpressionSpecification = [
   60,
 ] as unknown as maplibregl.ExpressionSpecification
 
+const colorSusceptibilidad: maplibregl.ExpressionSpecification = [
+  'interpolate', ['linear'], ['get', 'susceptibilidad'],
+  0, '#2E8B57',
+  33, '#E9C46A',
+  66, '#F28C28',
+  100, '#C62828',
+] as unknown as maplibregl.ExpressionSpecification
+
+const alturaSusceptibilidad: maplibregl.ExpressionSpecification = [
+  'interpolate', ['linear'], ['get', 'susceptibilidad'],
+  0, 60,
+  33, 400,
+  66, 900,
+  100, 1600,
+] as unknown as maplibregl.ExpressionSpecification
+
 const colorNivel: maplibregl.ExpressionSpecification = [
   'match', ['get', 'nivel'],
   ...Object.entries(NIVELES).flatMap(([k, v]) => [k, v.color]),
@@ -43,6 +59,11 @@ function conPronosticoPlano(zonas: ZonasGeoJSON) {
         ...f.properties,
         prob_3h: f.properties.pronostico?.prob_3h ?? -1,
         pron_mm_3h: f.properties.pronostico?.mm_3h ?? 0,
+        susceptibilidad: f.properties.perfil_territorial?.indice_susceptibilidad_preliminar ?? -1,
+        elevacion_mediana_m: f.properties.perfil_territorial?.elevacion_mediana_m ?? null,
+        hand_mediana_m: f.properties.perfil_territorial?.hand_mediana_m ?? null,
+        distancia_agua_m: f.properties.perfil_territorial?.distancia_cuerpo_agua_m ?? null,
+        eventos_inundacion: f.properties.perfil_territorial?.eventos_inundacion_registrados ?? null,
       },
     })),
   }
@@ -81,6 +102,7 @@ export default function MapView() {
   const encuadrado = useRef(false)
   const [listo, setListo] = useState(false)
   const [modo3d, setModo3d] = useState(true)
+  const [capa, setCapa] = useState<'riesgo' | 'territorio'>('territorio')
 
   const zonas = useStore((s) => s.zonas)
   const reportes = useStore((s) => s.reportes)
@@ -339,9 +361,44 @@ export default function MapView() {
     })
   }, [modo3d, listo])
 
+  // Alterna entre el riesgo operativo en vivo y la susceptibilidad física estática.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!listo || !map) return
+    const color = capa === 'territorio' ? colorSusceptibilidad : colorNivel
+    const altura = capa === 'territorio' ? alturaSusceptibilidad : alturaNivel
+    map.setPaintProperty('zonas-fill', 'fill-color', color)
+    map.setPaintProperty('zonas-volumen', 'fill-extrusion-color', color)
+    map.setPaintProperty('zonas-volumen', 'fill-extrusion-height', altura)
+  }, [capa, listo])
+
   return (
     <div className="relative h-full w-full overflow-hidden">
       <div ref={cont} style={{ position: 'absolute', inset: 0 }} />
+      <div className="absolute left-3 top-3 z-10 overflow-hidden rounded-lg border border-slate-300 bg-white/95 shadow-md backdrop-blur">
+        <div className="px-3 pt-2 text-[10px] font-bold uppercase tracking-wide text-slate-500">Capa del mapa</div>
+        <div className="flex gap-1 p-1.5">
+          <button
+            type="button"
+            onClick={() => setCapa('riesgo')}
+            className={`rounded-md px-3 py-1.5 text-xs font-semibold ${capa === 'riesgo' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+          >
+            Riesgo en vivo
+          </button>
+          <button
+            type="button"
+            onClick={() => setCapa('territorio')}
+            className={`rounded-md px-3 py-1.5 text-xs font-semibold ${capa === 'territorio' ? 'bg-amber-600 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+          >
+            Susceptibilidad territorial
+          </button>
+        </div>
+        {capa === 'territorio' && (
+          <div className="border-t border-slate-200 px-3 py-2 text-[11px] text-slate-600">
+            Topografía + cauces modelados
+          </div>
+        )}
+      </div>
       <button
         type="button"
         onClick={() => setModo3d((v) => !v)}
@@ -352,7 +409,18 @@ export default function MapView() {
         <span className={`inline-block h-2 w-2 rounded-full ${modo3d ? 'bg-emerald-500' : 'bg-slate-400'}`} />
         {modo3d ? '3D Activado' : '2D Activado'}
       </button>
-      <Legend />
+      {capa === 'riesgo' ? (
+        <Legend />
+      ) : (
+        <div className="absolute bottom-3 left-3 z-10 rounded-md border bg-white/95 p-2 text-xs shadow-md">
+          <div className="mb-1 font-semibold text-slate-700">Susceptibilidad relativa</div>
+          <div className="flex items-center gap-2">
+            <span className="h-2.5 w-8 rounded" style={{ background: 'linear-gradient(90deg,#2E8B57,#E9C46A,#F28C28,#C62828)' }} />
+            <span className="text-slate-500">Baja</span><span>→</span><span className="text-slate-500">Elevada</span>
+          </div>
+          <div className="mt-1 text-[10px] text-amber-700">Índice preliminar, no probabilidad</div>
+        </div>
+      )}
     </div>
   )
 }

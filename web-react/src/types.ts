@@ -62,6 +62,30 @@ export interface ZonaProps {
   componentes: Componentes
   actualizado_en: string
   pronostico?: Pronostico
+  perfil_territorial?: PerfilTerritorial | null
+}
+
+export interface PerfilTerritorial {
+  codigo_postal: string
+  elevacion_mediana_m: number | null
+  elevacion_relativa_m: number | null
+  pendiente_media_grados: number | null
+  hand_mediana_m: number | null
+  distancia_cuerpo_agua_m: number | null
+  distancia_cauce_mayor_m: number | null
+  acumulacion_flujo_max_km2: number | null
+  eventos_inundacion_registrados: number | null
+  lluvia_anual_media_mm: number | null
+  lluvia_24h_retorno_2a_mm: number | null
+  lluvia_24h_retorno_10a_mm: number | null
+  lluvia_24h_retorno_100a_mm: number | null
+  indice_susceptibilidad_preliminar: number | null
+  categoria_relativa: 'baja' | 'media' | 'elevada' | null
+  tipo_cuerpo_agua: string | null
+  cobertura_meteorologica: string | null
+  n_variables_faltantes: number | null
+  fuente: string
+  advertencia: string
 }
 
 /** Pronóstico de lluvia de la zona (Open-Meteo). prob_* en %, null si no hay dato. */
@@ -129,6 +153,33 @@ export interface Dispositivo {
   plataforma: 'android' | 'ios' | 'web'
 }
 
+export interface AvisoOficial {
+  id: string
+  titulo: string | null
+  descripcion: string | null
+  tipo: string | null
+  institucion: string | null
+  emitida_en: string | null
+  expira_en: string | null
+  alcance: string | null
+  fenomenos: string[]
+  municipios_veracruz: string[]
+  documento_url: string | null
+  detalle_url: string
+  oficial: true
+}
+
+export interface AvisosOficiales {
+  alertas: AvisoOficial[]
+  actualizado_en: string | null
+  ultima_consulta_en: string | null
+  error: string | null
+  desactualizado: boolean
+  fuente: string
+  fuente_url: string
+  estado: 'ok' | 'error'
+}
+
 // WebSocket
 export interface ZonaRiesgoWS {
   colonia_id: number
@@ -146,5 +197,6 @@ export type MensajeWS =
   | { tipo: 'alert.drafted'; datos: Alerta }
   | { tipo: 'alert.approved'; datos: Alerta & { dispositivos_notificados: number } }
   | { tipo: 'weather.updated'; datos: Clima }
+  | { tipo: 'official_alerts.updated'; datos: AvisosOficiales }
 
 export type TipoWS = MensajeWS['tipo']
