@@ -33,7 +33,9 @@ class HeroHeader extends StatelessWidget {
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppConfig.maxContentWidth),
+            constraints: const BoxConstraints(
+              maxWidth: AppConfig.maxContentWidth,
+            ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 18, 20, 26),
               child: Column(
@@ -55,7 +57,10 @@ class HeroHeader extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       subtitle!,
-                      style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                   ...children,
@@ -79,12 +84,17 @@ class _BrandRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Row(
+        Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.water_drop, color: Colors.white, size: 22),
-            SizedBox(width: 6),
-            Text(
+            Image.asset(
+              'assets/images/hidronexo_logo.png',
+              width: 30,
+              height: 30,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 7),
+            const Text(
               AppStrings.appName,
               style: TextStyle(
                 color: Colors.white,

@@ -51,10 +51,6 @@ export default function AlertsTray() {
           ))}
         </ul>
       )}
-      <div className="mt-5 flex items-start gap-3 rounded-xl bg-[#eef3ff] p-4 text-sm leading-relaxed text-[#17326b]">
-        <span className="text-xl" aria-hidden>◎</span>
-        <span><b>Modo consulta pública.</b> La revisión, aprobación y publicación requieren una sesión administrativa segura.</span>
-      </div>
     </div>
   )
 }

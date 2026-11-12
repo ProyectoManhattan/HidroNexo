@@ -57,11 +57,11 @@ export default function TopBar() {
   return (
     <header className="app-header z-30">
       <div className="flex min-w-[20rem] items-center gap-4">
-        <div className="brand-tile"><Icon tipo="agua" className="h-14 w-14" /></div>
+        <div className="brand-tile">
+          <img src="/hidronexo-logo.png" alt="Logo de HidroNexo" className="h-[5.2rem] w-[5.2rem] object-contain" />
+        </div>
         <div className="min-w-0 text-[#0b2b70]">
-          <div className="text-[15px] font-extrabold">Sistema Territorial</div>
-          <h1 className="truncate text-[1.8rem] leading-none font-black tracking-tight">Agua y Lluvia</h1>
-          <p className="mt-1 truncate text-[14px] font-medium">Monitoreo hidrometeorológico · Veracruz</p>
+          <h1 className="truncate text-[2rem] leading-none font-black tracking-tight">HidroNexo</h1>
         </div>
       </div>
 

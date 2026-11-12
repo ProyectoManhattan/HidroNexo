@@ -25,8 +25,6 @@ export default function BottomBar() {
       <div className="hidden text-slate-600 sm:block"><b className="text-slate-900">{nReportes}</b> reportes activos · <b className="text-slate-900">{nAltas}</b> zonas postales en alto o crítico</div>
       <div className="ml-auto hidden items-center gap-3 text-slate-500 lg:flex">
         <span>Fuentes: Open-Meteo · Protección Civil · reportes ciudadanos</span>
-        <span className="rounded-full bg-[#eef3ff] px-4 py-2 font-bold text-[#0b2b70]">Consulta pública</span>
-        <span className="rounded-full bg-red-50 px-4 py-2 font-bold text-red-700">Emergencias: 911</span>
       </div>
     </footer>
   )

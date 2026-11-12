@@ -1,4 +1,4 @@
-# AguaVer (app móvil, solo Android)
+# HidroNexo (app móvil, solo Android)
 
 ## Notificaciones push (Firebase Cloud Messaging)
 
